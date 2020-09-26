@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2016",
+    "sourceMap": true,
+    "inlineSources": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "importHelpers": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "strict": false,
+    "strictFunctionTypes": false,
+    "incremental": true,
+    "lib": ["dom", "esnext"],
+    "paths": {
+      "actions/*": ["src/actions/*"],
+      "components/*": ["src/components/*"],
+      "config/*": ["src/config/*"],
+      "config": ["src/config"],
+      "constants/*": ["src/constants/*"],
+      "containers/*": ["src/containers/*"],
+      "markdown-it": ["node_modules/markdown-it"],
+      "markdown": ["src/markdown"],
+      "pages/*": ["src/pages/*"],
+      "reducers/*": ["src/reducers/*"],
+      "reducers": ["src/reducers"],
+      "services/*": ["src/services/*"],
+      "store": ["src/store"],
+      "types": ["src/types"],
+      "utils/*": ["src/utils/*"],
+      "@img/*": ["src/img/*"],
+      "@platform/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.js", "src/**/*.jsx",
+    "src/**/*.ts", "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
