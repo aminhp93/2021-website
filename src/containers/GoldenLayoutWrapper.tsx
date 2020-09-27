@@ -20,7 +20,8 @@ class GoldenLayoutWrapper extends React.Component {
     }
 
     componentDidMount() {
-      
+        setTimeout(() => {
+
         const config = {
             content: [
                 {
@@ -91,6 +92,7 @@ class GoldenLayoutWrapper extends React.Component {
         window.addEventListener('resize', () => {
             myLayout.updateSize();
         });
+    },0)
     }
 }
 

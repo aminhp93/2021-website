@@ -6,41 +6,40 @@ import {
   Link
 } from "react-router-dom";
 
+
 import Stock from 'containers/Stock';
 import GoldenLayoutWrapper from 'containers/GoldenLayoutWrapper';
 
 class App extends React.Component {
+    componentDidUpdate() {
+      
+
+      console.log(this.props, 123)
+    }
+
     render() {
         return <Router>
         <Switch>
-          <Route path="/stock">
-            <Stock/>
-          </Route>
-          <Route path="/note">
-            {/* <Note /> */}
-            <div>Note</div>
-          </Route>
-          <Route path="/stickies">
-            <GoldenLayoutWrapper />
-          </Route>
-          <Route path="/">
-            <nav className="App-nav">
-              <ul>
-                <li>
-                  <Link to="/stock">Stock</Link>
-                </li>
-                <li>
-                  <Link to="/note">Note</Link>
-                </li>
-                <li>
-                  <Link to="/stickies">Stickies</Link>
-                </li>
-              </ul>
-            </nav>
-          </Route>
+          <Route path="/stock" component={Stock} />
+          <Route path="/stickies" component={GoldenLayoutWrapper} />
+          <Route path="/" component={LinkList} />
         </Switch>
       </Router>
     }
 }
 
+
 export default App
+
+class LinkList extends React.Component {
+  render() {
+    return <ul>
+    <li>
+      <Link to="/stock">Stock</Link>
+    </li>
+    <li>
+      <Link to="/stickies">Stickies</Link>
+    </li>
+  </ul>
+  }
+}
