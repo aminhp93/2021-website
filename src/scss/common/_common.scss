@@ -1,0 +1,38 @@
+.flex {
+    display: flex;
+}
+
+.ant-modal-wrap.customed-modal-wrap {
+    /* margin: 20px; */
+    display: block;
+    justify-content: center;
+    align-items: center;
+    /* width: 100% !important; */
+    height: 100%;
+  }
+  
+.ant-modal-wrap.customed-modal-wrap .ant-modal {
+    width: 100%!important;
+    position: unset;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    padding: 50px;
+    height: 100%;
+}
+
+.ant-modal-wrap.customed-modal-wrap .ant-modal-content {
+    width: 100%;
+}
+
+.ant-modal-wrap.customed-modal-wrap .ant-modal-body {
+    height: calc(100% - 56px);
+}
+
+.chartTV-container,
+.chartTV-container .chartTV,
+.chartTV-container .chartTV article,
+.chartTV-container .chartTV article iframe {
+  height: 100% !important;
+}
