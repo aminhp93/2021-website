@@ -1,11 +1,14 @@
 import React from 'react';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 import Stock from 'containers/Stock';
+import GoldenLayoutWrapper from 'containers/GoldenLayoutWrapper';
+
 class App extends React.Component {
     render() {
         return <Router>
@@ -17,6 +20,9 @@ class App extends React.Component {
             {/* <Note /> */}
             <div>Note</div>
           </Route>
+          <Route path="/stickies">
+            <GoldenLayoutWrapper />
+          </Route>
           <Route path="/">
             <nav className="App-nav">
               <ul>
@@ -25,6 +31,9 @@ class App extends React.Component {
                 </li>
                 <li>
                   <Link to="/note">Note</Link>
+                </li>
+                <li>
+                  <Link to="/stickies">Stickies</Link>
                 </li>
               </ul>
             </nav>

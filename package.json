@@ -1,6 +1,6 @@
 {
   "name": "2021-webapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.1.0",
@@ -30,6 +30,7 @@
     "firebase": "^7.14.1",
     "flatpickr": "^4.6.3",
     "font-awesome": "^4.7.0",
+    "golden-layout": "^1.5.9",
     "history": "^4.10.1",
     "in-view": "^0.6.1",
     "js-base64": "^3.4.5",
