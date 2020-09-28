@@ -22,3 +22,5 @@ dist/*
 !dist/favicon.ico
 !dist/img
 !dist/*-sw.js
+
+.env
