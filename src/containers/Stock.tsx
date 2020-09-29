@@ -1,17 +1,19 @@
 import React from 'react';
-
-import { Tabs, Select, Spin } from 'antd';
+import axios from 'axios';
+import { Tabs, Select, Spin, Button } from 'antd';
 import { connect } from 'react-redux';
-import { get, debounce } from 'lodash';
+import { get, debounce, cloneDeep } from 'lodash';
 import moment from 'moment';
 
 import { IStock } from 'types'
 import { fetchListStocks, } from 'reducers/stocks';
 import { fetchCompany } from 'reducers/companies';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
-import { getLastUpdatedDate } from 'reducers/lastUpdatedDate';
+import { getLastUpdatedDate, updateLastUpdatedDate } from 'reducers/lastUpdatedDate';
 import { fetchDecisiveIndexes } from 'reducers/decisiveIndexes';
-
+import {
+    getHistoricalQuotesUpdateUrl,
+} from 'utils/request';
 import Analysis from './Analysis';
 
 const { TabPane } = Tabs;
@@ -27,6 +29,7 @@ interface IProps {
     getLastUpdatedDate: any,
     fetchCompany: any,
     fetchDecisiveIndexes: any,
+    updateLastUpdatedDate: any,
 }
 
 interface IState {
@@ -93,6 +96,68 @@ class Stock extends React.Component<IProps, IState> {
         });
     };
 
+    udpateHistoricalQuotesDaily = async () => {
+        const { lastUpdatedDate } = this.props;
+        const lastUpdatedDateValue = lastUpdatedDate.value
+        const todayDate = moment().format('YYYY-MM-DD');
+        const next1Day = moment(lastUpdatedDateValue).add(1, 'days').format('YYYY-MM-DD');
+        const next2Day = moment(lastUpdatedDateValue).add(2, 'days').format('YYYY-MM-DD');
+        if (
+            !lastUpdatedDateValue
+            || lastUpdatedDateValue === todayDate
+            || (moment(lastUpdatedDateValue).format('dddd') === 'Friday' && next1Day === todayDate)
+            || (moment(lastUpdatedDateValue).format('dddd') === 'Friday' && next2Day === todayDate)
+        ) return;
+
+        const startDate = next1Day;
+        const endDate = todayDate;
+        this.setState({ loading: true })
+        await this.udpateHistoricalQuotesPartial(0, 500, startDate, endDate);
+        await this.udpateHistoricalQuotesPartial(500, 1000, startDate, endDate);
+        await this.udpateHistoricalQuotesPartial(1000, 2000, startDate, endDate);
+        await this.props.updateLastUpdatedDate(lastUpdatedDate);
+        this.setState({ loading: false })
+    }
+
+    udpateHistoricalQuotesPartial = (start, count, startDate, endDate) => {
+        let listPromises = [];
+        const arr = cloneDeep(Object.values(this.props.stocks));
+        const arr1 = arr.slice(start, count)
+        arr1.forEach(item => {
+            item.Symbol && listPromises.push(
+                new Promise(resolve => {
+                    this.udpateHistoricalQuotes(item.Symbol, resolve, startDate, endDate);
+                })
+            );
+        });
+
+        return Promise.all(listPromises)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    udpateHistoricalQuotes = (symbol, resolve, startDate, endDate) => {
+        if (!symbol || !startDate || !endDate) return;
+        axios({
+            method: 'put',
+            url: getHistoricalQuotesUpdateUrl(symbol, startDate, endDate)
+        })
+            .then(response => {
+                console.log(response)
+                if (response.data) {
+                    resolve && resolve(response.data)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                resolve && resolve(error)
+            })
+    }
+
     render() {
         const { fetching, data, value, loading } = this.state;
         const { selectedSymbol, lastUpdatedDate } = this.props;
@@ -116,6 +181,8 @@ class Stock extends React.Component<IProps, IState> {
                                 <Option value={d.Symbol} key={d.Symbol}>{d.Symbol}</Option>
                             ))}
                         </Select>
+                        <Button onClick={this.udpateHistoricalQuotesDaily}>Update daily all</Button>
+
                     </div>
                     <div className="App-header-symbol">
                         {selectedSymbol || 'No symbol selected'} |
@@ -190,7 +257,8 @@ const mapDispatchToProps = {
     fetchListStocks,
     updateSelectedSymbolSuccess,
     fetchCompany,
-    fetchDecisiveIndexes
+    fetchDecisiveIndexes,
+    updateLastUpdatedDate
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stock);
