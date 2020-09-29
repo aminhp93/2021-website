@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import { notification } from 'antd';
+import ENV from 'ENV';
 
 const headers = {
     'Content-Type': 'application/json',
@@ -32,7 +33,7 @@ export default request
 
 export const host_2020_webapp = 'http://3.88.254.14/'
 export const host_2020_server = 'http://18.207.193.124'
-export const localhost = 'http://localhost:8001'
+export const localhost = ENV.DOMAIN || 'http://localhost:8001'
 export const hostName1 = 'https://svr1.fireant.vn';
 export const hostName3 = 'https://svr3.fireant.vn';
 export const myIP = 'http://192.169.1.125:8000'
