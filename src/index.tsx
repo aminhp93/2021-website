@@ -10,8 +10,6 @@ import 'antd/dist/antd.css';
 import './scss/main.scss';
 import store from 'store';
 
-console.log(13, process, process.env)
-
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>      

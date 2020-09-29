@@ -1,3 +1,5 @@
+import ENV from 'ENV';
+
 export default {
-    apiUrl: 'http://localhost:8001'
+    apiUrl: ENV.DOMAIN || 'http://localhost:8001'
 }
