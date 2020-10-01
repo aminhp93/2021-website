@@ -235,10 +235,19 @@ class Summary extends React.Component<IProps, IState> {
             //  modules, 
             rowData, columnDefs, defaultColDef } = this.state;
         return <div className="Summary">
-            <div>Doanh thu</div>
-            {this.renderRevenueTable()}
-            <div>Loi nhuan</div>
-            {this.renderRevenueTable(true)}
+            <div className="flex">
+                <div className="flex-1">
+                    <div>Doanh thu</div>
+                    {this.renderRevenueTable()}
+                </div>
+                <div className="flex-1">
+                    <div>Loi nhuan</div>
+                    {this.renderRevenueTable(true)}
+                </div>
+            
+           
+            </div>
+            
             <div>Compare same ICBCode</div>
             <div style={{ width: '100%', height: '100%' }}>
                 <div

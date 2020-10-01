@@ -328,7 +328,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
                         <div className="chartTV-container">
                             <ChartTV symbol={symbol} />
-                            {/* {show && <Summary data={this.state} />} */}
+                            {show && <Summary data={this.state} />}
                         </div>
                     </Modal>
                     : null}
