@@ -232,17 +232,17 @@ class Summary extends React.Component<IProps, IState> {
         const { rowData, columnDefs, defaultColDef } = this.state;
         return <div className="Summary">
             <div className="flex">
-                <div className="flex-1">
-                    <div>Doanh thu</div>
+                <div className="flex-1 Summary-revenue">
+                    <div className="medium">Doanh thu</div>
                     {this.renderRevenueTable()}
                 </div>
                 <div className="flex-1">
-                    <div>Loi nhuan</div>
+                    <div className="medium">Loi nhuan</div>
                     {this.renderRevenueTable(true)}
                 </div>
             </div>
             
-            <div>Compare same ICBCode</div>
+            <div className="medium">Compare same ICBCode</div>
             <div style={{ width: '100%', height: '100%' }}>
                 <div
                     id="myGrid"

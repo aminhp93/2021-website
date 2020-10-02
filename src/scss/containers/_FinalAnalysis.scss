@@ -1,15 +1,15 @@
-.Sticky {
+.FinalAnalysis {
     height: 100%;
     position: relative;
 
     textarea.ant-input {
         height: 100%;
-        background-color: transparent;
     }
 }
 
-.Sticky-allow-edit {
+.FinalAnalysis-preview {
     position: absolute;
     right: 0;
     z-index: 1;
+    top: 0;
 }

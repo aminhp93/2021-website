@@ -34,5 +34,6 @@ export const LastUpdatedDateUrls = {
 
 export const NoteUrls = {
     getListNotes: `${baseUrl}/api/Note/`,
-    updateNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`
+    updateNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`,
+    getNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`
 }

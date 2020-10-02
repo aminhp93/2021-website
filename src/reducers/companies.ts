@@ -25,7 +25,6 @@ export const fetchCompany = (data: any): ThunkActionType => async (
     getStoreValue
 ) => {
     const response = await CompanyService.fetchCompany()
-    console.log(response)
     const data = keyBy(response.data, 'Stock')
     dispatch(fetchCompanySuccess(data))
 }

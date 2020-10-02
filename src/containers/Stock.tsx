@@ -232,7 +232,6 @@ class Stock extends React.Component<IProps, IState> {
                                     <Analysis />
                                 </TabPane>
                                 <TabPane tab="News" key="3">
-                                    {/* <MarketNews /> */}
                                 </TabPane>
                             </Tabs>
                         </div>

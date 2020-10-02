@@ -57,7 +57,6 @@ interface IState {
     TodayCapital: number,
     MinPrice: number,
     ChangePrice: number,
-    show: boolean,
     checkBlackList: boolean,
     checkStrong: boolean,
 }
@@ -76,7 +75,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             TodayCapital: 5,
             MinPrice: 5000,
             Symbol: '',
-            // modules: AllModules,
             columnDefs: analysisDailyColumnDefs(this),
             defaultColDef: {
                 flex: 1,
@@ -94,7 +92,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             visibleInfo: false,
             addVN30Stock: [],
             data: [],
-            show: true,
             checkBlackList: true,
             checkStrong: true
         }
@@ -170,7 +167,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             data.TodayCapital = 0;
             data.ChangePrice = -100;
         } else if (['TodayCapital', 'MinPrice', 'ICBCode'].includes(index)) {
-            // if (e.target.value.match(/\D/)) return
             data[index] = Number(e.target.value);
         } else {
             data[index] = e.target.value
@@ -228,14 +224,12 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
     render() {
         const { startDate, endDate, rowData,
-            // modules,
             columnDefs, defaultColDef,
             visibleChart, visibleInfo, type,
             importantIndexType, TodayCapital, MinPrice,
-            ChangePrice, show, Symbol: symbol,
+            ChangePrice, Symbol: symbol,
             checkStrong, checkBlackList
         } = this.state;
-        console.log(this.state);
         return (
             <div className="AnalysisDaily">
                 <div>
@@ -311,7 +305,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                 {visibleChart ?
                     <Modal
                         wrapClassName="customed-modal-wrap"
-                        title={<div onClick={() => this.setState({ show: !show })}>Show</div>}
+                        title={symbol}
                         visible={visibleChart}
                         onOk={this.handleOk}
                         onCancel={this.handleCancel}
@@ -320,13 +314,13 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
                         <div className="chartTV-container">
                             <ChartTV symbol={symbol} />
-                            {show && <Summary data={this.state} />}
+                            {<Summary data={this.state} />}
                         </div>
                     </Modal>
                     : null}
                 {visibleInfo
                     ? <Modal
-                        title="Basic Modal"
+                        title={symbol}
                         wrapClassName="customed-modal-wrap"
                         visible={visibleInfo}
                         onOk={this.handleOk}

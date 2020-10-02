@@ -568,7 +568,6 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
 }
 
 export const analysisDailyColumnDefs = (that, importantIndexType = null, allowICBCode = false) => {
-    console.log(that);
     const Stock = {
         headerName: 'Stock',
         align: 'left',
@@ -596,7 +595,12 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
                             })
                             that.props.updateSelectedSymbolSuccess(params.data.Symbol)
                         }}><BarChartOutlined style={{ fontSize: '16px' }} /></div>
-                        <div onClick={() => { that.setState({ visibleInfo: true, Symbol: params.data.Symbol }) }}><InfoCircleOutlined style={{ fontSize: '16px' }} /></div>
+                        <div onClick={() => { 
+                            that.setState({ 
+                                visibleInfo: true, 
+                                Symbol: params.data.Symbol 
+                            }) 
+                        }}><InfoCircleOutlined style={{ fontSize: '16px' }} /></div>
                     </div>
                 </>,
                 div

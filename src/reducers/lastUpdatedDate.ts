@@ -29,7 +29,6 @@ export const getLastUpdatedDate = (): ThunkActionType => async (
 export const updateLastUpdatedDate = (data: any): ThunkActionType => async (
     dispatch: DispatchType
 ) => {
-    console.log(33, data)
     const response = await LastUpdatedDateService.updateLastUpdatedDate(data);
     dispatch(updateLastUpdatedDateSuccess(response.data));
 };

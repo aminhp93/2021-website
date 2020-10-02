@@ -58,7 +58,6 @@ export function mapDataTwoDate(data1, data2, allStocks) {
     data2.forEach(item => {
         data2Obj[item.Stock] = item
     })
-    // console.log(allStocks, data1, data2, data1Obj, data2Obj)
     for (let i = 0; i < data1.length; i++) {
         data1[i].TodayCapital = Number((data1[i].PriceClose * data1[i].DealVolume / 1000000000).toFixed(0))
         data1[i].MarketCap = Number((data1[i].MarketCap / 1000000000).toFixed(0))
@@ -454,7 +453,6 @@ export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataTyp
         Name: "PB",
         Values: PBValues
     })
-    console.log(result)
     return result
 }
 
@@ -616,7 +614,6 @@ export const mapDataLatestFinancialReport = (data, period = null, type = null) =
             let yearArray = [2015, 2016, 2017, 2018, 2019]
 
             yearArray.forEach((year, index) => {
-                console.log(cloneData[i])
                 if ([3, 6, 12].includes(cloneData[i].ID)) {
                     cloneData[i].Values.push(
                         {
@@ -698,7 +695,6 @@ export const mapDataLatestFinancialReport = (data, period = null, type = null) =
     if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
         cloneData.sort((a, b) => a.sortedIndex - b.sortedIndex)
     }
-    console.log(cloneData)
     return cloneData
 }
 

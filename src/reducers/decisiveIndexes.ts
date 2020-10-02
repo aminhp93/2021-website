@@ -25,7 +25,6 @@ export const fetchDecisiveIndexes = (data: any): ThunkActionType => async (
     getStoreValue
 ) => {
     const response = await StockService.fetchDecisiveIndexes()
-    console.log(response)
     const data = keyBy(response.data, 'Stock')
     dispatch(fetchDecisiveIndexesSuccess(data))
 }

@@ -32,3 +32,9 @@ export const getListNotes = (): ThunkActionType => async (
     return res
 };
 
+export const getNote = (noteId): ThunkActionType => async (
+    dispatch
+) => {
+    const res = await NoteService.getNote(noteId);
+    return res
+};

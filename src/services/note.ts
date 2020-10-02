@@ -15,6 +15,12 @@ const NoteService = {
             url: NoteUrls.updateNote(noteId),
         });
     },
+    getNote(noteId) {
+        return request({
+            method: 'GET',
+            url: NoteUrls.getNote(noteId),
+        });
+    },
  
 
 };
