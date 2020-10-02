@@ -2,6 +2,46 @@
     display: flex;
 }
 
+.flex-1 {
+    flex: 1;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.bg-light-yellow {
+    background-color: $light-yellow;
+}
+
+.bg-light-pink {
+    background-color: $light-pink;
+}
+
+.bg-light-blue {
+    background-color: $light-blue;
+}
+
+.bg-gray {
+    background-color: $gray;
+}
+
+.small {
+    font-size: $small;
+}
+
+.medium {
+    font-size: $medium;
+}
+
+.large {
+    font-size: $large;
+}
+
 .ant-modal-wrap.customed-modal-wrap {
     /* margin: 20px; */
     display: block;

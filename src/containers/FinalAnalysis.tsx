@@ -2,9 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { get, debounce } from 'lodash';
 import { Input } from 'antd';
+import ReactHtmlParser from 'react-html-parser';
+import {
+    EditOutlined,
+    EyeOutlined
+} from '@ant-design/icons';
 
 import { updateStock } from 'reducers/stocks';
-import ReactHtmlParser from 'react-html-parser';
 
 const MarkdownIt = require('markdown-it');
 const { TextArea } = Input;
@@ -12,9 +16,7 @@ const { TextArea } = Input;
 interface IProps {
     symbol: any,
     stocks: any,
-
     updateStock: any,
-
 }
 
 interface IState {
@@ -27,7 +29,6 @@ class FinalAnalysis extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         const { symbol, stocks } = this.props;
-        console.log(symbol, stocks);
         const symbolObj: any = Object.values(stocks).filter((i: any) => i.Symbol === symbol)[0] || {}
         this.state = {
             allowEdit: false,
@@ -46,23 +47,17 @@ class FinalAnalysis extends React.Component<IProps, IState> {
         this.sendRequest(data);
     }
 
-    sendRequest = (data) => {
+    sendRequest = async (data) => {
         const { updateStock } = this.props;
-        updateStock(data)
-            .then(res => {
-                this.setState({
-                    symbolObj: res.data
-                })
-            })
-            .catch(error => {
-
-            })
+        const res = await updateStock(data)
+        this.setState({
+            symbolObj: res.data
+        })
     }
 
     parseMarkdown = (data) => {
         const md = new MarkdownIt();
-
-        return ReactHtmlParser(md.render(data))
+        return ReactHtmlParser(md.render(String(data)))
     }
 
     render() {
@@ -76,7 +71,7 @@ class FinalAnalysis extends React.Component<IProps, IState> {
                         : <div className="FinalAnalysis-note">{this.parseMarkdown(note)}</div>
                 }
 
-                <div onClick={() => this.setState({ allowEdit: !allowEdit })}>{allowEdit ? 'Disable edit' : 'Edit'}</div>
+                <div className="FinalAnalysis-preview" onClick={() => this.setState({ allowEdit: !allowEdit })}>{allowEdit ? <EditOutlined className="medium"/> : <EyeOutlined className="medium"/> }</div>
             </div>
         )
     }

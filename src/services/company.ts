@@ -1,6 +1,5 @@
-import request from '../utils/request';
-import { CompanyUrls } from '../config/api';
-// import QueryString from 'utils/queryString';
+import request from 'utils/request';
+import { CompanyUrls } from 'utils/api';
 
 const CompanyService = {
     fetchCompany() {

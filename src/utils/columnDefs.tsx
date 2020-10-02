@@ -12,7 +12,7 @@ import {
     formatNumber,
     mapColorFinancialReportChange,
     LATEST_FINANCIAL_REPORTS
-} from './all';
+} from './common';
 
 
 export function getYearlyFinancialInfoColumnDefs() {
@@ -166,7 +166,7 @@ export function getQuarterlyFinancialInfoColumnDefs() {
         // 'LiquidAssets_MRQ',
         'IntangibleAssets_MRQ',
     ]
-    let result = [
+    let result: any = [
         {
             headerName: 'Stock',
             field: 'Stock',
@@ -202,7 +202,7 @@ export const HistoricalQuotesPastPriceColumns = [
         title: 'THAY ĐỔI',
         align: 'right',
         render: params => {
-            const content = ((params.PriceClose - params.PriceBasic) / 1000).toFixed(2)
+            const content = Number(((params.PriceClose - params.PriceBasic) / 1000).toFixed(2))
             let className = '';
             if (content > 0) {
                 className = 'green';
@@ -216,7 +216,7 @@ export const HistoricalQuotesPastPriceColumns = [
         title: '%',
         align: 'right',
         render: params => {
-            const content = ((params.PriceClose - params.PriceOpen) * 100 / (params.PriceOpen)).toFixed(2)
+            const content = Number(((params.PriceClose - params.PriceOpen) * 100 / (params.PriceOpen)).toFixed(2))
             let className = '';
             if (content > 0) {
                 className = 'green';
@@ -388,7 +388,7 @@ export const HistoricalQuotesSupplyDemandColumns = [
 
 export const getLastestFinancialReportsColumnDefs = (period, type, analysisType = null) => {
     let yearArray = [2015, 2016, 2017, 2018, 2019]
-    let quarterArray = [
+    let quarterArray: any = [
         {
             Year: 2018,
             Quarter: 4
@@ -472,7 +472,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
                         if (params.data && params.data.Values && params.data.Values.length) {
                             const data = params.data.Values.filter(item => item.Year === yearItem)
                             const div = document.createElement("div");
-                            if (data.length && (data[0].Value * 100).toFixed(1) > 10) {
+                            if (data.length && Number((data[0].Value * 100).toFixed(1)) > 10) {
                                 div.className = 'red'
                             }
                             div.innerText = data.length && (data[0].Value * 100).toFixed(1)
@@ -490,7 +490,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
                         if (params.data && params.data.Values && params.data.Values.length) {
                             const data = params.data.Values.filter(item => item.Year === yearItem)
                             const div = document.createElement("div");
-                            if (data.length && (data[0].Value * 100).toFixed(1) > 0) {
+                            if (data.length && Number((data[0].Value * 100).toFixed(1)) > 0) {
                                 div.className = 'green'
                             } else {
                                 div.className = 'red'
@@ -516,7 +516,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
                             const data = params.data.Values.filter(item => item.Year === yearItem)
                             if (!data.length) return ''
                             const div = document.createElement("div");
-                            if (data.length && (data[0].Value * 100).toFixed(1) > 10) {
+                            if (data.length && Number((data[0].Value * 100).toFixed(1)) > 10) {
                                 div.className = 'red'
                             }
                             div.innerText = data.length && (data[0].Value * 100).toFixed(1)
@@ -534,7 +534,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
                         if (params.data && params.data.Values && params.data.Values.length) {
                             const data = params.data.Values.filter(item => item.Year === yearItem)
                             const div = document.createElement("div");
-                            if (data.length && (data[0].Value * 100).toFixed(1) > 0) {
+                            if (data.length && Number((data[0].Value * 100).toFixed(1)) > 0) {
                                 div.className = 'green'
                             } else {
                                 div.className = 'red'
@@ -568,7 +568,6 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
 }
 
 export const analysisDailyColumnDefs = (that, importantIndexType = null, allowICBCode = false) => {
-    console.log(that);
     const Stock = {
         headerName: 'Stock',
         align: 'left',
@@ -596,7 +595,12 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
                             })
                             that.props.updateSelectedSymbolSuccess(params.data.Symbol)
                         }}><BarChartOutlined style={{ fontSize: '16px' }} /></div>
-                        <div onClick={() => { that.setState({ visibleInfo: true, Symbol: params.data.Symbol }) }}><InfoCircleOutlined style={{ fontSize: '16px' }} /></div>
+                        <div onClick={() => { 
+                            that.setState({ 
+                                visibleInfo: true, 
+                                Symbol: params.data.Symbol 
+                            }) 
+                        }}><InfoCircleOutlined style={{ fontSize: '16px' }} /></div>
                     </div>
                 </>,
                 div
@@ -1058,7 +1062,7 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     }
 
     const { selectedSymbol, stocks, companies } = that.props;
-    const stock = Object.values(stocks).filter(i => i.Symbol === selectedSymbol)[0]
+    const stock: any = Object.values(stocks).filter((i: any) => i.Symbol === selectedSymbol)[0]
     const ICBCodeIndex = Number((companies[(stock || {}).id] || {}).ICBCode)
     if (allowICBCode) {
         switch (ICBCodeIndex) {

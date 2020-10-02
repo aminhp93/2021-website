@@ -15,7 +15,6 @@ class GoldenLayoutWrapper extends React.Component {
     layout: any;
 
     render() {
-        // return <div className='goldenLayout' ref={input => this.layout = input}/>
         return null
     }
 
@@ -34,12 +33,14 @@ class GoldenLayoutWrapper extends React.Component {
                                 {
                                     type: 'react-component',
                                     component: 'Sticky',
-                                    title: 'Note 1'
+                                    title: 'Note 1',
+                                    props: { nodeId: 2, bgColor: 'bg-light-pink' }
                                 },
                                 {
                                     type: 'react-component',
                                     component: 'Sticky',
-                                    title: 'Note 2'
+                                    title: 'Note 2',
+                                    props: { nodeId: 9, bgColor: 'bg-light-blue' }
                                 },
                             ]
                         },
@@ -50,7 +51,8 @@ class GoldenLayoutWrapper extends React.Component {
                                 {
                                     type: 'react-component',
                                     component: 'Sticky',
-                                    title: 'Note 3'
+                                    title: 'Note 3',
+                                    props: { nodeId: 10, bgColor: 'bg-light-yellow' }
                                 },
                             ]
                         },
@@ -61,7 +63,8 @@ class GoldenLayoutWrapper extends React.Component {
                                 {
                                     type: 'react-component',
                                     component: 'Sticky',
-                                    title: 'Note 4'
+                                    title: 'Note 4',
+                                    props: { nodeId: 11, bgColor: 'bg-gray' }
                                 },
                             ]
                         }

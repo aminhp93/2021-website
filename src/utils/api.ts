@@ -1,6 +1,6 @@
-import config from './index';
+import config from 'config';
 
-const baseUrl = config.apiUrl;
+const baseUrl = config.domain;
 
 export const StockUrls = {
     getListStocks: `${baseUrl}/api/Data/Markets/TradingStatistic/`,
@@ -30,4 +30,10 @@ export const CompanyUrls = {
 export const LastUpdatedDateUrls = {
     getLastUpdatedDate: (id) => `${baseUrl}/api/config/${id ? `?key=${id}` : ''}`,
     updateLastUpdatedDate: (id) => `${baseUrl}/api/config/${id}/`,
+}
+
+export const NoteUrls = {
+    getListNotes: `${baseUrl}/api/Note/`,
+    updateNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`,
+    getNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`
 }

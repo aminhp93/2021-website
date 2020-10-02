@@ -1,51 +1,54 @@
 import React from 'react';
-import axios from 'axios';
-import { List, Input, Button } from 'antd';
-
-import moment from 'moment';
-
-import {
-    getListNotesUrl,
-} from 'utils/request';
-import {
-    arrayToKeyValue
-} from 'utils/all';
-
+import { Input } from 'antd';
+import { debounce } from 'lodash';
 import ReactHtmlParser from 'react-html-parser';
+import { connect } from 'react-redux';
+import {
+    EditOutlined,
+    EyeOutlined
+} from '@ant-design/icons';
+
+import { getListNotes, updateNote, getNote } from 'reducers/notes';
 
 const MarkdownIt = require('markdown-it');
-
 const { TextArea } = Input;
 
+interface IProps {
+    getListNotes: any,
+    updateNote: any,
+    getNote: any,
+    nodeId: number,
+    bgColor: string,
+}
 
-class Sticky extends React.Component {
+interface IState {
+    allowEdit: boolean,
+    noteObj: any,
+}
+
+class Sticky extends React.Component<IProps, IState> {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            listNotesObj: [],
+            noteObj: {},
+            allowEdit: false
         }
+        this.sendRequest = debounce(this.sendRequest, 300)
+
     }
 
-    componentDidMount() {
-        axios({
-            method: 'get',
-            url: getListNotesUrl()
+    async componentDidMount() {        
+        const res = await this.props.getNote(this.props.nodeId);
+        this.setState({ 
+            noteObj: res.data
         })
-            .then(response => {
-                this.setState({
-                    listNotesObj: arrayToKeyValue(response.data)
-                })
-            })
-            .catch(error => {
-
-            })
+     
     }
 
     renderDescription = (item) => {
         const { allowEdit } = this.state;
         if (allowEdit) {
-            return null
-            // return <TextArea onChange={e => this.handleChangeInput(e, item.id)} defaultValue={item.content} />
+            return <TextArea onChange={e => this.handleChangeInput(e, item.id)} defaultValue={item.content}/>
         } else {
             return <div>{this.parseMarkdown(item.content)}</div>
         }
@@ -53,35 +56,42 @@ class Sticky extends React.Component {
 
     parseMarkdown = (data) => {
         const md = new MarkdownIt();
+        return ReactHtmlParser(md.render(String(data)))
+    }
 
-        return ReactHtmlParser(md.render(data))
+    handleChangeInput = (e, noteId) => {
+        this.setState({ 
+
+        })
+        this.sendRequest(e.target.value, noteId)
+    }
+
+    sendRequest = async (content, noteId) => {
+        const res = await this.props.updateNote(noteId, content);
+        this.setState({
+            noteObj: res.data
+        })
     }
 
     render() {
-        const { listNotesObj } = this.state;
-        const listNotesArray = Object.values(listNotesObj)
+        const { noteObj, allowEdit } = this.state;
+        const { bgColor } = this.props;
 
-        return <div className="Sticky">
-            <List
-                itemLayout="horizontal"
-                dataSource={listNotesArray}
-                renderItem={item => (
-                    <List.Item>
-                        <List.Item.Meta
-                            description={
-                                <div className="flex">
-                                    <div className="Note-created-time">{moment(item.created).format('YYYY-MM-DD')}</div>
-                                    {this.renderDescription(item)}
-                                </div>
-                            }
-                        />
-                    </List.Item>
-                )}
-            />
+        return <div className={`Sticky ${bgColor}`}>
+            <div className="Sticky-allow-edit" onClick={() => this.setState({ allowEdit: !allowEdit })}>{!allowEdit ? <EditOutlined className="medium"/> : <EyeOutlined className="medium"/> }</div>
+            {this.renderDescription(noteObj)}
         </div>
     }
-
-   
 }
 
-export default Sticky
+const mapStateToProps = state => {
+    return {}
+}
+
+const mapDispatchToProps = {
+    getListNotes,
+    updateNote,
+    getNote
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sticky);

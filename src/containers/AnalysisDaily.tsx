@@ -3,31 +3,26 @@ import { connect } from 'react-redux';
 import { DatePicker, Button, Modal, Input, Radio, Switch } from 'antd';
 import { debounce, get, each } from 'lodash';
 import moment from 'moment'
+import { AgGridReact } from 'ag-grid-react';
 
 import {
     filterStocks,
     updateStock,
     scanStock
 } from 'reducers/stocks';
+import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
+import { IStock } from 'types';
+import { getPreviousDate } from 'utils/common';
+import { BILLION_UNIT } from 'utils/unit';
+import { STOCK_GROUP } from 'utils/constant';
+import { analysisDailyColumnDefs } from 'utils/columnDefs';
+
 import ChartTV from './ChartTV/ChartTV';
 import FinalAnalysis from './FinalAnalysis';
 import Summary from './Summary';
-import { IStock } from 'types'
-import { analysisDailyColumnDefs } from '../utils/columnDefs';
-import { updateSelectedSymbolSuccess } from '../reducers/selectedSymbol';
-
-import { AgGridReact } from 'ag-grid-react';
-// import { AllModules } from '@ag-grid-enterprise/all-modules';
-// import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
-// import '@ag-grid-community/all-modules/dist/styles/ag-theme-alpine.css';
 
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
-
-import { getPreviousDate } from 'utils/all'
-import { BILLION_UNIT } from 'utils/unit';
-import { STOCK_GROUP } from 'utils/constant';
 
 const { RangePicker } = DatePicker;
 
@@ -45,7 +40,6 @@ interface IProps {
 }
 
 interface IState {
-    // modules: any,
     columnDefs: any,
     defaultColDef: any,
     rowData: any,
@@ -63,7 +57,6 @@ interface IState {
     TodayCapital: number,
     MinPrice: number,
     ChangePrice: number,
-    show: boolean,
     checkBlackList: boolean,
     checkStrong: boolean,
 }
@@ -82,7 +75,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             TodayCapital: 5,
             MinPrice: 5000,
             Symbol: '',
-            // modules: AllModules,
             columnDefs: analysisDailyColumnDefs(this),
             defaultColDef: {
                 flex: 1,
@@ -100,7 +92,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             visibleInfo: false,
             addVN30Stock: [],
             data: [],
-            show: true,
             checkBlackList: true,
             checkStrong: true
         }
@@ -176,7 +167,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             data.TodayCapital = 0;
             data.ChangePrice = -100;
         } else if (['TodayCapital', 'MinPrice', 'ICBCode'].includes(index)) {
-            // if (e.target.value.match(/\D/)) return
             data[index] = Number(e.target.value);
         } else {
             data[index] = e.target.value
@@ -234,14 +224,12 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
     render() {
         const { startDate, endDate, rowData,
-            // modules,
             columnDefs, defaultColDef,
             visibleChart, visibleInfo, type,
             importantIndexType, TodayCapital, MinPrice,
-            ChangePrice, show, Symbol: symbol,
+            ChangePrice, Symbol: symbol,
             checkStrong, checkBlackList
         } = this.state;
-        console.log(this.state);
         return (
             <div className="AnalysisDaily">
                 <div>
@@ -305,12 +293,10 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         className="ag-theme-alpine"
                     >
                         <AgGridReact
-                            // modules={modules}
                             columnDefs={columnDefs}
                             defaultColDef={defaultColDef}
                             onGridReady={this.onGridReady}
                             rowData={rowData}
-                            // sideBar={true}
                             onFirstDataRendered={params => params.api.sizeColumnsToFit()}
                         />
                     </div>
@@ -319,7 +305,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                 {visibleChart ?
                     <Modal
                         wrapClassName="customed-modal-wrap"
-                        title={<div onClick={() => this.setState({ show: !show })}>Show</div>}
+                        title={symbol}
                         visible={visibleChart}
                         onOk={this.handleOk}
                         onCancel={this.handleCancel}
@@ -328,13 +314,13 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
                         <div className="chartTV-container">
                             <ChartTV symbol={symbol} />
-                            {/* {show && <Summary data={this.state} />} */}
+                            {<Summary data={this.state} />}
                         </div>
                     </Modal>
                     : null}
                 {visibleInfo
                     ? <Modal
-                        title="Basic Modal"
+                        title={symbol}
                         wrapClassName="customed-modal-wrap"
                         visible={visibleInfo}
                         onOk={this.handleOk}

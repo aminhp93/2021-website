@@ -33,7 +33,6 @@ export const fetchNews = (data): ThunkActionType => async (
     dispatch
 ) => {
     const { type, group, startIndex, count } = data;
-    console.log(data)
     const response = await StockService.fetchNews(type, group, startIndex, count);
     return response
 }
@@ -112,7 +111,6 @@ export const scanStock = (data: any): ThunkActionType => async (
     getStoreValue
 ) => {
     const dataRequest = {}
-    console.log(data);
     const ALLOW_CONDITION_SEARCH = [
         'Symbol', 'TodayCapital',
         'startDate', 'endDate',
