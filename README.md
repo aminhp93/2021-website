@@ -4,7 +4,7 @@
 ## Live on
 
 * [Webapp] http://54.169.93.240/
-* [Server] http://18.138.230.66/
+* [Server] http://54.254.155.118/
 
 ## Setting up
 1. `npm install`
