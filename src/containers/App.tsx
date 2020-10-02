@@ -11,11 +11,6 @@ import Stock from 'containers/Stock';
 import GoldenLayoutWrapper from 'containers/GoldenLayoutWrapper';
 
 class App extends React.Component {
-    componentDidUpdate() {
-      
-
-      console.log(this.props, 123)
-    }
 
     render() {
         return <Router>

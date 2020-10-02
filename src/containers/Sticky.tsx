@@ -1,51 +1,51 @@
 import React from 'react';
-import axios from 'axios';
 import { List, Input, Button } from 'antd';
-
 import moment from 'moment';
-
-import {
-    getListNotesUrl,
-} from 'utils/request';
-import {
-    arrayToKeyValue
-} from 'utils/all';
-
+import { debounce } from 'lodash';
 import ReactHtmlParser from 'react-html-parser';
+import { connect } from 'react-redux';
+
+import { arrayToKeyValue } from 'utils/common';
+import { getListNotes, updateNote } from 'reducers/notes';
+
 
 const MarkdownIt = require('markdown-it');
 
 const { TextArea } = Input;
 
+interface IProps {
+    getListNotes: any,
+    updateNote: any,
+}
 
-class Sticky extends React.Component {
+interface IState {
+    allowEdit: boolean,
+    listNotesObj: any,
+}
+
+class Sticky extends React.Component<IProps, IState> {
     constructor(props) {
         super(props)
         this.state = {
             listNotesObj: [],
+            allowEdit: false
         }
+        this.sendRequest = debounce(this.sendRequest, 300)
+
     }
 
-    componentDidMount() {
-        axios({
-            method: 'get',
-            url: getListNotesUrl()
+    async componentDidMount() {
+        const res = await this.props.getListNotes();
+        this.setState({ 
+            listNotesObj: arrayToKeyValue(res.data) 
         })
-            .then(response => {
-                this.setState({
-                    listNotesObj: arrayToKeyValue(response.data)
-                })
-            })
-            .catch(error => {
-
-            })
+     
     }
 
     renderDescription = (item) => {
         const { allowEdit } = this.state;
         if (allowEdit) {
-            return null
-            // return <TextArea onChange={e => this.handleChangeInput(e, item.id)} defaultValue={item.content} />
+            return <TextArea onChange={e => this.handleChangeInput(e, item.id)} defaultValue={item.content} />
         } else {
             return <div>{this.parseMarkdown(item.content)}</div>
         }
@@ -57,15 +57,29 @@ class Sticky extends React.Component {
         return ReactHtmlParser(md.render(data))
     }
 
-    render() {
+    handleChangeInput = (e, noteId) => {
+        this.sendRequest(e.target.value, noteId)
+    }
+
+    sendRequest = async (content, noteId) => {
         const { listNotesObj } = this.state;
+        const res = await this.props.updateNote(noteId, content);
+        listNotesObj[noteId] = res.data
+        this.setState({
+            listNotesObj
+        })
+    }
+
+    render() {
+        const { listNotesObj, allowEdit } = this.state;
         const listNotesArray = Object.values(listNotesObj)
 
         return <div className="Sticky">
+            <Button onClick={() => this.setState({ allowEdit: !allowEdit })}>Edit</Button>
             <List
                 itemLayout="horizontal"
                 dataSource={listNotesArray}
-                renderItem={item => (
+                renderItem={(item: any) => (
                     <List.Item>
                         <List.Item.Meta
                             description={
@@ -80,8 +94,15 @@ class Sticky extends React.Component {
             />
         </div>
     }
-
-   
 }
 
-export default Sticky
+const mapStateToProps = state => {
+    return {}
+}
+
+const mapDispatchToProps = {
+    getListNotes,
+    updateNote
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sticky);

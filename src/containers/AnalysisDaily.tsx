@@ -3,31 +3,26 @@ import { connect } from 'react-redux';
 import { DatePicker, Button, Modal, Input, Radio, Switch } from 'antd';
 import { debounce, get, each } from 'lodash';
 import moment from 'moment'
+import { AgGridReact } from 'ag-grid-react';
 
 import {
     filterStocks,
     updateStock,
     scanStock
 } from 'reducers/stocks';
+import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
+import { IStock } from 'types';
+import { getPreviousDate } from 'utils/common';
+import { BILLION_UNIT } from 'utils/unit';
+import { STOCK_GROUP } from 'utils/constant';
+import { analysisDailyColumnDefs } from 'utils/columnDefs';
+
 import ChartTV from './ChartTV/ChartTV';
 import FinalAnalysis from './FinalAnalysis';
 import Summary from './Summary';
-import { IStock } from 'types'
-import { analysisDailyColumnDefs } from '../utils/columnDefs';
-import { updateSelectedSymbolSuccess } from '../reducers/selectedSymbol';
-
-import { AgGridReact } from 'ag-grid-react';
-// import { AllModules } from '@ag-grid-enterprise/all-modules';
-// import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
-// import '@ag-grid-community/all-modules/dist/styles/ag-theme-alpine.css';
 
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-
-
-import { getPreviousDate } from 'utils/all'
-import { BILLION_UNIT } from 'utils/unit';
-import { STOCK_GROUP } from 'utils/constant';
 
 const { RangePicker } = DatePicker;
 
@@ -45,7 +40,6 @@ interface IProps {
 }
 
 interface IState {
-    // modules: any,
     columnDefs: any,
     defaultColDef: any,
     rowData: any,
@@ -305,12 +299,10 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         className="ag-theme-alpine"
                     >
                         <AgGridReact
-                            // modules={modules}
                             columnDefs={columnDefs}
                             defaultColDef={defaultColDef}
                             onGridReady={this.onGridReady}
                             rowData={rowData}
-                            // sideBar={true}
                             onFirstDataRendered={params => params.api.sizeColumnsToFit()}
                         />
                     </div>

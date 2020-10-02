@@ -1,7 +1,8 @@
-import request from '../utils/request';
-import { LastUpdatedDateUrls } from '../config/api';
-import moment from 'moment'
-// import QueryString from 'utils/queryString';
+import moment from 'moment';
+
+import request from 'utils/request';
+import { LastUpdatedDateUrls } from 'utils/api';
+
 
 const LastUpdatedDateService = {
     getLastUpdatedDate() {

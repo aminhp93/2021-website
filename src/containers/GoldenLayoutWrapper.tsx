@@ -15,7 +15,6 @@ class GoldenLayoutWrapper extends React.Component {
     layout: any;
 
     render() {
-        // return <div className='goldenLayout' ref={input => this.layout = input}/>
         return null
     }
 

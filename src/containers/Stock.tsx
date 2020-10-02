@@ -244,7 +244,6 @@ class Stock extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         selectedSymbol: get(state, 'selectedSymbol'),
         stocks: get(state, 'stocks'),

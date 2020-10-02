@@ -1,6 +1,5 @@
-import request from '../utils/request';
-import { StockUrls } from '../config/api';
-// import QueryString from 'utils/queryString';
+import request from 'utils/request';
+import { StockUrls } from 'utils/api';
 
 const StockService = {
     getListStocks() {

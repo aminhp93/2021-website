@@ -1,6 +1,6 @@
 /* eslint-disable no-loop-func */
 import axios from "axios";
-import { getDataHistoryUrl } from "../../utils/request";
+import { getDataHistoryUrl } from "utils/request";
 /*
 	This class implements interaction with UDF-compatible datafeed.
 

@@ -2,17 +2,16 @@ import React from 'react';
 import { get, uniqBy, each } from 'lodash';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
+import { AgGridReact } from 'ag-grid-react';
 
 import {
     getYearlyFinancialInfo,
     getQuarterlyFinancialInfo,
     getLastestFinancialInfo,
     scanStock
-} from '../reducers/stocks';
-import { BILLION_UNIT } from '../utils/unit';
-import { formatNumber, } from '../utils/all'
-import { AgGridReact } from 'ag-grid-react';
-// import { AllModules } from '@ag-grid-enterprise/all-modules';
+} from 'reducers/stocks';
+import { BILLION_UNIT } from 'utils/unit';
+import { formatNumber } from 'utils/common';
 import { analysisDailyColumnDefs } from 'utils/columnDefs';
 
 
@@ -32,7 +31,6 @@ interface IState {
     QuarterlyFinancialInfoArray: any,
     YearlyFinancialInfoArray: any,
     LastestFinancialInfoObj: any,
-    // modules: any,
     rowData: any,
     columnDefs: any,
     defaultColDef: any,
@@ -231,9 +229,7 @@ class Summary extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {
-            //  modules, 
-            rowData, columnDefs, defaultColDef } = this.state;
+        const { rowData, columnDefs, defaultColDef } = this.state;
         return <div className="Summary">
             <div className="flex">
                 <div className="flex-1">
@@ -244,8 +240,6 @@ class Summary extends React.Component<IProps, IState> {
                     <div>Loi nhuan</div>
                     {this.renderRevenueTable(true)}
                 </div>
-            
-           
             </div>
             
             <div>Compare same ICBCode</div>
@@ -258,7 +252,6 @@ class Summary extends React.Component<IProps, IState> {
                     className="ag-theme-alpine"
                 >
                     <AgGridReact
-                        // modules={modules}
                         columnDefs={columnDefs}
                         defaultColDef={defaultColDef}
                         onGridReady={this.onGridReady}
