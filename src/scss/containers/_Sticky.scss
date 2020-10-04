@@ -1,6 +1,7 @@
 .Sticky {
     height: 100%;
     position: relative;
+    overflow: auto;
 
     textarea.ant-input {
         height: 100%;
