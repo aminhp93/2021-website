@@ -1066,8 +1066,8 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const ICBCodeIndex = Number((companies[(stock || {}).id] || {}).ICBCode)
     if (allowICBCode) {
         switch (ICBCodeIndex) {
-            case 8355:
-                return [Stock, PE, PS, PB, EPS, MarketCap, TotalAssetsTurnover, ReceivablesTurnover, OperatingMargin, EBITMargin, NetProfitMargin, ROE, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, DealVolume, TodayCapital, PriceChange]
+            // case 8355:
+                // return [Stock, PE, PS, PB, EPS, MarketCap, TotalAssetsTurnover, ReceivablesTurnover, OperatingMargin, EBITMargin, NetProfitMargin, ROE, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, DealVolume, TodayCapital, PriceChange]
             // QuickRatio, CurrentRatio, TotalDebtOverEquity, TotalDebtOverAssets, InventoryTurnover, GrossMargin, ROIC, LastPrice, Price, ROA
             default:
                 return [Stock, MarketCap, PriceChange, LastQuarterRev, CurrentQuarterRev, LastQuarterProfit, CurrentQuarterProfit]
