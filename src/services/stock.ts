@@ -65,6 +65,13 @@ const StockService = {
             url: StockUrls.scanStock()
         })
     },
+    getLatest(data) {
+        return request({
+            method: 'POST',
+            data,
+            url: StockUrls.getLatest()
+        })
+    },
     fetchCompanyInfo() {
         return request({
             method: 'GET',
@@ -75,6 +82,12 @@ const StockService = {
         return request({
             method: 'GET',
             url: StockUrls.fetchDecisiveIndexes()
+        })
+    },
+    getListUrlGoValue() {
+        return request({
+            method: 'GET',
+            url: StockUrls.getListUrlGoValue()
         })
     }
 

@@ -130,3 +130,19 @@ export const scanStock = (data: any): ThunkActionType => async (
     const response = await StockService.scanStock(dataRequest)
     return response
 }
+
+export const getLatest = (data: any): ThunkActionType => async (
+    dispatch,
+    getStoreValue
+) => {
+
+    const response = await StockService.getLatest(data)
+    return response
+}
+
+
+
+export const getListUrlGoValue = (): ThunkActionType => async () => {
+    const res = await StockService.getListUrlGoValue()
+    return res
+}

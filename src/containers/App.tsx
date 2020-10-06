@@ -9,6 +9,7 @@ import {
 
 import Stock from 'containers/Stock';
 import GoldenLayoutWrapper from 'containers/GoldenLayoutWrapper';
+import Test from 'containers/Test';
 
 class App extends React.Component {
 
@@ -17,6 +18,7 @@ class App extends React.Component {
         <Switch>
           <Route path="/stock" component={Stock} />
           <Route path="/stickies" component={GoldenLayoutWrapper} />
+          <Route path="/test" component={Test} />
           <Route path="/" component={LinkList} />
         </Switch>
       </Router>
@@ -34,6 +36,9 @@ class LinkList extends React.Component {
     </li>
     <li>
       <Link to="/stickies">Stickies</Link>
+    </li>
+    <li>
+      <Link to="/test">test</Link>
     </li>
   </ul>
   }

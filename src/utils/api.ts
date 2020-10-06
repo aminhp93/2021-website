@@ -19,7 +19,9 @@ export const StockUrls = {
     filterStocks: () => `${baseUrl}/api/Stock/Filter/`,
     updateStock: (id) => `${baseUrl}/api2/Stock/${id}/`,
     scanStock: () => `${baseUrl}/api/Stock/scan/`,
+    getLatest: () => `${baseUrl}/api/Latest/`,
     fetchDecisiveIndexes: () => `${baseUrl}/api/DecisiveIndex/`,
+    getListUrlGoValue: () => `https://govalue-prod-tnwwkvxisq-an.a.run.app/api/v1/user_idea/?limit=0&offset=0`
 };
 
 export const CompanyUrls = {

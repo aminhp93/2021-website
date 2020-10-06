@@ -8,7 +8,8 @@ import { AgGridReact } from 'ag-grid-react';
 import {
     filterStocks,
     updateStock,
-    scanStock
+    scanStock,
+    getLatest
 } from 'reducers/stocks';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { IStock } from 'types';
@@ -36,7 +37,8 @@ interface IProps {
     scanStock: any,
     companies: any,
     decisiveIndexes: any,
-    updateSelectedSymbolSuccess: any
+    updateSelectedSymbolSuccess: any,
+    getLatest: any,
 }
 
 interface IState {
@@ -184,7 +186,8 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             data['TodayCapital'] = Number(TodayCapital) * BILLION_UNIT
             this.gridApi.showLoadingOverlay();
             this.scanning = true
-            const res = await this.props.scanStock(data);
+            // const res = await this.props.scanStock(data);
+            const res = await this.props.getLatest(data);
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
@@ -349,7 +352,8 @@ const mapDispatchToProps = {
     filterStocks,
     updateStock,
     scanStock,
-    updateSelectedSymbolSuccess
+    updateSelectedSymbolSuccess,
+    getLatest
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnalysisDaily);
