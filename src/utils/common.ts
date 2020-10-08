@@ -29,6 +29,14 @@ export function mapColorPriceChange(data) {
     }
 }
 
+export function mapColorVolumeChange(data) {
+    if (!data) return ''
+    if (data >= 1.5) {
+        return 'green'
+    }
+}
+
+
 export function mapColorFinancialReportChange(data) {
     if (!data) return ''
     if (data > 0) {

@@ -11,7 +11,8 @@ import {
     mapColorPriceChange,
     formatNumber,
     mapColorFinancialReportChange,
-    LATEST_FINANCIAL_REPORTS
+    LATEST_FINANCIAL_REPORTS,
+    mapColorVolumeChange
 } from './common';
 
 
@@ -646,7 +647,7 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
 
     const TodayCapital = {
         field: 'TodayCapital',
-        align: 'right',
+        type: 'rightAligned',
         headerName: 'TodayCapital',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
@@ -669,8 +670,8 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     }
     const PriceChange = {
         field: 'PriceChange',
-        headerName: '%',
-        align: 'right',
+        headerName: '%P',
+        type: 'rightAligned',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -994,7 +995,7 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const MarketCap = {
         field: 'MarketCap',
         headerName: 'MarketCap',
-        align: 'right',
+        type: 'rightAligned',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -1061,6 +1062,32 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
         }
     }
 
+    const AverageVolume30 = {
+        field: 'AverageVolume30',
+        headerName: 'AverageVolume30',
+        align: 'right',
+        filter: 'agNumberColumnFilter',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = formatNumber(params.data.AverageVolume30)
+            return div
+        }
+    }
+
+    const VolumeChange = {
+        field: 'VolumeChange',
+        headerName: '%V',
+        type: 'rightAligned',
+        filter: 'agNumberColumnFilter',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.VolumeChange.toFixed(2)
+            div.className = mapColorVolumeChange(params.data.VolumeChange)
+            return div
+        }
+    }
+
+
     const { selectedSymbol, stocks, companies } = that.props;
     const stock: any = Object.values(stocks).filter((i: any) => i.Symbol === selectedSymbol)[0]
     const ICBCodeIndex = Number((companies[(stock || {}).id] || {}).ICBCode)
@@ -1082,7 +1109,7 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
             case 'HieuSuatHoatDong':
                 return [Stock, Actions, ICBCode, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, MarketCap]
             default:
-                return [Stock, Actions, ICBCode, DealVolume, TodayCapital, PriceChange, MarketCap]
+                return [Stock, Actions, ICBCode, TodayCapital, PriceChange, VolumeChange, MarketCap]
             // Price, LastPrice
         }
     }

@@ -104,7 +104,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
     onGridReady = params => {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
-        this.scan();
+        this.scan(true)
     };
 
     mapData = (data) => {
@@ -133,6 +133,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             i.ROA = Number(i.ROA)
             i.ROE = Number(i.ROE)
             i.ROIC = Number(i.ROIC)
+            i.VolumeChange = Number(i.DealVolume/i.AverageVolume30)
             return i
         })
         return data
@@ -176,7 +177,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
         this.setState(data)
     }
 
-    scan = async () => {
+    scan = async (useLatest=false) => {
         if (this.scanning) return;
         try {
             const { type, ChangePrice, TodayCapital } = this.state;
@@ -186,8 +187,12 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             data['TodayCapital'] = Number(TodayCapital) * BILLION_UNIT
             this.gridApi.showLoadingOverlay();
             this.scanning = true
-            // const res = await this.props.scanStock(data);
-            const res = await this.props.getLatest(data);
+            let res
+            if (useLatest) {
+                res = await this.props.getLatest(data);
+            } else {
+                res = await this.props.scanStock(data);
+            }
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
