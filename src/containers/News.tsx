@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
 import { List, Avatar, Pagination, Modal } from 'antd';
+import moment from 'moment';
 import { get } from 'lodash';
 
 import { getCompanyNewsUrl } from 'utils/request';
@@ -76,7 +77,7 @@ class News extends React.Component<IProps, IState> {
                         renderItem={item => (
                             <List.Item>
                                 <List.Item.Meta
-                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                    avatar={<div>{moment(item.Date).format('MM/DD/YYYY')}</div>}
                                     title={<a href={item.NewsUrl} target="_blank" rel="noopener noreferrer">{item.Title}</a>}
                                     description={item.Description}
                                 />
