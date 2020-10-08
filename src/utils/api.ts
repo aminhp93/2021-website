@@ -4,12 +4,17 @@ const baseUrl = config.domain;
 
 export const StockUrls = {
     getListStocks: `${baseUrl}/api/Data/Markets/TradingStatistic/`,
-    fetchNews: (type, group, startIndex, count) => {
-        if (group) {
-            return `${baseUrl}/api/Data/News/${type}?group=${group}&startIndex=${startIndex}&count=${count}`
+    fetchNews: (type, group, startIndex, count, symbol) => {
+        if (symbol) {
+            return `${baseUrl}/api/Data/News/${type}?startIndex=${startIndex}&count=${count}&symbol=${symbol}`
         } else {
-            return `${baseUrl}/api/Data/News/${type}?startIndex=${startIndex}&count=${count}`
+            if (group) {
+                return `${baseUrl}/api/Data/News/${type}?group=${group}&startIndex=${startIndex}&count=${count}`
+            } else {
+                return `${baseUrl}/api/Data/News/${type}?startIndex=${startIndex}&count=${count}`
+            }
         }
+        
     },
     getYearlyFinancialInfo: (symbol) => `${baseUrl}/api/Data/Finance/YearlyFinancialInfo/?symbol=${symbol}&fromYear=2016&toYear=2019`,
     getQuarterlyFinancialInfo: (symbol) => `${baseUrl}/api/Data/Finance/QuarterlyFinancialInfo/?symbol=${symbol}&fromYear=2016&fromQuarter=1&toYear=2020&toQuarter=2`,

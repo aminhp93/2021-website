@@ -32,8 +32,8 @@ export const fetchListStocks = (): ThunkActionType => async (
 export const fetchNews = (data): ThunkActionType => async (
     dispatch
 ) => {
-    const { type, group, startIndex, count } = data;
-    const response = await StockService.fetchNews(type, group, startIndex, count);
+    const { type, group, startIndex, count, symbol } = data;
+    const response = await StockService.fetchNews(type, group, startIndex, count, symbol);
     return response
 }
 

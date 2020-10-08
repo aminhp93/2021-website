@@ -14,7 +14,10 @@ import { fetchDecisiveIndexes } from 'reducers/decisiveIndexes';
 import {
     getHistoricalQuotesUpdateUrl,
 } from 'utils/request';
+
 import Analysis from './Analysis';
+import MarketNews from './MarketNews';
+
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -192,7 +195,7 @@ class Stock extends React.Component<IProps, IState> {
                 <div className="App-container">
                     <div className="App-navigation">
                         <div>
-                            <Tabs defaultActiveKey="2" tabPosition="left">
+                            <Tabs defaultActiveKey="3" tabPosition="left">
                                 <TabPane tab="Stock" key="1">
                                     <div className="App-content">
                                         <div>
@@ -232,6 +235,7 @@ class Stock extends React.Component<IProps, IState> {
                                     <Analysis />
                                 </TabPane>
                                 <TabPane tab="News" key="3">
+                                    <MarketNews/>
                                 </TabPane>
                             </Tabs>
                         </div>
