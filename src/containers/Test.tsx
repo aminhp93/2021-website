@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { getListUrlGoValue } from 'reducers/stocks';
 
@@ -33,7 +34,7 @@ class Test extends React.Component<IProps, IState> {
             <div>
                 {listUrl.map(i => {
                     const slug = 'https://app.govalue.vn/' + i.slug
-                    return <div><a href={slug} target="_blank">{i.idea_id} - {slug}</a></div>
+                    return <div><a href={slug} target="_blank">{i.idea_id} - {moment(i.create_date).format('YYYY-MM-DD')} - {slug}</a></div>
                 })}
             </div>
         )
