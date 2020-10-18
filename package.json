@@ -156,7 +156,8 @@
       "@typescript-eslint/no-empty-function": 1,
       "react/prop-types": 1,
       "react/no-deprecated": 1,
-      "react/no-find-dom-node": 1
+      "react/no-find-dom-node": 1,
+      "@typescript-eslint/explicit-module-boundary-types": "off"
     }
   },
   "eslint-teamcity": {

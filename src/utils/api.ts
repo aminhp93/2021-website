@@ -14,7 +14,7 @@ export const StockUrls = {
                 return `${baseUrl}/api/Data/News/${type}?startIndex=${startIndex}&count=${count}`
             }
         }
-        
+
     },
     getYearlyFinancialInfo: (symbol) => `${baseUrl}/api/Data/Finance/YearlyFinancialInfo/?symbol=${symbol}&fromYear=2016&toYear=2019`,
     getQuarterlyFinancialInfo: (symbol) => `${baseUrl}/api/Data/Finance/QuarterlyFinancialInfo/?symbol=${symbol}&fromYear=2016&fromQuarter=1&toYear=2020&toQuarter=2`,
@@ -43,4 +43,11 @@ export const NoteUrls = {
     getListNotes: `${baseUrl}/api/Note/`,
     updateNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`,
     getNote: (noteId) => `${baseUrl}/api/Note/${noteId}/`
+}
+
+export const AccountUrls = {
+    fetchAccount: 'https://trade-api.vndirect.com.vn/accounts/0001069456',
+    fetchAccountPortfolio: 'https://trade-api.vndirect.com.vn/accounts/v3/0001069456/portfolio',
+    fetchAccountAssets: 'https://trade-api.vndirect.com.vn/accounts/v2/0001069456/assets',
+    fetchAccountStocks: 'https://trade-api.vndirect.com.vn/accounts/v3/0001069456/stocks'
 }

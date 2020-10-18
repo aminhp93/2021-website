@@ -1,0 +1,29 @@
+.Account {
+    justify-content: space-between;
+}
+
+.Account-Account-item,
+.Account-Assets-item,
+.Account-Portfolio-item,
+.Account-Stocks-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Account-Account,
+.Account-Assets,
+.Account-Portfolio {
+    margin-right: 40px
+}
+
+.Account-Portfolio-item-value,
+.Account-Stocks-item-value {
+    width: 100px;
+    justify-content: flex-end;
+    display: flex;
+}
+
+.Account-Portfolio-item-Stock,
+.Account-Stocks-item-Stock {
+    margin-bottom: 20px;
+}

@@ -3,13 +3,10 @@ import axios from 'axios';
 import { notification } from 'antd';
 import ENV from 'ENV';
 
-const headers = {
+let headers = {
     'Content-Type': 'application/json',
 };
 
-const client = axios.create({
-    headers
-});
 
 const request = (options) => {
     const onSuccess = (res) => res;
@@ -21,6 +18,15 @@ const request = (options) => {
             duration: 5,
         });
     }
+
+    if (options.headers) {
+        headers = options.headers
+    }
+
+    const client = axios.create({
+        headers
+    });
+
 
     return client(options)
         .then(onSuccess)

@@ -6,6 +6,7 @@ import selectedSymbol from './selectedSymbol';
 import lastUpdatedDate from './lastUpdatedDate';
 import decisiveIndexes from './decisiveIndexes';
 import notes from './notes';
+import account from './account';
 
 const rootReducer = combineReducers({
   stocks,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   lastUpdatedDate,
   decisiveIndexes,
   notes,
+  account
 });
 
 export default rootReducer;
