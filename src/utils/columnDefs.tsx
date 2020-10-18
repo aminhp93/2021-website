@@ -591,16 +591,14 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
                     <div className="flex">
                         <div onClick={() => {
                             that.setState({
-                                visibleChart: true,
-                                Symbol: params.data.Symbol
+                                visibleChart: true
                             })
-                            that.props.updateSelectedSymbolSuccess(params.data.Symbol)
+                            that.props.updateSelectedSymbolSuccess(params.data.Stock)
                         }}><BarChartOutlined style={{ fontSize: '16px' }} /></div>
-                        <div onClick={() => { 
-                            that.setState({ 
-                                visibleInfo: true, 
-                                Symbol: params.data.Symbol 
-                            }) 
+                        <div onClick={() => {
+                            that.setState({
+                                visibleInfo: true
+                            })
                         }}><InfoCircleOutlined style={{ fontSize: '16px' }} /></div>
                     </div>
                 </>,
@@ -1087,14 +1085,12 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
         }
     }
 
-
-    const { selectedSymbol, stocks, companies } = that.props;
-    const stock: any = Object.values(stocks).filter((i: any) => i.Symbol === selectedSymbol)[0]
-    const ICBCodeIndex = Number((companies[(stock || {}).id] || {}).ICBCode)
+    const { selectedSymbol, companies } = that.props;
+    const ICBCodeIndex = Number((companies[selectedSymbol] || {}).ICBCode)
     if (allowICBCode) {
         switch (ICBCodeIndex) {
             // case 8355:
-                // return [Stock, PE, PS, PB, EPS, MarketCap, TotalAssetsTurnover, ReceivablesTurnover, OperatingMargin, EBITMargin, NetProfitMargin, ROE, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, DealVolume, TodayCapital, PriceChange]
+            // return [Stock, PE, PS, PB, EPS, MarketCap, TotalAssetsTurnover, ReceivablesTurnover, OperatingMargin, EBITMargin, NetProfitMargin, ROE, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, DealVolume, TodayCapital, PriceChange]
             // QuickRatio, CurrentRatio, TotalDebtOverEquity, TotalDebtOverAssets, InventoryTurnover, GrossMargin, ROIC, LastPrice, Price, ROA
             default:
                 return [Stock, MarketCap, PriceChange, LastQuarterRev, CurrentQuarterRev, LastQuarterProfit, CurrentQuarterProfit]

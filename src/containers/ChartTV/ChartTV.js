@@ -10,6 +10,7 @@ import {
   getAllLayoutsUrl
 } from "utils/request";
 // import FormData from "form-data";
+import { get } from 'lodash';
 
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 
@@ -18,21 +19,14 @@ class ChartTV extends React.Component {
   constructor(props) {
     super(props);
     this.id = uuidv4();
-    this.state = {
-      symbol: props.symbol || "FPT"
-    };
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    if (!nextProps.symbol) return;
-    if (
-      nextProps.symbol &&
-      nextProps.symbol.length &&
-      nextProps.symbol.length < 2
-    )
-      return;
-    this.showChart(nextProps.symbol);
+  componentDidUpdate(preProps) {
+    if (this.props.selectedSymbol !== preProps.selectedSymbol) {
+      const { stocks, selectedSymbol } = this.props;
+      const symbol = (stocks[selectedSymbol] || {}).Symbol
+      this.showChart(symbol);
+    }
   }
 
   showChart(code) {
@@ -52,6 +46,8 @@ class ChartTV extends React.Component {
 
   initChart(dataFeed) {
     /* global TradingView */
+    const { stocks, selectedSymbol } = this.props;
+    const symbol = (stocks[selectedSymbol] || {}).Symbol
     const that = this;
     let data = new Datafeeds.UDFCompatibleDatafeed(
       "https://demo_feed.tradingview.com",
@@ -84,7 +80,7 @@ class ChartTV extends React.Component {
         "show_logo_on_all_charts"
       ],
       user_id: "public_user_id",
-      symbol: this.state.symbol
+      symbol
     };
     this.widget = new TradingView.widget(option);
     this.widget &&
@@ -107,11 +103,12 @@ class ChartTV extends React.Component {
   }
 
   async loadLayoutChart(init) {
-    console.log(this.state.symbol, this.widget._options, this.widget._options.symbol)
+    const { stocks, selectedSymbol } = this.props;
+    const symbol = (stocks[selectedSymbol] || {}).Symbol
     if (!init) {
-      if (this.state.symbol === this.widget._options.symbol) return
+      if (symbol === this.widget._options.symbol) return
     }
-    this.widget._options.symbol = this.state.symbol
+    this.widget._options.symbol = symbol
     let url = getAllLayoutsUrl();
     let listLayout;
     await axios
@@ -127,9 +124,8 @@ class ChartTV extends React.Component {
       return;
     }
     let indexLayout = listLayout.findIndex(
-      item => item.symbol === this.state.symbol
+      item => item.symbol === symbol
     );
-    console.log(indexLayout, this.widget);
     if (indexLayout === -1) {
       this.widget.load();
       return;
@@ -140,9 +136,7 @@ class ChartTV extends React.Component {
       .get(url)
       .then(response => {
         if (response.data) {
-          console.log(response.data);
           const savedLayout = JSON.parse(response.data.data.content).content;
-          console.log(savedLayout);
           this.widget && this.widget.load && this.widget.load(savedLayout);
         }
       })
@@ -152,13 +146,17 @@ class ChartTV extends React.Component {
   }
 
   callbackSearch(response) {
-    console.log(response);
+    // console.log(response);
   }
 
   cbSymbol(response) {
-    console.log(response);
+    // console.log(response);
     const that = this;
-    this.props.updateSelectedSymbolSuccess(response.symbol)
+    const { stocks } = this.props;
+    const fileredStocks = Object.values(stocks).filter(i => i.Symbol === response.symbol)
+    if (fileredStocks.length === 1) {
+      this.props.updateSelectedSymbolSuccess(fileredStocks[0].id)
+    }
     this.setState({
       symbol: response.symbol
     }, () => that.loadLayoutChart());
@@ -172,10 +170,12 @@ class ChartTV extends React.Component {
 
   async saveLayoutChart(div) {
     let listLayout;
+    const { stocks, selectedSymbol } = this.props;
+    const symbol = (stocks[selectedSymbol] || {}).Symbol
+
     await axios
       .get(getAllLayoutsUrl())
       .then(response => {
-        console.log(response);
         listLayout = response.data.data;
       })
       .catch(error => {
@@ -183,30 +183,29 @@ class ChartTV extends React.Component {
       });
     if (!listLayout) return;
     let indexLayout = listLayout.findIndex(
-      item => item.symbol === this.state.symbol
+      item => item.symbol === symbol
     );
     this.widget &&
       this.widget.save &&
       this.widget.save(savedObj => {
-        console.log(savedObj);
         var formData = new FormData();
         const content = {
           publish_request_id: uuidv4().substring(0, 12),
-          name: `${this.state.symbol}_layout`,
+          name: `${symbol}_layout`,
           description: "",
           resolution: "D",
           symbol_type: "stock",
           exchange: "HOSE",
           listed_exchange: "",
-          symbol: this.state.symbol,
-          short_name: this.state.symbol,
-          legs: `[{"symbol":"${this.state.symbol}","pro_symbol":"${
-            this.state.symbol
+          symbol,
+          short_name: symbol,
+          legs: `[{"symbol":"${symbol}","pro_symbol":"${
+            symbol
             }"}]`,
           content: savedObj
         };
-        formData.append("name", `${this.state.symbol}_layout`);
-        formData.append("symbol", this.state.symbol);
+        formData.append("name", `${symbol}_layout`);
+        formData.append("symbol", symbol);
         formData.append("resolution", "D");
 
         if (indexLayout > -1) {
@@ -224,7 +223,6 @@ class ChartTV extends React.Component {
                 setTimeout(() => {
                   div.innerText = "Save";
                 }, 1000);
-                console.log(response.data);
               }
             })
             .catch(error => {
@@ -237,12 +235,11 @@ class ChartTV extends React.Component {
           div.innerText = "Createing";
           axios
             .post(getAllLayoutsUrl(), formData)
-            .then(response => {
+            .then(() => {
               div.innerText = "Done";
               setTimeout(() => {
                 div.innerText = "Save";
               }, 1000);
-              console.log(response);
             })
             .catch(error => {
               console.log(error);
@@ -261,8 +258,15 @@ class ChartTV extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    stocks: get(state, 'stocks'),
+    selectedSymbol: get(state, 'selectedSymbol'),
+  }
+}
+
 const mapDispatchToProps = {
   updateSelectedSymbolSuccess
 }
 
-export default connect(null, mapDispatchToProps)(ChartTV);
+export default connect(mapStateToProps, mapDispatchToProps)(ChartTV);

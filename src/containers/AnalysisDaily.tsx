@@ -13,7 +13,7 @@ import {
 } from 'reducers/stocks';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { IStock } from 'types';
-import { getPreviousDate } from 'utils/common';
+import { getPreviousDate, getEndDate } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
 import { STOCK_GROUP } from 'utils/constant';
 import { analysisDailyColumnDefs } from 'utils/columnDefs';
@@ -29,7 +29,6 @@ const { RangePicker } = DatePicker;
 
 
 interface IProps {
-    selectedSymbol: string,
     stocks: IStock,
     filterStocks: any,
     updateStock: any,
@@ -39,6 +38,7 @@ interface IProps {
     decisiveIndexes: any,
     updateSelectedSymbolSuccess: any,
     getLatest: any,
+    selectedSymbol: number,
 }
 
 interface IState {
@@ -47,7 +47,6 @@ interface IState {
     rowData: any,
     visibleChart: boolean,
     visibleInfo: boolean,
-    Symbol: string,
     startDate: string,
     endDate: string,
     type: string,
@@ -76,7 +75,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             ChangePrice: 1,
             TodayCapital: 5,
             MinPrice: 5000,
-            Symbol: '',
             columnDefs: analysisDailyColumnDefs(this),
             defaultColDef: {
                 flex: 1,
@@ -89,7 +87,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             },
             rowData: [],
             startDate: getPreviousDate(this.props.lastUpdatedDate.value),
-            endDate: moment(this.props.lastUpdatedDate.value).format('YYYY-MM-DD') + 'T00:00:00Z',
+            endDate: getEndDate(this.props.lastUpdatedDate.value),
             visibleChart: false,
             visibleInfo: false,
             addVN30Stock: [],
@@ -104,6 +102,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
     onGridReady = params => {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
+        this.props.updateSelectedSymbolSuccess(null)
         this.scan(true)
     };
 
@@ -133,7 +132,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             i.ROA = Number(i.ROA)
             i.ROE = Number(i.ROE)
             i.ROIC = Number(i.ROIC)
-            i.VolumeChange = Number(i.DealVolume/i.AverageVolume30)
+            i.VolumeChange = Number(i.DealVolume / i.AverageVolume30)
             return i
         })
         return data
@@ -164,30 +163,35 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
     changeInput = (e, index) => {
         const data: any = {};
-        if (index === 'Symbol') {
-            data[index] = e.target.value.toUpperCase();
-            data.MinPrice = 0;
-            data.TodayCapital = 0;
-            data.ChangePrice = -100;
-        } else if (['TodayCapital', 'MinPrice', 'ICBCode'].includes(index)) {
+        if (['TodayCapital', 'MinPrice', 'ICBCode'].includes(index)) {
             data[index] = Number(e.target.value);
         } else {
             data[index] = e.target.value
         }
+
         this.setState(data)
     }
 
-    scan = async (useLatest=false) => {
+    scan = async (useLatest = false) => {
         if (this.scanning) return;
         try {
             const { type, ChangePrice, TodayCapital } = this.state;
-            let data = { ...this.state }
+            const { selectedSymbol, stocks } = this.props;
+            let data: any = { ...this.state }
             data[type] = true
             data['ChangePrice'] = Number(ChangePrice)
             data['TodayCapital'] = Number(TodayCapital) * BILLION_UNIT
             this.gridApi.showLoadingOverlay();
             this.scanning = true
             let res
+            if (selectedSymbol) {
+                const symbol = (stocks[selectedSymbol] || {}).Symbol
+                data = {
+                    Symbol: symbol,
+                    endDate: data.endDate,
+                    startDate: data.startDate,
+                }
+            }
             if (useLatest) {
                 res = await this.props.getLatest(data);
             } else {
@@ -207,7 +211,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
         if (e.target.value === STOCK_GROUP.CANSLIM) {
             this.setState({
                 type: e.target.value,
-                Symbol: '',
                 MinPrice: 5000,
                 TodayCapital: 5,
                 ChangePrice: 1
@@ -215,7 +218,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
         } else {
             this.setState({
                 type: e.target.value,
-                Symbol: '',
                 MinPrice: -1,
                 TodayCapital: -1,
                 ChangePrice: -100
@@ -230,14 +232,22 @@ class AnalysisDaily extends React.Component<IProps, IState> {
         })
     }
 
+    componentDidUpdate(preProps) {
+        if (this.props.selectedSymbol !== preProps.selectedSymbol) {
+            this.scan();
+        }
+    }
+
     render() {
         const { startDate, endDate, rowData,
             columnDefs, defaultColDef,
             visibleChart, visibleInfo, type,
             importantIndexType, TodayCapital, MinPrice,
-            ChangePrice, Symbol: symbol,
+            ChangePrice,
             checkStrong, checkBlackList
         } = this.state;
+        const { stocks, selectedSymbol } = this.props;
+        const symbol = (stocks[selectedSymbol] || {}).Symbol
         return (
             <div className="AnalysisDaily">
                 <div>
@@ -254,10 +264,6 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                     </div>
                     <div>
                         <div className="flex AnalysisDaily-Filter">
-                            <Input addonBefore="Symbol" value={symbol} onChange={(e) => this.changeInput(e, 'Symbol')} onPressEnter={() => {
-                                this.scan();
-                                this.props.updateSelectedSymbolSuccess(symbol)
-                            }} />
                             <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} />
                             <Input addonBefore="Min Price" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
                             <Input addonBefore="%ChangePrice" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
@@ -281,7 +287,10 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                 </div>
                 <div>
                     <RangePicker onChange={this.onChange} value={startDate ? [moment(startDate), moment(endDate)] : null} />
-                    <Button onClick={() => this.scan()}>Xem</Button>
+                    <Button onClick={() => {
+                        this.props.updateSelectedSymbolSuccess(null)
+                        this.scan()
+                    }}>Xem</Button>
                 </div>
 
                 <div>
@@ -321,7 +330,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                     >
 
                         <div className="chartTV-container">
-                            <ChartTV symbol={symbol} />
+                            <ChartTV />
                             {<Summary data={this.state} />}
                         </div>
                     </Modal>
@@ -335,7 +344,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         onCancel={this.handleCancel}
                         footer={null}
                     >
-                        <FinalAnalysis symbol={symbol} />
+                        <FinalAnalysis />
                     </Modal>
                     : null}
             </div>
@@ -345,11 +354,11 @@ class AnalysisDaily extends React.Component<IProps, IState> {
 
 const mapStateToProps = state => {
     return {
-        selectedSymbol: get(state, 'selectedSymbol'),
         stocks: get(state, 'stocks'),
         lastUpdatedDate: get(state, 'lastUpdatedDate') || {},
         companies: get(state, 'companies'),
-        decisiveIndexes: get(state, 'decisiveIndexes')
+        decisiveIndexes: get(state, 'decisiveIndexes'),
+        selectedSymbol: get(state, 'selectedSymbol')
     }
 }
 

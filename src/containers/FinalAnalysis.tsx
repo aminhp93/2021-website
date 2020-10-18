@@ -7,10 +7,11 @@ import {
     EditOutlined,
     EyeOutlined
 } from '@ant-design/icons';
+import MarkdownIt from 'markdown-it';
 
 import { updateStock } from 'reducers/stocks';
 
-const MarkdownIt = require('markdown-it');
+
 const { TextArea } = Input;
 
 interface IProps {
@@ -71,7 +72,7 @@ class FinalAnalysis extends React.Component<IProps, IState> {
                         : <div className="FinalAnalysis-note">{this.parseMarkdown(note)}</div>
                 }
 
-                <div className="FinalAnalysis-preview" onClick={() => this.setState({ allowEdit: !allowEdit })}>{allowEdit ? <EditOutlined className="medium"/> : <EyeOutlined className="medium"/> }</div>
+                <div className="FinalAnalysis-preview" onClick={() => this.setState({ allowEdit: !allowEdit })}>{allowEdit ? <EditOutlined className="medium" /> : <EyeOutlined className="medium" />}</div>
             </div>
         )
     }
@@ -79,7 +80,6 @@ class FinalAnalysis extends React.Component<IProps, IState> {
 
 const mapStateToProps = state => {
     return {
-        selectedSymbol: get(state, 'selectedSymbol'),
         stocks: get(state, 'stocks'),
     }
 }

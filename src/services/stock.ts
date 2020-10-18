@@ -32,16 +32,16 @@ const StockService = {
             url: StockUrls.getLastestFinancialInfo(stockId)
         })
     },
-    getLastestFinancialReports(selectedSymbol, financialType, year, quarter) {
+    getLastestFinancialReports(symbol, financialType, year, quarter) {
         return request({
             method: 'GET',
-            url: StockUrls.getLastestFinancialReports(selectedSymbol, financialType, year, quarter)
+            url: StockUrls.getLastestFinancialReports(symbol, financialType, year, quarter)
         })
     },
-    getHistoricalQuotes(selectedSymbol, startDate, endDate) {
+    getHistoricalQuotes(symbol, startDate, endDate) {
         return request({
             method: 'GET',
-            url: StockUrls.getHistoricalQuotes(selectedSymbol, startDate, endDate)
+            url: StockUrls.getHistoricalQuotes(symbol, startDate, endDate)
         })
     },
     filterStocks(data) {

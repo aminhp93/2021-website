@@ -10,7 +10,6 @@ import { getCompanyNewsUrl } from 'utils/request';
 import { IStock, ICompanyNews } from 'types'
 
 interface IProps {
-    selectedSymbol: string,
     stocks: IStock,
     lastUpdatedDate: string,
     dataSource: [ICompanyNews?]
@@ -101,7 +100,6 @@ class News extends React.Component<IProps, IState> {
 
 const mapStateToProps = state => {
     return {
-        selectedSymbol: get(state, 'selectedSymbol'),
         stocks: get(state, 'stocks'),
         lastUpdatedDate: get(state, 'lastUpdatedDate')
     }

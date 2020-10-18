@@ -49,7 +49,7 @@ const { TabPane } = Tabs;
 // 9: "E1VFVN30"
 
 interface IProps {
-    selectedSymbol: string,
+    selectedSymbol: number,
     stocks: IStock,
     getYearlyFinancialInfo: any,
     getQuarterlyFinancialInfo: any,
@@ -823,7 +823,8 @@ class Financial extends React.Component<IProps, IState> {
 
     render() {
         const { period, isFinancialReports, analysisType } = this.state;
-        const { selectedSymbol } = this.props;
+        const { selectedSymbol, stocks } = this.props;
+        const symbol = (stocks[selectedSymbol] || {}).Symbol
         if (isFinancialReports) {
             return (
                 <div className="Financial bg-white">
@@ -837,7 +838,7 @@ class Financial extends React.Component<IProps, IState> {
                                 <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
                             </div>
                             <div>
-                                <Button disabled={false} onClick={() => this.updateLastestFinancialReportsValue(selectedSymbol)}>LastestFinancialReportsValue</Button>
+                                <Button disabled={false} onClick={() => this.updateLastestFinancialReportsValue(symbol)}>LastestFinancialReportsValue</Button>
                                 <Button disabled={false} onClick={this.updateLastestFinancialReportsValueAll}>Update all</Button>
                                 {/* <Button onClick={() => this.updateLastestFinancialReportsValue('AAV')}>Update all</Button> */}
                             </div>
@@ -887,11 +888,11 @@ class Financial extends React.Component<IProps, IState> {
                             <div>
                                 <Button onClick={this.handleOpenFinancialReports}>Bao cao tai chinh</Button>
                                 <div>
-                                    <Button disabled={true} onClick={() => this.updateYearlyFinancialInfo(selectedSymbol)}>YearlyFinancialInfo</Button>
+                                    <Button disabled={true} onClick={() => this.updateYearlyFinancialInfo(symbol)}>YearlyFinancialInfo</Button>
                                     <Button disabled={true} onClick={this.updateYearlyFinancialInfoAll}>Update all</Button>
                                 </div>
                                 <div>
-                                    <Button disabled={true} onClick={() => this.updateQuarterlyFinancialInfo(selectedSymbol)}>QuarterlyFinancialInfo</Button>
+                                    <Button disabled={true} onClick={() => this.updateQuarterlyFinancialInfo(symbol)}>QuarterlyFinancialInfo</Button>
                                     <Button disabled={true} onClick={this.updateQuarterlyFinancialInfoAll}>Update all</Button>
                                 </div>
 
@@ -921,7 +922,7 @@ class Financial extends React.Component<IProps, IState> {
                 <div className="Financial-right-container bg-white">
                     <div className="header">
                         CHỈ TIÊU TÀI CHÍNH
-                        <Button disabled={false} onClick={() => this.updateLatestFinancialInfo(selectedSymbol)}>update</Button>
+                        <Button disabled={false} onClick={() => this.updateLatestFinancialInfo(symbol)}>update</Button>
                         <Button disabled={false} onClick={this.updateLatestFinancialInfoAll}>update all </Button>
                     </div>
                     <div className="Financial-criteria">

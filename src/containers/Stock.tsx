@@ -25,7 +25,7 @@ const { Option } = Select;
 
 
 interface IProps {
-    selectedSymbol: string,
+    selectedSymbol: number,
     stocks: IStock,
     lastUpdatedDate: any,
     updateSelectedSymbolSuccess: any,
@@ -74,13 +74,13 @@ class Stock extends React.Component<IProps, IState> {
         }
     }
 
-    handleChange = value => {
+    handleChange = (value, data) => {
         this.setState({
-            value,
+            value: [],
             data: [],
             fetching: false,
         }, () => {
-            value && value.length && this.props.updateSelectedSymbolSuccess(value[0]['key']);
+            data && data.length && this.props.updateSelectedSymbolSuccess(data[0].data.id);
         });
     };
 
@@ -124,7 +124,7 @@ class Stock extends React.Component<IProps, IState> {
     }
 
     udpateHistoricalQuotesPartial = (start, count, startDate, endDate) => {
-        let listPromises = [];
+        const listPromises = [];
         const arr = cloneDeep(Object.values(this.props.stocks));
         const arr1 = arr.slice(start, count)
         arr1.forEach(item => {
@@ -164,7 +164,8 @@ class Stock extends React.Component<IProps, IState> {
 
     render() {
         const { fetching, data, value, loading } = this.state;
-        const { selectedSymbol, lastUpdatedDate } = this.props;
+        const { selectedSymbol, lastUpdatedDate, stocks } = this.props;
+        const symbol = (stocks[selectedSymbol] || {}).Symbol
         if (loading) return <Spin size='large' />
         return (
             <div className="App">
@@ -182,15 +183,16 @@ class Stock extends React.Component<IProps, IState> {
                             style={{ width: '200px' }}
                         >
                             {data.map(d => (
-                                <Option value={d.Symbol} key={d.Symbol}>{d.Symbol}</Option>
+                                <Option value={d.Symbol} key={d.Symbol} data={d}>{d.Symbol}</Option>
                             ))}
                         </Select>
                         <Button onClick={this.udpateHistoricalQuotesDaily}>Update daily all</Button>
 
                     </div>
                     <div className="App-header-symbol">
-                        {selectedSymbol || 'No symbol selected'} |
+                        {symbol || 'No symbol selected'} |
                         Last udpated: {moment(lastUpdatedDate.value).format('YYYY-MM-DD')}
+                        <span onClick={() => this.props.updateSelectedSymbolSuccess(null)}>Clear</span>
                     </div>
                 </div>
                 <div className="App-container">

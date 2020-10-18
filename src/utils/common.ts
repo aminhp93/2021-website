@@ -709,9 +709,23 @@ export const mapDataLatestFinancialReport = (data, period = null, type = null) =
 export const getPreviousDate = (date) => {
     let count = -1
     if (moment(date).format('ddd') === 'Mon') {
+        count = -4
+    } else if (moment(date).format('ddd') === 'Sun') {
+        count = -3
+    } else if (moment(date).format('ddd') === 'Sat') {
+        count = -2
+    }
+    return moment(date).add(count, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
+}
+
+export const getEndDate = (date) => {
+    let count = 0
+    if (moment(date).format('ddd') === 'Mon') {
         count = -3
     } else if (moment(date).format('ddd') === 'Sun') {
         count = -2
+    } else if (moment(date).format('ddd') === 'Sat') {
+        count = -1
     }
     return moment(date).add(count, 'days').format('YYYY-MM-DD') + 'T00:00:00Z'
 }

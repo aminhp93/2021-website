@@ -16,7 +16,7 @@ import { analysisDailyColumnDefs } from 'utils/columnDefs';
 
 
 interface IProps {
-    selectedSymbol: string,
+    selectedSymbol: number,
     getYearlyFinancialInfo: any,
     getQuarterlyFinancialInfo: any,
     getLastestFinancialInfo: any,
@@ -75,11 +75,11 @@ class Summary extends React.Component<IProps, IState> {
     crawlData = async () => {
         try {
             const res1 = await this.props.getYearlyFinancialInfo()
-            let YearlyFinancialInfoArray = res1.data
+            const YearlyFinancialInfoArray = res1.data
             const res2 = await this.props.getQuarterlyFinancialInfo()
-            let QuarterlyFinancialInfoArray = res2.data
+            const QuarterlyFinancialInfoArray = res2.data
             const res3 = await this.props.getLastestFinancialInfo()
-            let LastestFinancialInfoObj = res3.data
+            const LastestFinancialInfoObj = res3.data
             if (YearlyFinancialInfoArray && QuarterlyFinancialInfoArray && LastestFinancialInfoObj) {
                 this.setState({
                     YearlyFinancialInfoArray,
@@ -104,7 +104,7 @@ class Summary extends React.Component<IProps, IState> {
 
         const { QuarterlyFinancialInfoArray, YearlyFinancialInfoArray } = this.state;
         const mappedData = this.mapDataRevenueTable(QuarterlyFinancialInfoArray, YearlyFinancialInfoArray, isProfit);
-        let keys = uniqBy(QuarterlyFinancialInfoArray.map(i => i.Year)).sort((a, b) => a - b)
+        const keys = uniqBy(QuarterlyFinancialInfoArray.map(i => i.Year)).sort((a, b) => a - b)
         keys.map((i, index) => {
             const pushObj = {
                 title: String(i),
@@ -130,13 +130,13 @@ class Summary extends React.Component<IProps, IState> {
 
     mapDataRevenueTable = (data, data2, isProfit) => {
         if (!data || !data2) return []
-        let result = [];
+        const result = [];
 
-        let keys = uniqBy(data.map(i => i.Year)).sort((a, b) => a - b)
+        const keys = uniqBy(data.map(i => i.Year)).sort((a, b) => a - b)
         for (let j = 1; j < keys.length + 1; j++) {
-            let itemObj = {}
+            const itemObj = {}
             for (let i = 0; i < data.length; i++) {
-                let item = data[i]
+                const item = data[i]
                 if (item.Quarter === j) {
 
                     itemObj['Quarter'] = j
@@ -169,11 +169,10 @@ class Summary extends React.Component<IProps, IState> {
     scan = async () => {
         if (this.scanning) return;
         try {
-            let data: any = { ...this.state }
+            const data: any = { ...this.state }
             data.endDate = this.props.data.endDate;
             data.startDate = this.props.data.startDate;
-            const stock: any = Object.values(this.props.stocks).filter((i: any) => i.Symbol === this.props.selectedSymbol)[0]
-            data.ICBCode = Number((this.props.companies[stock.id] || {}).ICBCode)
+            data.ICBCode = Number((this.props.companies[this.props.selectedSymbol] || {}).ICBCode)
             data.ChangePrice = -100
             data.MinPrice = 5000
             data.Symbol = ""
@@ -241,7 +240,7 @@ class Summary extends React.Component<IProps, IState> {
                     {this.renderRevenueTable(true)}
                 </div>
             </div>
-            
+
             <div className="medium">Compare same ICBCode</div>
             <div style={{ width: '100%', height: '100%' }}>
                 <div

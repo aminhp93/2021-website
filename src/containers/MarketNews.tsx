@@ -13,7 +13,7 @@ import { fetchNews } from 'reducers/stocks';
 const { TabPane } = Tabs;
 
 interface IProps {
-    selectedSymbol: string,
+    selectedSymbol: number,
     stocks: IStock,
     lastUpdatedDate: string,
     fetchNews: any,
@@ -48,10 +48,11 @@ class MarketNews extends React.Component<IProps, IState> {
         try {
             let type
             let group
-            let startIndex = '0'
-            let count = '10'
+            const startIndex = '0'
+            const count = '10'
             let symbol = ''
-            const { selectedSymbol } = this.props;
+            const { selectedSymbol, stocks } = this.props;
+
             switch (this.state.key) {
                 case '1':
                     type = 'AllNews'
@@ -92,7 +93,8 @@ class MarketNews extends React.Component<IProps, IState> {
                 case '10':
                     type = 'CompanyNews'
                     group = null
-                    symbol = selectedSymbol
+                    symbol = (stocks[selectedSymbol] || {}).Symbol
+                    break;
                 default:
                     break;
             }
@@ -105,7 +107,8 @@ class MarketNews extends React.Component<IProps, IState> {
 
     render() {
         const { key, newsDataSource } = this.state;
-        const { selectedSymbol } = this.props;
+        const { selectedSymbol, stocks } = this.props;
+        const symbol = (stocks[selectedSymbol] || {}).Symbol
         return (
             <div>
                 <Tabs defaultActiveKey={key} onChange={(key) => this.setState({ key }, () => this.crawlData())}>
@@ -136,7 +139,7 @@ class MarketNews extends React.Component<IProps, IState> {
                     <TabPane tab="Bat dong san" key="9">
                         <News dataSource={newsDataSource} />
                     </TabPane>
-                    <TabPane tab={selectedSymbol} key="10">
+                    <TabPane tab={symbol} key="10">
                         <News dataSource={newsDataSource} />
                     </TabPane>
                 </Tabs>
