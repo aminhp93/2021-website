@@ -29,16 +29,14 @@ export const fetchListStocks = (): ThunkActionType => async (
     dispatch(fetchListStocksSuccess(data));
 };
 
-export const fetchNews = (data): ThunkActionType => async (
-    dispatch
-) => {
+export const fetchNews = (data): ThunkActionType => async () => {
     const { type, group, startIndex, count, symbol } = data;
     const response = await StockService.fetchNews(type, group, startIndex, count, symbol);
     return response
 }
 
 export const getYearlyFinancialInfo = (): ThunkActionType => async (
-    dispatch,
+    _,
     getStoreValue
 ) => {
     const { selectedSymbol } = getStoreValue();
@@ -47,7 +45,7 @@ export const getYearlyFinancialInfo = (): ThunkActionType => async (
 }
 
 export const getQuarterlyFinancialInfo = (): ThunkActionType => async (
-    dispatch,
+    _,
     getStoreValue
 ) => {
     const { selectedSymbol } = getStoreValue();
@@ -56,7 +54,7 @@ export const getQuarterlyFinancialInfo = (): ThunkActionType => async (
 }
 
 export const getLastestFinancialInfo = (): ThunkActionType => async (
-    dispatch,
+    _,
     getStoreValue
 ) => {
     const { selectedSymbol, stocks } = getStoreValue();
@@ -66,7 +64,7 @@ export const getLastestFinancialInfo = (): ThunkActionType => async (
 }
 
 export const getLastestFinancialReports = (data: any): ThunkActionType => async (
-    dispatch,
+    _,
     getStoreValue
 ) => {
     const { selectedSymbol } = getStoreValue();
@@ -75,8 +73,8 @@ export const getLastestFinancialReports = (data: any): ThunkActionType => async 
     return response
 }
 
-export const getHistoricalQuotes = (data: any): ThunkActionType => async (
-    dispatch,
+export const getHistoricalQuotes = (): ThunkActionType => async (
+    _,
     getStoreValue
 ) => {
     const { selectedSymbol, lastUpdatedDate } = getStoreValue();
@@ -86,30 +84,23 @@ export const getHistoricalQuotes = (data: any): ThunkActionType => async (
     return response
 }
 
-export const filterStocks = (data: any): ThunkActionType => async (
-    dispatch,
-    getStoreValue
-) => {
+export const filterStocks = (data: any): ThunkActionType => async () => {
     const response = await StockService.filterStocks(data)
     return response
 }
 
 export const updateStock = (data: any): ThunkActionType => async (
-    dispatch,
-    getStoreValue
+    dispatch
 ) => {
 
     const response = await StockService.updateStock(data)
-    let updatedData = {}
+    const updatedData = {}
     updatedData[response.data.id] = response.data
     dispatch(fetchListStocksSuccess(updatedData))
     return response
 }
 
-export const scanStock = (data: any): ThunkActionType => async (
-    dispatch,
-    getStoreValue
-) => {
+export const scanStock = (data: any): ThunkActionType => async () => {
     const dataRequest = {}
     const ALLOW_CONDITION_SEARCH = [
         'Symbol', 'TodayCapital',
@@ -131,16 +122,10 @@ export const scanStock = (data: any): ThunkActionType => async (
     return response
 }
 
-export const getLatest = (data: any): ThunkActionType => async (
-    dispatch,
-    getStoreValue
-) => {
-
+export const getLatest = (data: any): ThunkActionType => async () => {
     const response = await StockService.getLatest(data)
     return response
 }
-
-
 
 export const getListUrlGoValue = (): ThunkActionType => async () => {
     const res = await StockService.getListUrlGoValue()
