@@ -49,7 +49,7 @@ export function mapColorFinancialReportChange(data) {
 }
 
 export function mapArrayToKeyValue(data) {
-    let result = {}
+    const result = {}
     data.forEach(item => {
         result[item.id] = item
     })
@@ -58,8 +58,8 @@ export function mapArrayToKeyValue(data) {
 
 export function mapDataTwoDate(data1, data2, allStocks) {
     if (!data1 || !data2 || !allStocks) return []
-    let data1Obj = {};
-    let data2Obj = {};
+    const data1Obj = {};
+    const data2Obj = {};
     data1.forEach(item => {
         data1Obj[item.Stock] = item
     })
@@ -70,7 +70,7 @@ export function mapDataTwoDate(data1, data2, allStocks) {
         data1[i].TodayCapital = Number((data1[i].PriceClose * data1[i].DealVolume / 1000000000).toFixed(0))
         data1[i].MarketCap = Number((data1[i].MarketCap / 1000000000).toFixed(0))
         if (!data2Obj[data1[i].Stock]) {
-
+            // 
         } else {
             const data2Item = data2Obj[data1[i].Stock]
             data1[i].YesterdayPriceClose = data2Item.PriceClose
@@ -88,7 +88,7 @@ export const arrayToKeyValue = (array, key = 'id') =>
 
 export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataType4, dataType5) => {
     if (!dataType1 || !dataType2) return []
-    let result = []
+    const result = []
 
     // GET INFO
     // const taiSanNganHan = dataType1.filter(i => i.ID === 101)[0]
@@ -139,33 +139,33 @@ export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataTyp
     const yearsArray = [2014, 2015, 2016, 2017, 2018, 2019, 'Current']
 
     // INDEX 1
-    let tyLeThanhToanHienHanhValues = [];
-    let tyLeThanhToanNhanhValues = [];
-    let tyLeThanhToanTucThoiValues = [];
-    let khaNangThanhToanLaiVayValues = [];
+    const tyLeThanhToanHienHanhValues = [];
+    const tyLeThanhToanNhanhValues = [];
+    const tyLeThanhToanTucThoiValues = [];
+    const khaNangThanhToanLaiVayValues = [];
     // INDEX 2
-    let tyLeNoVay_VCSHValues = []
-    let tyLeNovayDaiHan_VCSHValues = []
-    let tyLeNoVayNganHan_VCSHValues = []
+    const tyLeNoVay_VCSHValues = []
+    const tyLeNovayDaiHan_VCSHValues = []
+    const tyLeNoVayNganHan_VCSHValues = []
     // INDEX 3
-    let soVongQuayHangTonKhoValues = []
-    let soVongQuayPhaiThuKhachHangValues = []
-    let soVongQuayPhaiTraNguoiBanValues = []
-    let vongQuayTienMatValues = []
-    let vongQuayTaiSanValues = []
+    const soVongQuayHangTonKhoValues = []
+    const soVongQuayPhaiThuKhachHangValues = []
+    const soVongQuayPhaiTraNguoiBanValues = []
+    const vongQuayTienMatValues = []
+    const vongQuayTaiSanValues = []
     // INDEX 4
-    let bienLoiNhuanGopValues = []
-    let ROSValues = []
-    let ROAValues = []
-    let ROEValues = []
-    let heSoDonBayTaiChinhValues = []
-    let EPSValues = []
+    const bienLoiNhuanGopValues = []
+    const ROSValues = []
+    const ROAValues = []
+    const ROEValues = []
+    const heSoDonBayTaiChinhValues = []
+    const EPSValues = []
     // INDEX 5
-    // let tyLeChiTraCoTucValues = []
-    // let tySuatCoTucValues = []
+    // const tyLeChiTraCoTucValues = []
+    // const tySuatCoTucValues = []
     // INDEX 6
-    let PEValues = []
-    let PBValues = []
+    const PEValues = []
+    const PBValues = []
 
     yearsArray.forEach(i => {
         // const taiSanNganHanValue = taiSanNganHan && taiSanNganHan.Values && taiSanNganHan.Values.filter(j => j.Year === i).length && taiSanNganHan.Values.filter(j => j.Year === i)[0].Value
@@ -188,7 +188,7 @@ export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataTyp
         // const loiNhuanGopValue = loiNhuanGop && loiNhuanGop.Values && phaiTraNguoiBanDaiHan.Values.filter(j => j.Year === i).length && phaiTraNguoiBanDaiHan.Values.filter(j => j.Year === i)[0].Value
         const LNSTValue = LNST && LNST.Values && LNST.Values.filter(j => j.Year === i).length && LNST.Values.filter(j => j.Year === i)[0].Value
 
-        let dataType3Indexes = dataType3.filter(j => Number(j.Year) === i)
+        const dataType3Indexes = dataType3.filter(j => Number(j.Year) === i)
 
         // INDEX 1
         tyLeThanhToanHienHanhValues.push({
@@ -233,8 +233,8 @@ export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataTyp
 
         // let soVongQuayHangTonKho = (tongCongNguonVonValue && hangTonKhoValue) ? tongCongNguonVonValue / hangTonKhoValue : null
         // let soVongQuayPhaiThuKhachHang = (doanhThuThuanValue && (phaiThuNganHanKhachHangValue || phaiThuNganHanKhachHangValue === 0) && (phaiThuDaiHanKhachHangValue || phaiThuDaiHanKhachHangValue === 0)) ? doanhThuThuanValue / (phaiThuNganHanKhachHangValue + phaiThuDaiHanKhachHangValue) : null
-        let soVongQuayPhaiTraNguoiBan = (tongCongNguonVonValue && (phaiTraNguoiBanNganHanValue || phaiTraNguoiBanNganHanValue === 0) && (phaiTraNguoiBanDaiHanValue || phaiTraNguoiBanDaiHanValue === 0)) ? tongCongNguonVonValue / (phaiTraNguoiBanNganHanValue + phaiTraNguoiBanDaiHanValue) : null
-        let vongQuayTienMat = (
+        const soVongQuayPhaiTraNguoiBan = (tongCongNguonVonValue && (phaiTraNguoiBanNganHanValue || phaiTraNguoiBanNganHanValue === 0) && (phaiTraNguoiBanDaiHanValue || phaiTraNguoiBanDaiHanValue === 0)) ? tongCongNguonVonValue / (phaiTraNguoiBanNganHanValue + phaiTraNguoiBanDaiHanValue) : null
+        const vongQuayTienMat = (
             dataType3Indexes.length
             && dataType3Indexes[0].InventoryTurnover
             && dataType3Indexes[0].ReceivablesTurnover
@@ -465,244 +465,244 @@ export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataTyp
 }
 
 export const mapDataLatestFinancialReport = (data, period = null, type = null) => {
-    let cloneData = cloneDeep(data);
-    let tongDoanhThuValues = []
-    let tongChiPhiValues = []
+    const cloneData = cloneDeep(data);
+    // let tongDoanhThuValues = []
+    // let tongChiPhiValues = []
 
-    if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
-        if (cloneData.length) {
-
-
-            cloneData[0].Values.forEach(i => {
-                let doanhThuThuan = cloneData.filter(j => j.ID === 3)[0].Values.filter(j => j.Year === i.Year)[0].Value
-                let doanhThuHoatDongTaiChinh = cloneData.filter(j => j.ID === 6)[0].Values.filter(j => j.Year === i.Year)[0].Value
-                let doanhThuKhac = cloneData.filter(j => j.ID === 12)[0].Values.filter(j => j.Year === i.Year)[0].Value
-
-                let giaVonBanHang = cloneData.filter(j => j.ID === 4)[0].Values.filter(j => j.Year === i.Year)[0].Value
-                let chiPhiTaiChinh = cloneData.filter(j => j.ID === 7)[0].Values.filter(j => j.Year === i.Year)[0].Value
-                let chiPhiBanHang = cloneData.filter(j => j.ID === 9)[0].Values.filter(j => j.Year === i.Year)[0].Value
-                let chiPhiKhac = cloneData.filter(j => j.ID === 13)[0].Values.filter(j => j.Year === i.Year)[0].Value
-
-                tongDoanhThuValues.push({
-                    Year: i.Year,
-                    Value: doanhThuThuan + doanhThuHoatDongTaiChinh + doanhThuKhac
-                })
-
-                tongChiPhiValues.push({
-                    Year: i.Year,
-                    Value: giaVonBanHang + chiPhiTaiChinh + chiPhiBanHang + chiPhiKhac
-                })
-            })
-            cloneData.push({
-                ID: 'TONG DOANH THU',
-                Name: 'TONG DOANH THU (3)+(6)+(12)',
-                Values: tongDoanhThuValues
-            })
+    // if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
+    //     if (cloneData.length) {
 
 
-            cloneData.push({
-                ID: 'TONG CHI PHI',
-                Name: 'TONG CHI PHI (4)+(7)+(9)+(13)',
-                Values: tongChiPhiValues
-            })
-        }
-    }
+    //         cloneData[0].Values.forEach(i => {
+    //             let doanhThuThuan = cloneData.filter(j => j.ID === 3)[0].Values.filter(j => j.Year === i.Year)[0].Value
+    //             let doanhThuHoatDongTaiChinh = cloneData.filter(j => j.ID === 6)[0].Values.filter(j => j.Year === i.Year)[0].Value
+    //             let doanhThuKhac = cloneData.filter(j => j.ID === 12)[0].Values.filter(j => j.Year === i.Year)[0].Value
 
-    for (let i = 0; i < cloneData.length; i++) {
-        let id = JSON.stringify(cloneData[i].ID)
-        if (id.match(/^1/) || id.match(/^2/)) {
-            cloneData[i].ParentID1 = 1
-            if (id.match(/^10/)) {
-                cloneData[i].ParentID2 = 10
-                if (id.match(/^101/)) {
-                    cloneData[i].ParentID3 = 101
-                    if (id.match(/^10101/)) {
-                        cloneData[i].ParentID4 = 10101
-                    } else if (id.match(/^10102/)) {
-                        cloneData[i].ParentID4 = 10102
-                    } else if (id.match(/^10103/)) {
-                        cloneData[i].ParentID4 = 10103
-                    } else if (id.match(/^10104/)) {
-                        cloneData[i].ParentID4 = 10104
-                    } else if (id.match(/^10105/)) {
-                        cloneData[i].ParentID4 = 10105
-                    } else if (id.match(/^10106/)) {
-                        cloneData[i].ParentID4 = 10106
-                    } else if (id.match(/^10107/)) {
-                        cloneData[i].ParentID4 = 10107
-                    }
-                } else if (id.match(/^102/)) {
-                    cloneData[i].ParentID3 = 102
-                    if (id.match(/^10201/)) {
-                        cloneData[i].ParentID4 = 10201
-                    } else if (id.match(/^10202/)) {
-                        cloneData[i].ParentID4 = 10202
-                    } else if (id.match(/^10203/)) {
-                        cloneData[i].ParentID4 = 10203
-                    } else if (id.match(/^10204/)) {
-                        cloneData[i].ParentID4 = 10204
-                    } else if (id.match(/^10205/)) {
-                        cloneData[i].ParentID4 = 10205
-                    } else if (id.match(/^10206/)) {
-                        cloneData[i].ParentID4 = 10206
-                    } else if (id.match(/^10207/)) {
-                        cloneData[i].ParentID4 = 10207
-                    }
-                }
-            }
-        } else if (id.match(/^3/) || id.match(/^4/)) {
-            cloneData[i].ParentID1 = 3
-            if (id.match(/^30/)) {
-                cloneData[i].ParentID2 = 30
-                if (id.match(/^301/)) {
-                    cloneData[i].ParentID3 = 301
-                    if (id.match(/^30101/)) {
-                        cloneData[i].ParentID4 = 30101
-                    } else if (id.match(/^30102/)) {
-                        cloneData[i].ParentID4 = 30102
-                    } else if (id.match(/^30103/)) {
-                        cloneData[i].ParentID4 = 30103
-                    } else if (id.match(/^30104/)) {
-                        cloneData[i].ParentID4 = 30104
-                    } else if (id.match(/^30105/)) {
-                        cloneData[i].ParentID4 = 30105
-                    } else if (id.match(/^30106/)) {
-                        cloneData[i].ParentID4 = 30106
-                    } else if (id.match(/^30107/)) {
-                        cloneData[i].ParentID4 = 30107
-                    }
-                } else if (id.match(/^302/)) {
-                    cloneData[i].ParentID3 = 302
-                    if (id.match(/^30201/)) {
-                        cloneData[i].ParentID4 = 30201
-                    } else if (id.match(/^30202/)) {
-                        cloneData[i].ParentID4 = 30202
-                    } else if (id.match(/^30203/)) {
-                        cloneData[i].ParentID4 = 30203
-                    } else if (id.match(/^30204/)) {
-                        cloneData[i].ParentID4 = 30204
-                    } else if (id.match(/^30205/)) {
-                        cloneData[i].ParentID4 = 30205
-                    } else if (id.match(/^30206/)) {
-                        cloneData[i].ParentID4 = 30206
-                    } else if (id.match(/^30207/)) {
-                        cloneData[i].ParentID4 = 30207
-                    }
-                } else {
-                    cloneData[i].ParentID3 = 13
-                }
-            }
-        } else {
-            cloneData[i].ParentID1 = 3
-        }
+    //             let giaVonBanHang = cloneData.filter(j => j.ID === 4)[0].Values.filter(j => j.Year === i.Year)[0].Value
+    //             let chiPhiTaiChinh = cloneData.filter(j => j.ID === 7)[0].Values.filter(j => j.Year === i.Year)[0].Value
+    //             let chiPhiBanHang = cloneData.filter(j => j.ID === 9)[0].Values.filter(j => j.Year === i.Year)[0].Value
+    //             let chiPhiKhac = cloneData.filter(j => j.ID === 13)[0].Values.filter(j => j.Year === i.Year)[0].Value
 
-        if (type === LATEST_FINANCIAL_REPORTS.TYPE_1) {
-            let yearArray = [2015, 2016, 2017, 2018, 2019]
-            let tongCongTaiSan = data.filter(i => i.ID === 2)[0].Values
+    //             tongDoanhThuValues.push({
+    //                 Year: i.Year,
+    //                 Value: doanhThuThuan + doanhThuHoatDongTaiChinh + doanhThuKhac
+    //             })
 
-            yearArray.forEach((year, index) => {
-                cloneData[i].Values.push(
-                    {
-                        Year: `%${yearArray[index]}`,
-                        Value: cloneData[i].Values.filter(j => j.Year === year)[0].Value / tongCongTaiSan.filter(j => j.Year === year)[0].Value
-                    }
-                )
-                if (index > 0) {
-                    let newValue = cloneData[i].Values.filter(j => j.Year === year)[0].Value
-                    let oldValue = cloneData[i].Values.filter(j => j.Year === yearArray[index - 1])[0].Value
-                    cloneData[i].Values.push(
-                        {
-                            Year: `${year}-${yearArray[index - 1]}`,
-                            Value: (newValue - oldValue) / oldValue
-                        }
-                    )
-                }
-            })
-        } else if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
-            let yearArray = [2015, 2016, 2017, 2018, 2019]
+    //             tongChiPhiValues.push({
+    //                 Year: i.Year,
+    //                 Value: giaVonBanHang + chiPhiTaiChinh + chiPhiBanHang + chiPhiKhac
+    //             })
+    //         })
+    //         cloneData.push({
+    //             ID: 'TONG DOANH THU',
+    //             Name: 'TONG DOANH THU (3)+(6)+(12)',
+    //             Values: tongDoanhThuValues
+    //         })
 
-            yearArray.forEach((year, index) => {
-                if ([3, 6, 12].includes(cloneData[i].ID)) {
-                    cloneData[i].Values.push(
-                        {
-                            Year: `%${yearArray[index]}`,
-                            Value: (cloneData[i].Values.filter(j => j.Year === year)[0] || {}).Value / (tongDoanhThuValues.filter(j => j.Year === year)[0] || {}).Value
-                        }
-                    )
-                } else if ([4, 7, 9, 13].includes(cloneData[i].ID)) {
-                    cloneData[i].Values.push(
-                        {
-                            Year: `%${yearArray[index]}`,
-                            Value: (cloneData[i].Values.filter(j => j.Year === year)[0] || {}).Value / (tongChiPhiValues.filter(j => j.Year === year)[0] || {}).Value
-                        }
-                    )
-                }
 
-                if (index > 0) {
-                    let newValue = (cloneData[i].Values.filter(j => j.Year === year)[0] || {}).Value
-                    let oldValue = (cloneData[i].Values.filter(j => j.Year === yearArray[index - 1])[0] || {}).Value
-                    cloneData[i].Values.push(
-                        {
-                            Year: `${year}-${yearArray[index - 1]}`,
-                            Value: (newValue - oldValue) / oldValue
-                        }
-                    )
-                }
+    //         cloneData.push({
+    //             ID: 'TONG CHI PHI',
+    //             Name: 'TONG CHI PHI (4)+(7)+(9)+(13)',
+    //             Values: tongChiPhiValues
+    //         })
+    //     }
+    // }
 
-            })
-        }
+    // for (let i = 0; i < cloneData.length; i++) {
+    //     let id = JSON.stringify(cloneData[i].ID)
+    //     if (id.match(/^1/) || id.match(/^2/)) {
+    //         cloneData[i].ParentID1 = 1
+    //         if (id.match(/^10/)) {
+    //             cloneData[i].ParentID2 = 10
+    //             if (id.match(/^101/)) {
+    //                 cloneData[i].ParentID3 = 101
+    //                 if (id.match(/^10101/)) {
+    //                     cloneData[i].ParentID4 = 10101
+    //                 } else if (id.match(/^10102/)) {
+    //                     cloneData[i].ParentID4 = 10102
+    //                 } else if (id.match(/^10103/)) {
+    //                     cloneData[i].ParentID4 = 10103
+    //                 } else if (id.match(/^10104/)) {
+    //                     cloneData[i].ParentID4 = 10104
+    //                 } else if (id.match(/^10105/)) {
+    //                     cloneData[i].ParentID4 = 10105
+    //                 } else if (id.match(/^10106/)) {
+    //                     cloneData[i].ParentID4 = 10106
+    //                 } else if (id.match(/^10107/)) {
+    //                     cloneData[i].ParentID4 = 10107
+    //                 }
+    //             } else if (id.match(/^102/)) {
+    //                 cloneData[i].ParentID3 = 102
+    //                 if (id.match(/^10201/)) {
+    //                     cloneData[i].ParentID4 = 10201
+    //                 } else if (id.match(/^10202/)) {
+    //                     cloneData[i].ParentID4 = 10202
+    //                 } else if (id.match(/^10203/)) {
+    //                     cloneData[i].ParentID4 = 10203
+    //                 } else if (id.match(/^10204/)) {
+    //                     cloneData[i].ParentID4 = 10204
+    //                 } else if (id.match(/^10205/)) {
+    //                     cloneData[i].ParentID4 = 10205
+    //                 } else if (id.match(/^10206/)) {
+    //                     cloneData[i].ParentID4 = 10206
+    //                 } else if (id.match(/^10207/)) {
+    //                     cloneData[i].ParentID4 = 10207
+    //                 }
+    //             }
+    //         }
+    //     } else if (id.match(/^3/) || id.match(/^4/)) {
+    //         cloneData[i].ParentID1 = 3
+    //         if (id.match(/^30/)) {
+    //             cloneData[i].ParentID2 = 30
+    //             if (id.match(/^301/)) {
+    //                 cloneData[i].ParentID3 = 301
+    //                 if (id.match(/^30101/)) {
+    //                     cloneData[i].ParentID4 = 30101
+    //                 } else if (id.match(/^30102/)) {
+    //                     cloneData[i].ParentID4 = 30102
+    //                 } else if (id.match(/^30103/)) {
+    //                     cloneData[i].ParentID4 = 30103
+    //                 } else if (id.match(/^30104/)) {
+    //                     cloneData[i].ParentID4 = 30104
+    //                 } else if (id.match(/^30105/)) {
+    //                     cloneData[i].ParentID4 = 30105
+    //                 } else if (id.match(/^30106/)) {
+    //                     cloneData[i].ParentID4 = 30106
+    //                 } else if (id.match(/^30107/)) {
+    //                     cloneData[i].ParentID4 = 30107
+    //                 }
+    //             } else if (id.match(/^302/)) {
+    //                 cloneData[i].ParentID3 = 302
+    //                 if (id.match(/^30201/)) {
+    //                     cloneData[i].ParentID4 = 30201
+    //                 } else if (id.match(/^30202/)) {
+    //                     cloneData[i].ParentID4 = 30202
+    //                 } else if (id.match(/^30203/)) {
+    //                     cloneData[i].ParentID4 = 30203
+    //                 } else if (id.match(/^30204/)) {
+    //                     cloneData[i].ParentID4 = 30204
+    //                 } else if (id.match(/^30205/)) {
+    //                     cloneData[i].ParentID4 = 30205
+    //                 } else if (id.match(/^30206/)) {
+    //                     cloneData[i].ParentID4 = 30206
+    //                 } else if (id.match(/^30207/)) {
+    //                     cloneData[i].ParentID4 = 30207
+    //                 }
+    //             } else {
+    //                 cloneData[i].ParentID3 = 13
+    //             }
+    //         }
+    //     } else {
+    //         cloneData[i].ParentID1 = 3
+    //     }
 
-        if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
-            switch (cloneData[i].ID) {
-                case 'TONG DOANH THU':
-                    cloneData[i].sortedIndex = 0
-                    break;
-                case 3:
-                    cloneData[i].sortedIndex = 1
-                    break;
-                case 6:
-                    cloneData[i].sortedIndex = 2
-                    break;
-                case 12:
-                    cloneData[i].sortedIndex = 3
-                    break;
-                case 'TONG CHI PHI':
-                    cloneData[i].sortedIndex = 4
-                    break;
-                case 4:
-                    cloneData[i].sortedIndex = 5
-                    break;
-                case 7:
-                    cloneData[i].sortedIndex = 6
-                    break;
-                case 9:
-                    cloneData[i].sortedIndex = 7
-                    break;
-                case 13:
-                    cloneData[i].sortedIndex = 8
-                    break;
-                case 5:
-                    cloneData[i].sortedIndex = 9
-                    break;
-                case 15:
-                    cloneData[i].sortedIndex = 10
-                    break;
-                case 18:
-                    cloneData[i].sortedIndex = 11
-                    break;
-                case 19:
-                    cloneData[i].sortedIndex = 12
-                    break;
-                default:
-                    cloneData[i].sortedIndex = 9999
-                    break;
-            }
-        }
+    //     if (type === LATEST_FINANCIAL_REPORTS.TYPE_1) {
+    //         let yearArray = [2015, 2016, 2017, 2018, 2019]
+    //         let tongCongTaiSan = data.filter(i => i.ID === 2)[0].Values
 
-    }
-    if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
-        cloneData.sort((a, b) => a.sortedIndex - b.sortedIndex)
-    }
+    //         yearArray.forEach((year, index) => {
+    //             cloneData[i].Values.push(
+    //                 {
+    //                     Year: `%${yearArray[index]}`,
+    //                     Value: cloneData[i].Values.filter(j => j.Year === year)[0].Value / tongCongTaiSan.filter(j => j.Year === year)[0].Value
+    //                 }
+    //             )
+    //             if (index > 0) {
+    //                 let newValue = cloneData[i].Values.filter(j => j.Year === year)[0].Value
+    //                 let oldValue = cloneData[i].Values.filter(j => j.Year === yearArray[index - 1])[0].Value
+    //                 cloneData[i].Values.push(
+    //                     {
+    //                         Year: `${year}-${yearArray[index - 1]}`,
+    //                         Value: (newValue - oldValue) / oldValue
+    //                     }
+    //                 )
+    //             }
+    //         })
+    //     } else if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
+    //         let yearArray = [2015, 2016, 2017, 2018, 2019]
+
+    //         yearArray.forEach((year, index) => {
+    //             if ([3, 6, 12].includes(cloneData[i].ID)) {
+    //                 cloneData[i].Values.push(
+    //                     {
+    //                         Year: `%${yearArray[index]}`,
+    //                         Value: (cloneData[i].Values.filter(j => j.Year === year)[0] || {}).Value / (tongDoanhThuValues.filter(j => j.Year === year)[0] || {}).Value
+    //                     }
+    //                 )
+    //             } else if ([4, 7, 9, 13].includes(cloneData[i].ID)) {
+    //                 cloneData[i].Values.push(
+    //                     {
+    //                         Year: `%${yearArray[index]}`,
+    //                         Value: (cloneData[i].Values.filter(j => j.Year === year)[0] || {}).Value / (tongChiPhiValues.filter(j => j.Year === year)[0] || {}).Value
+    //                     }
+    //                 )
+    //             }
+
+    //             if (index > 0) {
+    //                 let newValue = (cloneData[i].Values.filter(j => j.Year === year)[0] || {}).Value
+    //                 let oldValue = (cloneData[i].Values.filter(j => j.Year === yearArray[index - 1])[0] || {}).Value
+    //                 cloneData[i].Values.push(
+    //                     {
+    //                         Year: `${year}-${yearArray[index - 1]}`,
+    //                         Value: (newValue - oldValue) / oldValue
+    //                     }
+    //                 )
+    //             }
+
+    //         })
+    //     }
+
+    //     if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
+    //         switch (cloneData[i].ID) {
+    //             case 'TONG DOANH THU':
+    //                 cloneData[i].sortedIndex = 0
+    //                 break;
+    //             case 3:
+    //                 cloneData[i].sortedIndex = 1
+    //                 break;
+    //             case 6:
+    //                 cloneData[i].sortedIndex = 2
+    //                 break;
+    //             case 12:
+    //                 cloneData[i].sortedIndex = 3
+    //                 break;
+    //             case 'TONG CHI PHI':
+    //                 cloneData[i].sortedIndex = 4
+    //                 break;
+    //             case 4:
+    //                 cloneData[i].sortedIndex = 5
+    //                 break;
+    //             case 7:
+    //                 cloneData[i].sortedIndex = 6
+    //                 break;
+    //             case 9:
+    //                 cloneData[i].sortedIndex = 7
+    //                 break;
+    //             case 13:
+    //                 cloneData[i].sortedIndex = 8
+    //                 break;
+    //             case 5:
+    //                 cloneData[i].sortedIndex = 9
+    //                 break;
+    //             case 15:
+    //                 cloneData[i].sortedIndex = 10
+    //                 break;
+    //             case 18:
+    //                 cloneData[i].sortedIndex = 11
+    //                 break;
+    //             case 19:
+    //                 cloneData[i].sortedIndex = 12
+    //                 break;
+    //             default:
+    //                 cloneData[i].sortedIndex = 9999
+    //                 break;
+    //         }
+    //     }
+
+    // }
+    // if (type === LATEST_FINANCIAL_REPORTS.TYPE_2) {
+    //     cloneData.sort((a, b) => a.sortedIndex - b.sortedIndex)
+    // }
     return cloneData
 }
 

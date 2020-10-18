@@ -14,7 +14,6 @@ export const StockUrls = {
                 return `${baseUrl}/api/Data/News/${type}?startIndex=${startIndex}&count=${count}`
             }
         }
-
     },
     getYearlyFinancialInfo: (symbol) => `${baseUrl}/api/Data/Finance/YearlyFinancialInfo/?symbol=${symbol}&fromYear=2016&toYear=2019`,
     getQuarterlyFinancialInfo: (symbol) => `${baseUrl}/api/Data/Finance/QuarterlyFinancialInfo/?symbol=${symbol}&fromYear=2016&fromQuarter=1&toYear=2020&toQuarter=2`,
@@ -32,7 +31,6 @@ export const StockUrls = {
 export const CompanyUrls = {
     fetchCompany: () => `${baseUrl}/api/Company/`
 }
-
 
 export const LastUpdatedDateUrls = {
     getLastUpdatedDate: (id) => `${baseUrl}/api/config/${id ? `?key=${id}` : ''}`,

@@ -17,6 +17,7 @@ import {
 
 import Analysis from './Analysis';
 import MarketNews from './MarketNews';
+import Financial from './Financial';
 
 
 const { TabPane } = Tabs;
@@ -219,7 +220,7 @@ class Stock extends React.Component<IProps, IState> {
                                                     {/* <Price /> */}
                                                 </TabPane>
                                                 <TabPane tab="Financial" key="7">
-                                                    {/* <Financial /> */}
+                                                    <Financial />
                                                 </TabPane>
                                                 <TabPane tab="Technical" key="8">
                                                     {/* <Technical /> */}
@@ -235,7 +236,7 @@ class Stock extends React.Component<IProps, IState> {
                                     <Analysis />
                                 </TabPane>
                                 <TabPane tab="News" key="3">
-                                    <MarketNews/>
+                                    <MarketNews />
                                 </TabPane>
                             </Tabs>
                         </div>

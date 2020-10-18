@@ -1,6 +1,6 @@
 import ENV from 'ENV';
 
-let config = {
+const config = {
     domain: ENV.DOMAIN || 'http://localhost:8001'
 };
 
