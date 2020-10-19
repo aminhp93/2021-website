@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    postAuthToken,
     fetchAccount,
     fetchAccountAssets,
     fetchAccountPortfolio,
@@ -11,6 +12,7 @@ import {
 import { formatNumber } from 'utils/common';
 
 interface IProps {
+    postAuthToken: any,
     fetchAccount: any,
     fetchAccountAssets: any,
     fetchAccountPortfolio: any,
@@ -35,10 +37,11 @@ class Account extends React.Component<IProps, IState> {
         }
     }
     async componentDidMount() {
-        const res1 = await this.props.fetchAccount()
-        const res2 = await this.props.fetchAccountAssets()
-        const res3 = await this.props.fetchAccountPortfolio()
-        const res4 = await this.props.fetchAccountStocks()
+        const res = await this.props.postAuthToken()
+        const res1 = await this.props.fetchAccount(res.data.token)
+        const res2 = await this.props.fetchAccountAssets(res.data.token)
+        const res3 = await this.props.fetchAccountPortfolio(res.data.token)
+        const res4 = await this.props.fetchAccountStocks(res.data.token)
         this.setState({
             accountObj: res1.data.account,
             accountAssetsObj: res2.data,
@@ -55,27 +58,27 @@ class Account extends React.Component<IProps, IState> {
                 <div className="Account-Stocks-item Account-Stocks-item-Stock" key={i.symbol}>
                     <div>{i.symbol}</div>
                     <div key={i.symbol}>
-                        <div className="flex flex-sp-bt"><div>available</div><div className="Account-Stocks-item-value">{i.available}</div></div>
-                        <div className="flex flex-sp-bt"><div>availableV2</div><div className="Account-Stocks-item-value">{i.availableV2}</div></div>
-                        <div className="flex flex-sp-bt"><div>blocked</div><div className="Account-Stocks-item-value">{i.blocked}</div></div>
-                        <div className="flex flex-sp-bt"><div>boCostPrice</div><div className="Account-Stocks-item-value">{i.boCostPrice}</div></div>
-                        <div className="flex flex-sp-bt"><div>cashDividend</div><div className="Account-Stocks-item-value">{i.cashDividend}</div></div>
+                        <div className="flex flex-sp-bt"><div>available</div><div className="Account-Stocks-item-value">{formatNumber(i.available)}</div></div>
+                        <div className="flex flex-sp-bt"><div>availableV2</div><div className="Account-Stocks-item-value">{formatNumber(i.availableV2)}</div></div>
+                        {/* <div className="flex flex-sp-bt"><div>blocked</div><div className="Account-Stocks-item-value">{i.blocked}</div></div> */}
+                        <div className="flex flex-sp-bt"><div>boCostPrice</div><div className="Account-Stocks-item-value">{formatNumber(i.boCostPrice)}</div></div>
+                        {/* <div className="flex flex-sp-bt"><div>cashDividend</div><div className="Account-Stocks-item-value">{i.cashDividend}</div></div> */}
                         <div className="flex flex-sp-bt"><div>costPrice</div><div className="Account-Stocks-item-value">{i.costPrice}</div></div>
-                        <div className="flex flex-sp-bt"><div>currentPrice</div><div className="Account-Stocks-item-value">{i.currentPrice}</div></div>
-                        <div className="flex flex-sp-bt"><div>df</div><div className="Account-Stocks-item-value">{i.df}</div></div>
-                        <div className="flex flex-sp-bt"><div>exercisedCA</div><div className="Account-Stocks-item-value">{i.exercisedCA}</div></div>
-                        <div className="flex flex-sp-bt"><div>matchInday</div><div className="Account-Stocks-item-value">{i.matchInday}</div></div>
-                        <div className="flex flex-sp-bt"><div>mortgage</div><div className="Account-Stocks-item-value">{i.mortgage}</div></div>
-                        <div className="flex flex-sp-bt"><div>quantity</div><div className="Account-Stocks-item-value">{i.quantity}</div></div>
-                        <div className="flex flex-sp-bt"><div>secure</div><div className="Account-Stocks-item-value">{i.secure}</div></div>
-                        <div className="flex flex-sp-bt"><div>sellremain</div><div className="Account-Stocks-item-value">{i.sellremain}</div></div>
-                        <div className="flex flex-sp-bt"><div>stockDividend</div><div className="Account-Stocks-item-value">{i.stockDividend}</div></div>
-                        <div className="flex flex-sp-bt"><div>t0</div><div className="Account-Stocks-item-value">{i.t0}</div></div>
-                        <div className="flex flex-sp-bt"><div>t1</div><div className="Account-Stocks-item-value">{i.t1}</div></div>
-                        <div className="flex flex-sp-bt"><div>t2</div><div className="Account-Stocks-item-value">{i.t2}</div></div>
-                        <div className="flex flex-sp-bt"><div>unexercisedCA</div><div className="Account-Stocks-item-value">{i.unexercisedCA}</div></div>
-                        <div className="flex flex-sp-bt"><div>waitfortrade</div><div className="Account-Stocks-item-value">{i.waitfortrade}</div></div>
-                        <div className="flex flex-sp-bt"><div>waitfortransfer</div><div className="Account-Stocks-item-value">{i.waitfortransfer}</div></div>
+                        <div className="flex flex-sp-bt"><div>currentPrice</div><div className="Account-Stocks-item-value">{formatNumber(i.currentPrice)}</div></div>
+                        {/* <div className="flex flex-sp-bt"><div>df</div><div className="Account-Stocks-item-value">{i.df}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>exercisedCA</div><div className="Account-Stocks-item-value">{i.exercisedCA}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>matchInday</div><div className="Account-Stocks-item-value">{i.matchInday}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>mortgage</div><div className="Account-Stocks-item-value">{i.mortgage}</div></div> */}
+                        <div className="flex flex-sp-bt"><div>quantity</div><div className="Account-Stocks-item-value">{formatNumber(i.quantity)}</div></div>
+                        {/* <div className="flex flex-sp-bt"><div>secure</div><div className="Account-Stocks-item-value">{i.secure}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>sellremain</div><div className="Account-Stocks-item-value">{i.sellremain}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>stockDividend</div><div className="Account-Stocks-item-value">{i.stockDividend}</div></div> */}
+                        <div className="flex flex-sp-bt"><div>t0</div><div className="Account-Stocks-item-value">{formatNumber(i.t0)}</div></div>
+                        <div className="flex flex-sp-bt"><div>t1</div><div className="Account-Stocks-item-value">{formatNumber(i.t1)}</div></div>
+                        <div className="flex flex-sp-bt"><div>t2</div><div className="Account-Stocks-item-value">{formatNumber(i.t2)}</div></div>
+                        {/* <div className="flex flex-sp-bt"><div>unexercisedCA</div><div className="Account-Stocks-item-value">{i.unexercisedCA}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>waitfortrade</div><div className="Account-Stocks-item-value">{i.waitfortrade}</div></div> */}
+                        {/* <div className="flex flex-sp-bt"><div>waitfortransfer</div><div className="Account-Stocks-item-value">{i.waitfortransfer}</div></div> */}
                     </div>
                 </div>
             )
@@ -153,16 +156,19 @@ class Account extends React.Component<IProps, IState> {
 
                 <div className="flex-1 Account-Assets">
                     <div>Asset</div>
-                    <div className="Account-Assets-item"><div>balance</div> {formatNumber(balance)}</div>
-                    <div className="Account-Assets-item"><div>cashAvailable</div> {formatNumber(cashAvailable)}</div>
-                    <div className="Account-Assets-item"><div>depositFeeTotal</div> {formatNumber(depositFeeTotal)}</div>
-                    <div className="Account-Assets-item"><div>marketValueOfShares</div> {formatNumber(marketValueOfShares)}</div>
-                    <div className="Account-Assets-item"><div>nav</div> {formatNumber(nav)}</div>
+                    
                     <div className="Account-Assets-item"><div>netAssetValue</div> {formatNumber(netAssetValue)}</div>
+                    <div className="Account-Assets-item"><div>marketValueOfShares</div> {formatNumber(marketValueOfShares)}</div>
+                    <div className="Account-Assets-item"><div>cashAvailable</div> {formatNumber(cashAvailable)}</div>
+                    <hr/>
+                    <div className="Account-Assets-item"><div>nav</div> {formatNumber(nav)}</div>
+                    <div className="Account-Assets-item"><div>depositFeeTotal</div> {formatNumber(depositFeeTotal)}</div>
                     <div className="Account-Assets-item"><div>originWithdrawal</div> {formatNumber(originWithdrawal)}</div>
                     <div className="Account-Assets-item"><div>pp0</div> {formatNumber(pp0)}</div>
                     <div className="Account-Assets-item"><div>realAccountMoney</div> {formatNumber(realAccountMoney)}</div>
                     <div className="Account-Assets-item"><div>withdrawal</div> {formatNumber(withdrawal)}</div>
+                    <div className="Account-Assets-item"><div>balance</div> {formatNumber(balance)}</div>
+
                 </div>
 
                 <div className="flex-1 Account-Portfolio">
@@ -189,7 +195,8 @@ const mapDispatchToProps = {
     fetchAccount,
     fetchAccountAssets,
     fetchAccountPortfolio,
-    fetchAccountStocks
+    fetchAccountStocks,
+    postAuthToken
 }
 
 export default connect(null, mapDispatchToProps)(Account);

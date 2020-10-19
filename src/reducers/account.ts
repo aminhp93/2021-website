@@ -15,22 +15,43 @@ const accountSlice = createSlice({
 
 export default accountSlice.reducer;
 
-export const fetchAccount = (): ThunkActionType => async () => {
-    const res = await AccountService.fetchAccount()
+export const postAuthToken = (): ThunkActionType => async () => {
+    const data = {
+        password: "Miamikki521",
+        username: "aminhp93"
+    }
+    const res = await AccountService.postAuthToken(data)
     return res
 }
 
-export const fetchAccountPortfolio = (): ThunkActionType => async () => {
-    const res = await AccountService.fetchAccountPortfolio()
+export const fetchAccount = (token): ThunkActionType => async () => {
+    const headers = {
+        'X-Auth-Token': token
+    }
+    const res = await AccountService.fetchAccount(headers)
     return res
 }
 
-export const fetchAccountAssets = (): ThunkActionType => async () => {
-    const res = await AccountService.fetchAccountAssets()
+export const fetchAccountPortfolio = (token): ThunkActionType => async () => {
+    const headers = {
+        'X-Auth-Token': token
+    }
+    const res = await AccountService.fetchAccountPortfolio(headers)
     return res
 }
 
-export const fetchAccountStocks = (): ThunkActionType => async () => {
-    const res = await AccountService.fetchAccountStocks()
+export const fetchAccountAssets = (token): ThunkActionType => async () => {
+    const headers = {
+        'X-Auth-Token': token
+    }
+    const res = await AccountService.fetchAccountAssets(headers)
+    return res
+}
+
+export const fetchAccountStocks = (token): ThunkActionType => async () => {
+    const headers = {
+        'X-Auth-Token': token
+    }
+    const res = await AccountService.fetchAccountStocks(headers)
     return res
 }
