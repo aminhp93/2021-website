@@ -50,3 +50,7 @@ export const AccountUrls = {
     fetchAccountAssets: 'https://trade-api.vndirect.com.vn/accounts/v2/0001069456/assets',
     fetchAccountStocks: 'https://trade-api.vndirect.com.vn/accounts/v3/0001069456/stocks'
 }
+
+export const PostUrls = {
+    getPosts: (type=0, offset=0, limit=20, symbol='') => `https://betarest.fireant.vn/posts?type=${type}&offset=${offset}&limit=${limit}&symbol=${symbol}`
+}
