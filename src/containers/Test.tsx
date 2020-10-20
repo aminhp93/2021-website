@@ -1,39 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { groupBy } from 'lodash';
+import { groupBy, uniq } from 'lodash';
+import ReactHtmlParser from 'react-html-parser';
+import { Input } from 'antd';
 
 import { getListUrlGoValue } from 'reducers/stocks';
 import { getPosts } from 'reducers/post';
 
 import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  } from 'recharts';
+} from 'recharts';
   
-
-  const data1 = [
-    {
-      name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-    },
-    {
-      name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-    },
-    {
-      name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-    },
-    {
-      name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
-    },
-    {
-      name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
-    },
-    {
-      name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
-    },
-    {
-      name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
-    },
-  ];
 interface IProps {
     getListUrlGoValue: any,
     getPosts: any,
@@ -41,13 +19,19 @@ interface IProps {
 
 interface IState {
     data: any,
+    total: any,
+    postIds: any,
 }
+
+const NUMBER_CALL_POST = 200
 
 class Test extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            data: [],
+            total: [],
+            postIds: []
         }
     }
     async componentDidMount() {
@@ -62,7 +46,7 @@ class Test extends React.Component<IProps, IState> {
     getAllPosts = () => {
         const listPromises = [];
         let arrOffset = [];
-        for (let i=0; i < 200; i++) {
+        for (let i=0; i < NUMBER_CALL_POST; i++) {
             arrOffset.push(i*20)
         }
         
@@ -79,11 +63,47 @@ class Test extends React.Component<IProps, IState> {
                 let result = [];
                 response.map(i => result = result.concat(i))
                 result.map(i => i.mappedDate = moment(i.date).format('YYYY-MM-DD'))
-                this.setState({ data: result })
+
+                const total = this.getTotal(result)
+                this.setState({ 
+                    data: result,
+                    total
+                })
             })
             .catch(error => {
                 console.log(error)
             })
+    }
+
+    getTotal = (data) => {
+        const xxx: any = {}
+        const mappedDateObj = groupBy(data, 'mappedDate')
+
+        Object.keys(mappedDateObj).map((i: any) => {
+            const array: any = mappedDateObj[i];
+            for (let j=0; j < array.length; j++) {
+                const taggedSymbols = array[j].taggedSymbols;
+                taggedSymbols.map(k => {
+                    const symbol = k.symbol.slice(0,3);
+                    if (Object.keys(xxx).indexOf(symbol) === -1) {
+                        xxx[symbol] = {
+                            symbol,
+                            count: 1,
+                            postIds: [array[j].postID]
+                        }
+                    } else {
+                        const postIds = xxx[symbol].postIds
+                        postIds.push(array[j].postID)
+                        xxx[symbol] = {
+                            symbol,
+                            count: xxx[symbol].count + 1,
+                            postIds: uniq(postIds)
+                        }
+                    }
+                })   
+            }
+        })
+        return Object.values(xxx).sort((a, b) => b.count - a.count)
     }
 
     getPosts = async (offset, resolve=null) => {
@@ -91,21 +111,40 @@ class Test extends React.Component<IProps, IState> {
         if (res && res.data) {
             resolve && resolve(res.data)
         }
+    }
 
+    handleClick = (data) => {
+        this.handle(data.activeLabel)
+    }
+
+    handlePressEnter = e => {
+        console.log(e, e.target.value)
+        this.handle(e.target.value)
+    }
+
+    handle = (data) => {
+        const filterSymbol = this.state.total.filter(i => i.symbol === data);
+        if (filterSymbol.length === 1) {
+            this.setState({
+                postIds: filterSymbol[0].postIds
+            })
+        }
     }
 
     render() {
-        const { data } = this.state;
+        const { data, total, postIds } = this.state;
         const mappedDateObj = groupBy(data, 'mappedDate')
+        const dataGroupByPostID = groupBy(data, 'postID')
         
         return (
-            <div>
+            <div className="flex">
                 {/* {data.map(i => {
                     const slug = 'https://app.govalue.vn/' + i.slug
                     return <div><a href={slug} target="_blank">{i.idea_id} - {moment(i.create_date).format('YYYY-MM-DD')} - {slug}</a></div>
                 })} */}
-                <div>Count - { data.length }</div>
+                
                 <div>
+                    <div>Count - { data.length }</div>
                     {Object.keys(mappedDateObj).map((i: any) => {
                         const objectKeys: any = {}
                         const array: any = mappedDateObj[i];
@@ -131,7 +170,6 @@ class Test extends React.Component<IProps, IState> {
                         
                         return <div>
                             <div>{i} - {mappedDateObj[i].length}
-                            
                                 <BarChart
                                     width={500}
                                     height={100}
@@ -139,6 +177,7 @@ class Test extends React.Component<IProps, IState> {
                                     margin={{
                                         top: 5, right: 30, left: 20, bottom: 5,
                                     }}
+                                    onClick={this.handleClick}
                                 >
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="symbol" />
@@ -153,11 +192,38 @@ class Test extends React.Component<IProps, IState> {
                     })}
                 </div>
                 
+                <div className="flex">
+                    <div>Detail</div>
+                    <div>
+                        <Input onPressEnter={this.handlePressEnter}/>
+                        <BarChart
+                            width={200}
+                            height={500}
+                            data={total.slice(0, 10)}
+                            layout="vertical"
+                            onClick={this.handleClick}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type="number" />
+                            <YAxis type="category" dataKey="symbol" />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="count" fill="#8884d8" />
+                        </BarChart>
+                    </div>
+                    <div>
+                        {postIds.map(i => {
+                            return <div>
+                                {ReactHtmlParser(dataGroupByPostID[i][0].content)}
+                                <hr/>
+                            </div>
+                        })}
+                    </div>
+                </div>
             </div>
         )
     }
 }
-
 
 const mapDispatchToProps = {
     getListUrlGoValue,
