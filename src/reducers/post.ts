@@ -19,3 +19,8 @@ export const getPosts = (type, offset, limit, symbol): ThunkActionType => async 
     const res = await PostService.getPosts(type, offset, limit, symbol)
     return res
 }
+
+export const getReplies = (postId): ThunkActionType => async () => {
+    const res = await PostService.getReplies(postId)
+    return res
+}

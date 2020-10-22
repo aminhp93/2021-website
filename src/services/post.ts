@@ -12,7 +12,14 @@ const PostService = {
             method: 'GET',
             url: PostUrls.getPosts(type, offset, limit, symbol),
         });
-    }
+    },
+    getReplies(postId) {
+        return request({
+            headers,
+            method: 'GET',
+            url: PostUrls.getReplies(postId),
+        });
+    },
 };
 
 export default PostService;

@@ -52,5 +52,6 @@ export const AccountUrls = {
 }
 
 export const PostUrls = {
-    getPosts: (type=0, offset=0, limit=20, symbol='') => `https://betarest.fireant.vn/posts?type=${type}&offset=${offset}&limit=${limit}&symbol=${symbol}`
+    getPosts: (type=0, offset=0, limit=20, symbol='') => `https://betarest.fireant.vn/posts?type=${type}&offset=${offset}&limit=${limit}&symbol=${symbol}`,
+    getReplies: (postId) => `https://betarest.fireant.vn/posts/${postId}/replies?offset=0&limit=50`
 }

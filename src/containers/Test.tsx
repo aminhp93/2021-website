@@ -3,24 +3,26 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { groupBy, uniq } from 'lodash';
 import ReactHtmlParser from 'react-html-parser';
-import { Input } from 'antd';
+import { Input, Button } from 'antd';
 
 import { getListUrlGoValue } from 'reducers/stocks';
-import { getPosts } from 'reducers/post';
+import { getPosts, getReplies } from 'reducers/post';
 
 import {
-    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
   
 interface IProps {
     getListUrlGoValue: any,
     getPosts: any,
+    getReplies: any,
 }
 
 interface IState {
     data: any,
     total: any,
     postIds: any,
+    replies: any,
 }
 
 const NUMBER_CALL_POST = 200
@@ -31,7 +33,8 @@ class Test extends React.Component<IProps, IState> {
         this.state = {
             data: [],
             total: [],
-            postIds: []
+            postIds: [],
+            replies: []
         }
     }
     async componentDidMount() {
@@ -118,8 +121,14 @@ class Test extends React.Component<IProps, IState> {
     }
 
     handlePressEnter = e => {
-        console.log(e, e.target.value)
         this.handle(e.target.value)
+    }
+
+    getReplies = async (postId) => {
+        const res = await this.props.getReplies(postId);
+        this.setState({
+            replies: res.data
+        })
     }
 
     handle = (data) => {
@@ -132,7 +141,7 @@ class Test extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { data, total, postIds } = this.state;
+        const { data, total, postIds, replies } = this.state;
         const mappedDateObj = groupBy(data, 'mappedDate')
         const dataGroupByPostID = groupBy(data, 'postID')
         
@@ -183,7 +192,7 @@ class Test extends React.Component<IProps, IState> {
                                     <XAxis dataKey="symbol" />
                                     <YAxis />
                                     <Tooltip />
-                                    <Legend />
+                                    {/* <Legend /> */}
                                     <Bar dataKey="count" fill="#8884d8" />
                                 </BarChart>
                                 <hr/>
@@ -193,7 +202,6 @@ class Test extends React.Component<IProps, IState> {
                 </div>
                 
                 <div className="flex">
-                    <div>Detail</div>
                     <div>
                         <Input onPressEnter={this.handlePressEnter}/>
                         <BarChart
@@ -211,14 +219,31 @@ class Test extends React.Component<IProps, IState> {
                             <Bar dataKey="count" fill="#8884d8" />
                         </BarChart>
                     </div>
-                    <div>
-                        {postIds.map(i => {
-                            return <div>
-                                {ReactHtmlParser(dataGroupByPostID[i][0].content)}
-                                <hr/>
+                    <div className="flex">
+                        <div className="flex-1">
+                            {postIds.map(i => {
+                                return <div >
+                                    <div className="flex flex-sp-bt">
+                                        <div>{moment(dataGroupByPostID[i][0].date).format("MMMM Do")} - {ReactHtmlParser(dataGroupByPostID[i][0].content)}</div>
+                                        <Button onClick={() => this.getReplies(dataGroupByPostID[i][0].postID)}>Com - {dataGroupByPostID[i][0].totalReplies}</Button>
+                                    </div>
+                                    <hr/>
+                                </div>
+                            })}
+                        </div>
+                        <div className="replies">
+                            <div>
+                                <div>Replies</div>
+                                {replies.map(i => {
+                                    return <div>
+                                        {i.originalContent}
+                                        <hr/>
+                                        </div>
+                                })}
                             </div>
-                        })}
+                        </div>
                     </div>
+                    
                 </div>
             </div>
         )
@@ -227,7 +252,8 @@ class Test extends React.Component<IProps, IState> {
 
 const mapDispatchToProps = {
     getListUrlGoValue,
-    getPosts
+    getPosts,
+    getReplies
 }
 
 export default connect(null, mapDispatchToProps)(Test);
