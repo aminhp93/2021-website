@@ -59,6 +59,10 @@ class Stock extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        if (window.location.pathname !== "/stickies") {
+            const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
+            a && a.remove();
+        }
         try {
             const promise1 = this.props.getLastUpdatedDate()
             const promise2 = this.props.fetchListStocks()
@@ -198,7 +202,7 @@ class Stock extends React.Component<IProps, IState> {
                 <div className="App-container">
                     <div className="App-navigation">
                         <div>
-                            <Tabs defaultActiveKey="3" tabPosition="left">
+                            <Tabs defaultActiveKey="1" tabPosition="left">
                                 <TabPane tab="Stock" key="1">
                                     <div className="App-content">
                                         <div>

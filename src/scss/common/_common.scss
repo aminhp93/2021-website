@@ -1,3 +1,11 @@
+body {
+    display: flex;
+}
+
+#root {
+    width: 100%;
+}
+
 .flex {
     display: flex;
 }
@@ -26,6 +34,10 @@
     color: $blue;
 }
 
+.white {
+    color: $white;
+}
+
 .bg-light-yellow {
     background-color: $light-yellow;
 }
@@ -40,6 +52,14 @@
 
 .bg-gray {
     background-color: $gray;
+}
+
+.bg-red {
+    background-color: $red;
+}
+
+.bg-green {
+    background-color: $green;
 }
 
 .small {

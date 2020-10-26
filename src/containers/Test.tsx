@@ -43,6 +43,10 @@ class Test extends React.Component<IProps, IState> {
         // this.setState({ 
         //     data: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
         // })
+        if (window.location.pathname !== "/stickies") {
+            const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
+            a && a.remove();
+        }
         this.getAllPosts()
     }
 

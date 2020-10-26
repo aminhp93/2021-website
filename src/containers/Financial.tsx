@@ -611,7 +611,7 @@ class Financial extends React.Component<IProps, IState> {
                 className="ag-theme-alpine"
             >
                 <AgGridReact
-                    columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType)}
+                    columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
                     enableRangeSelection={true}
                     animateRows={true}
                     defaultColDef={defaultColDef}

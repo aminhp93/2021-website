@@ -37,6 +37,10 @@ class Account extends React.Component<IProps, IState> {
         }
     }
     async componentDidMount() {
+        if (window.location.pathname !== "/stickies") {
+            const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
+            a && a.remove();
+        }
         const res = await this.props.postAuthToken()
         const res1 = await this.props.fetchAccount(res.data.token)
         const res2 = await this.props.fetchAccountAssets(res.data.token)
@@ -53,7 +57,7 @@ class Account extends React.Component<IProps, IState> {
     renderStocks = (data) => {
         if (!data) return;
 
-        return data.map(i => {
+        return data.sort((a, b) => b.quantity * b.currentPrice - a.quantity * a.currentPrice).map(i => {
             return (
                 <div className="Account-Stocks-item Account-Stocks-item-Stock" key={i.symbol}>
                     <div>{i.symbol}</div>
@@ -63,7 +67,7 @@ class Account extends React.Component<IProps, IState> {
                         {/* <div className="flex flex-sp-bt"><div>blocked</div><div className="Account-Stocks-item-value">{i.blocked}</div></div> */}
                         <div className="flex flex-sp-bt"><div>boCostPrice</div><div className="Account-Stocks-item-value">{formatNumber(i.boCostPrice)}</div></div>
                         {/* <div className="flex flex-sp-bt"><div>cashDividend</div><div className="Account-Stocks-item-value">{i.cashDividend}</div></div> */}
-                        <div className="flex flex-sp-bt"><div>costPrice</div><div className="Account-Stocks-item-value">{i.costPrice}</div></div>
+                        <div className="flex flex-sp-bt"><div>costPrice</div><div className="Account-Stocks-item-value">{formatNumber(i.costPrice)}</div></div>
                         <div className="flex flex-sp-bt"><div>currentPrice</div><div className="Account-Stocks-item-value">{formatNumber(i.currentPrice)}</div></div>
                         {/* <div className="flex flex-sp-bt"><div>df</div><div className="Account-Stocks-item-value">{i.df}</div></div> */}
                         {/* <div className="flex flex-sp-bt"><div>exercisedCA</div><div className="Account-Stocks-item-value">{i.exercisedCA}</div></div> */}
@@ -87,7 +91,7 @@ class Account extends React.Component<IProps, IState> {
 
     renderStockPortfolio = (data) => {
         if (!data) return;
-        return data.map(i => {
+        return data.sort((a, b) => b.currentValue - a.currentValue).map(i => {
             return (
                 <div className="Account-Portfolio-item Account-Portfolio-item-Stock" key={i.symbol}>
                     <div>{i.symbol}</div>
@@ -100,7 +104,7 @@ class Account extends React.Component<IProps, IState> {
                         {/* <div className="flex flex-sp-bt"><div>tradingPlace</div><div className="Account-Portfolio-item-value">{formatNumber(i.tradingPlace)}</div></div> */}
                         <div className="flex flex-sp-bt"><div>currentValue</div><div className="Account-Portfolio-item-value">{formatNumber(i.currentValue)}</div></div>
                         <div className="flex flex-sp-bt"><div>cost</div><div className="Account-Portfolio-item-value">{formatNumber(i.cost)}</div></div>
-                        <div className="flex flex-sp-bt"><div>gainLoss</div><div className="Account-Portfolio-item-value">{formatNumber(i.gainLoss)}</div></div>
+                        <div className="flex flex-sp-bt"><div>gainLoss</div><div className={`Account-Portfolio-item-value white ${i.gainLoss > 0 ? "bg-green" : "bg-red" }`}>{formatNumber(i.gainLoss)}</div></div>
                         <div className="flex flex-sp-bt"><div>gainLossRatio</div><div className="Account-Portfolio-item-value">{formatNumber((i.gainLossRatio * 100).toFixed(1))}%</div></div>
                     </div>
                 </div>
@@ -173,11 +177,12 @@ class Account extends React.Component<IProps, IState> {
 
                 <div className="flex-1 Account-Portfolio">
                     <div>Portfolio</div>
-                    <div className="Account-Portfolio-item"><div>profit</div> {formatNumber(profit)}</div>
-                    <div className="Account-Portfolio-item"><div>ratio</div> {formatNumber((ratio * 100).toFixed(1))}%</div>
-                    {this.renderStockPortfolio(stocks)}
                     <div className="Account-Portfolio-item"><div>totalCost</div> {formatNumber(totalCost)}</div>
                     <div className="Account-Portfolio-item"><div>totalCurrentValue</div> {formatNumber(totalCurrentValue)}</div>
+                    <div className="Account-Portfolio-item"><div>profit</div><span className={`white ${profit > 0 ? 'bg-green' : 'bg-red'}`}>{formatNumber(profit)}</span></div>
+                    <div className="Account-Portfolio-item"><div>ratio</div> {formatNumber((ratio * 100).toFixed(1))}%</div>
+                    {this.renderStockPortfolio(stocks)}
+                    
                 </div>
 
                 <div className="flex-1 Account-Stocks">

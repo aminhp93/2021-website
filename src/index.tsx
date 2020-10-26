@@ -1,6 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import history from 'utils/history';
+import {
+  Router, Route, Switch, Redirect,
+} from 'react-router-dom';
 
 import App from 'containers/App';
 
@@ -12,8 +16,8 @@ import store from 'store';
 
 const render = () => {
   ReactDOM.render(
-    <Provider store={store}>      
-        <App />
+    <Provider store={store}>   
+      <App />
     </Provider>,
     document.getElementById('root')
   );

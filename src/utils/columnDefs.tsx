@@ -387,34 +387,19 @@ export const HistoricalQuotesSupplyDemandColumns = [
     }
 ]
 
-export const getLastestFinancialReportsColumnDefs = (period, type, analysisType = null) => {
-    let yearArray = [2015, 2016, 2017, 2018, 2019]
-    let quarterArray: any = [
-        {
-            Year: 2018,
-            Quarter: 4
-        },
-        {
-            Year: 2019,
-            Quarter: 1
-        },
-        {
-            Year: 2019,
-            Quarter: 2
-        },
-        {
-            Year: 2019,
-            Quarter: 3
-        },
-        {
-            Year: 2019,
-            Quarter: 4
-        },
-        {
-            Year: 2020,
-            Quarter: 1
+export const getLastestFinancialReportsColumnDefs = (period, type, analysisType = null, LastestFinancialReportsArray=[]) => {
+    console.log(LastestFinancialReportsArray, type )
+    if (LastestFinancialReportsArray.length === 0) return;
+    let yearArray = []
+    let quarterArray = []
+    
+    yearArray = LastestFinancialReportsArray[0].Values.map(i => i.Year)
+    quarterArray = LastestFinancialReportsArray[0].Values.map(i => {
+        return {
+            Year: i.Year,
+            Quarter: i.Quarter
         }
-    ]
+    })
     let year = []
     let quarter = []
     let rowGroup = [
@@ -550,7 +535,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
     }
 
 
-    quarterArray.push({
+    quarter.push({
         field: 'Name'
     })
     quarterArray.map(quarterItem => (
