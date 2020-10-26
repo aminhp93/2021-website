@@ -840,7 +840,6 @@ class Financial extends React.Component<IProps, IState> {
                             <div>
                                 <Button disabled={false} onClick={() => this.updateLastestFinancialReportsValue(symbol)}>LastestFinancialReportsValue</Button>
                                 <Button disabled={false} onClick={this.updateLastestFinancialReportsValueAll}>Update all</Button>
-                                {/* <Button onClick={() => this.updateLastestFinancialReportsValue('AAV')}>Update all</Button> */}
                             </div>
                         </div>
                         <div>

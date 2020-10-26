@@ -388,7 +388,6 @@ export const HistoricalQuotesSupplyDemandColumns = [
 ]
 
 export const getLastestFinancialReportsColumnDefs = (period, type, analysisType = null, LastestFinancialReportsArray=[]) => {
-    console.log(LastestFinancialReportsArray, type )
     if (LastestFinancialReportsArray.length === 0) return;
     let yearArray = []
     let quarterArray = []
@@ -438,6 +437,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
     yearArray.forEach(yearItem => {
         year.push({
             headerName: yearItem,
+            type: 'rightAligned',
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data = params.data.Values.filter(item => item.Year === yearItem)
@@ -541,10 +541,11 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
     quarterArray.map(quarterItem => (
         quarter.push({
             headerName: `${quarterItem.Year} ${quarterItem.Quarter}`,
+            type: 'rightAligned',
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data = params.data.Values.filter(item => item.Year === quarterItem.Year && item.Quarter === quarterItem.Quarter)
-                    return data.length && (data[0].Value / BILLION_UNIT).toFixed(0)
+                    return formatNumber(data.length && (data[0].Value / BILLION_UNIT).toFixed(0))
                 }
             }
         })
@@ -556,7 +557,6 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
 export const analysisDailyColumnDefs = (that, importantIndexType = null, allowICBCode = false) => {
     const Stock = {
         headerName: 'Stock',
-        align: 'left',
         field: 'Symbol',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -567,7 +567,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
 
     const Actions = {
         headerName: 'Actions',
-        align: 'left',
         cellRenderer: params => {
             const div = document.createElement("div");
             div.className = 'flex space-between'
@@ -597,7 +596,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
         field: 'ICBCode',
         headerName: 'ICBCode',
         filter: 'agNumberColumnFilter',
-        align: 'right',
         cellRenderer: params => {
             const div = document.createElement("div");
             div.innerText = params.data.ICBCode
@@ -609,7 +607,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
         field: 'PriceClose',
         headerName: 'Price',
         filter: 'agNumberColumnFilter',
-        align: 'right',
         cellRenderer: params => {
             const div = document.createElement("div");
             div.innerText = formatNumber(params.data.PriceClose)
@@ -618,7 +615,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     }
     const DealVolume = {
         field: 'DealVolume',
-        align: 'right',
         headerName: 'DealVolume',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
@@ -642,7 +638,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
 
     const LastPrice = {
         field: 'LastPrice',
-        align: 'right',
         headerName: 'LastPrice',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
@@ -666,7 +661,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const LowestPoint = {
         field: 'LowestPoint',
         headerName: 'LowestPoint',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -677,7 +671,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const LowestPointChange = {
         field: 'LowestPointChange',
         headerName: 'LowestPointChange',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -689,7 +682,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const LastRevenue = {
         field: 'LastRevenue',
         headerName: '2018Revenue',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -701,7 +693,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const CurrentRevenue = {
         field: 'CurrentRevenue',
         headerName: '2019Revenue',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -713,7 +704,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const RevenueChange = {
         field: 'RevenueChange',
         headerName: '%Rev',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -726,7 +716,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const LastProfit = {
         field: 'LastProfit',
         headerName: '2018Profit',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -738,7 +727,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const CurrentProfit = {
         field: 'CurrentProfit',
         headerName: '2019Profit',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -750,7 +738,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const ProfitChange = {
         field: 'ProfitChange',
         headerName: '%Profit',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -763,7 +750,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const PE = {
         field: 'PE',
         headerName: 'PE',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -775,7 +761,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const PS = {
         field: 'PS',
         headerName: 'PS',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -787,7 +772,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const PB = {
         field: 'PB',
         headerName: 'PB',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -799,7 +783,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const EPS = {
         field: 'EPS',
         headerName: 'EPS',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -811,7 +794,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const QuickRatio = {
         field: 'QuickRatio',
         headerName: 'QuickRatio',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -823,7 +805,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const CurrentRatio = {
         field: 'CurrentRatio',
         headerName: 'CurrentRatio',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -835,7 +816,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const TotalDebtOverEquity = {
         field: 'TotalDebtOverEquity',
         headerName: 'TotalDebtOverEquity',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -846,7 +826,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const TotalDebtOverAssets = {
         field: 'TotalDebtOverAssets',
         headerName: 'TotalDebtOverAssets',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -858,7 +837,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const TotalAssetsTurnover = {
         field: 'TotalAssetsTurnover',
         headerName: 'TotalAssetsTurnover',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -870,7 +848,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const InventoryTurnover = {
         field: 'InventoryTurnover',
         headerName: 'InventoryTurnover',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -882,7 +859,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const ReceivablesTurnover = {
         field: 'ReceivablesTurnover',
         headerName: 'ReceivablesTurnover',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -894,7 +870,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const GrossMargin = {
         field: 'GrossMargin',
         headerName: 'GrossMargin',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -906,7 +881,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const OperatingMargin = {
         field: 'OperatingMargin',
         headerName: 'OperatingMargin',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -918,7 +892,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const EBITMargin = {
         field: 'EBITMargin',
         headerName: 'EBITMargin',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -930,7 +903,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const NetProfitMargin = {
         field: 'NetProfitMargin',
         headerName: 'NetProfitMargin',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -942,7 +914,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const ROA = {
         field: 'ROA',
         headerName: 'ROA',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -954,7 +925,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const ROE = {
         field: 'ROE',
         headerName: 'ROE',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -966,7 +936,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const ROIC = {
         field: 'ROIC',
         headerName: 'ROIC',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -990,7 +959,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const LastQuarterRev = {
         field: 'LastQuarterRev',
         headerName: 'LastQuarterRev',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -1002,7 +970,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const LastQuarterProfit = {
         field: 'LastQuarterProfit',
         headerName: 'LastQuarterProfit',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -1014,7 +981,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const CurrentQuarterRev = {
         field: 'CurrentQuarterRev',
         headerName: 'CurrentQuarterRev',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -1031,7 +997,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const CurrentQuarterProfit = {
         field: 'CurrentQuarterProfit',
         headerName: 'CurrentQuarterProfit',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -1048,7 +1013,6 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
     const AverageVolume30 = {
         field: 'AverageVolume30',
         headerName: 'AverageVolume30',
-        align: 'right',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
