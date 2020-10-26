@@ -503,12 +503,6 @@ class Financial extends React.Component<IProps, IState> {
         this.gridColumnApi = params.columnApi;
     };
 
-    handleAnalysisType = e => {
-        this.setState({ analysisType: e.target.value }, () => {
-            // 
-        })
-    }
-
     // RENDER PART
 
     renderRevenueTable = (isProfit = false) => {
@@ -829,32 +823,31 @@ class Financial extends React.Component<IProps, IState> {
             return (
                 <div className="Financial bg-white">
                     <div style={{ width: '100%' }}>
-                        <div className="header">
-                            Bao cao tai chinh
-                        </div>
-                        <div>
-                            <Button onClick={this.handleCloseFinancialReports}>Chi tieu tai chinh</Button>
+                        <div className="flex flex-sp-bt">
                             <div>
-                                <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
+                                <div className="header">
+                                    Bao cao tai chinh
+                                    <Button onClick={this.handleCloseFinancialReports}>Chi tieu tai chinh</Button>
+                                </div>
+                                <div>
+                                    <Radio.Group value={period} onChange={this.handlePeriod}>
+                                        <Radio.Button value="quarterly">Hang quy</Radio.Button>
+                                        <Radio.Button value="yearly">Hang nam</Radio.Button>
+                                    </Radio.Group>
+                                </div>
                             </div>
-                            <div>
-                                <Button disabled={false} onClick={() => this.updateLastestFinancialReportsValue(symbol)}>LastestFinancialReportsValue</Button>
-                                <Button disabled={false} onClick={this.updateLastestFinancialReportsValueAll}>Update all</Button>
+                            
+                            <div>    
+                                <div>
+                                    <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
+                                </div>
+                                <div>
+                                    <Button disabled={true} onClick={() => this.updateLastestFinancialReportsValue(symbol)}>LastestFinancialReportsValue</Button>
+                                    <Button disabled={true} onClick={this.updateLastestFinancialReportsValueAll}>Update all</Button>
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <Radio.Group value={period} onChange={this.handlePeriod}>
-                                <Radio.Button value="quarterly">Hang quy</Radio.Button>
-                                <Radio.Button value="yearly">Hang nam</Radio.Button>
-                            </Radio.Group>
-                        </div>
-                        <div>
-                            <Radio.Group value={analysisType} onChange={this.handleAnalysisType}>
-                                <Radio.Button value="tyTrong">Ty trong</Radio.Button>
-                                <Radio.Button value="chieuNgang">Chieu ngang</Radio.Button>
-                                <Radio.Button value="yearly">Hang nam</Radio.Button>
-                            </Radio.Group>
-                        </div>
+                       
                         <div className="Financial-reports">
                             <Tabs defaultActiveKey="1" onChange={this.handleChangeLastestFinancialReportsType}>
                                 <TabPane tab={LATEST_FINANCIAL_REPORTS.TYPE_2} key={LATEST_FINANCIAL_REPORTS.TYPE_2}>
@@ -880,12 +873,13 @@ class Financial extends React.Component<IProps, IState> {
             <div className="Financial">
                 <div className="Financial-left-container">
                     <div className="Financial-revenue bg-white">
-                        <div>
+                        <div className="flex flex-sp-bt">
                             <div className="header">
                                 DOANH THU (TỶ)
+                                <Button onClick={this.handleOpenFinancialReports}>Bao cao tai chinh</Button>
                             </div>
                             <div>
-                                <Button onClick={this.handleOpenFinancialReports}>Bao cao tai chinh</Button>
+                                
                                 <div>
                                     <Button disabled={true} onClick={() => this.updateYearlyFinancialInfo(symbol)}>YearlyFinancialInfo</Button>
                                     <Button disabled={true} onClick={this.updateYearlyFinancialInfoAll}>Update all</Button>
