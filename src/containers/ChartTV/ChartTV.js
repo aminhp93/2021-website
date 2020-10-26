@@ -3,17 +3,11 @@ import ReactDOM from "react-dom";
 import uuidv4 from "uuid/v4";
 import Datafeeds from "./datafeeds";
 import axios from "axios";
-import { connect } from 'react-redux';
 import chartTV_constants from "./chartTV_constants";
 import {
   getSaveLayoutChartUrl,
   getAllLayoutsUrl
 } from "utils/request";
-// import FormData from "form-data";
-import { get } from 'lodash';
-
-import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
-
 
 class ChartTV extends React.Component {
   constructor(props) {
@@ -22,9 +16,8 @@ class ChartTV extends React.Component {
   }
 
   componentDidUpdate(preProps) {
-    if (this.props.selectedSymbol !== preProps.selectedSymbol) {
-      const { stocks, selectedSymbol } = this.props;
-      const symbol = (stocks[selectedSymbol] || {}).Symbol
+    if (this.props.symbol !== preProps.symbol) {
+      const { symbol } = this.props;
       this.showChart(symbol);
     }
   }
@@ -46,8 +39,7 @@ class ChartTV extends React.Component {
 
   initChart(dataFeed) {
     /* global TradingView */
-    const { stocks, selectedSymbol } = this.props;
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const { symbol } = this.props;
     const that = this;
     let data = new Datafeeds.UDFCompatibleDatafeed(
       "https://demo_feed.tradingview.com",
@@ -103,8 +95,7 @@ class ChartTV extends React.Component {
   }
 
   async loadLayoutChart(init) {
-    const { stocks, selectedSymbol } = this.props;
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const { symbol } = this.props;
     if (!init) {
       if (symbol === this.widget._options.symbol) return
     }
@@ -152,14 +143,7 @@ class ChartTV extends React.Component {
   cbSymbol(response) {
     // console.log(response);
     const that = this;
-    const { stocks } = this.props;
-    const fileredStocks = Object.values(stocks).filter(i => i.Symbol === response.symbol)
-    if (fileredStocks.length === 1) {
-      this.props.updateSelectedSymbolSuccess(fileredStocks[0].id)
-    }
-    this.setState({
-      symbol: response.symbol
-    }, () => that.loadLayoutChart());
+    that.loadLayoutChart()
   }
 
   componentDidMount() {
@@ -170,8 +154,7 @@ class ChartTV extends React.Component {
 
   async saveLayoutChart(div) {
     let listLayout;
-    const { stocks, selectedSymbol } = this.props;
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const { symbol } = this.props;
 
     await axios
       .get(getAllLayoutsUrl())
@@ -258,15 +241,5 @@ class ChartTV extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    stocks: get(state, 'stocks'),
-    selectedSymbol: get(state, 'selectedSymbol'),
-  }
-}
 
-const mapDispatchToProps = {
-  updateSelectedSymbolSuccess
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChartTV);
+export default ChartTV

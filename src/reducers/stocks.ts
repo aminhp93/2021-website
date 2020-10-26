@@ -35,32 +35,32 @@ export const fetchNews = (data): ThunkActionType => async () => {
     return response
 }
 
-export const getYearlyFinancialInfo = (): ThunkActionType => async (
+export const getYearlyFinancialInfo = (data: string): ThunkActionType => async (
     _,
     getStoreValue
 ) => {
     const { selectedSymbol, stocks } = getStoreValue();
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const symbol = data || (stocks[selectedSymbol] || {}).Symbol
     const response = await StockService.getYearlyFinancialInfo(symbol)
     return response
 }
 
-export const getQuarterlyFinancialInfo = (): ThunkActionType => async (
+export const getQuarterlyFinancialInfo = (data: string): ThunkActionType => async (
     _,
     getStoreValue
 ) => {
     const { selectedSymbol, stocks } = getStoreValue();
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const symbol = data || (stocks[selectedSymbol] || {}).Symbol
     const response = await StockService.getQuarterlyFinancialInfo(symbol)
     return response
 }
 
-export const getLastestFinancialInfo = (): ThunkActionType => async (
+export const getLastestFinancialInfo = (data: string): ThunkActionType => async (
     _,
     getStoreValue
 ) => {
     const { selectedSymbol, stocks } = getStoreValue();
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const symbol = data || (stocks[selectedSymbol] || {}).Symbol
     const stock: any = Object.values(stocks).filter((i: any) => i.Symbol === symbol)[0]
     const response = await StockService.getLastestFinancialInfo(stock.id)
     return response

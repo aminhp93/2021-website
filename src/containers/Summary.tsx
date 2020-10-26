@@ -25,6 +25,7 @@ interface IProps {
     companies: any,
     stocks: any,
     decisiveIndexes: any,
+    symbol: string,
 }
 
 interface IState {
@@ -67,18 +68,19 @@ class Summary extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(preProps) {
-        if (this.props.selectedSymbol !== preProps.selectedSymbol) {
+        if (this.props.symbol !== preProps.symbol) {
             this.crawlData();
         }
     }
 
     crawlData = async () => {
         try {
-            const res1 = await this.props.getYearlyFinancialInfo()
+            const symbol = (this.props.data || {}).symbol
+            const res1 = await this.props.getYearlyFinancialInfo(symbol)
             const YearlyFinancialInfoArray = res1.data
-            const res2 = await this.props.getQuarterlyFinancialInfo()
+            const res2 = await this.props.getQuarterlyFinancialInfo(symbol)
             const QuarterlyFinancialInfoArray = res2.data
-            const res3 = await this.props.getLastestFinancialInfo()
+            const res3 = await this.props.getLastestFinancialInfo(symbol)
             const LastestFinancialInfoObj = res3.data
             if (YearlyFinancialInfoArray && QuarterlyFinancialInfoArray && LastestFinancialInfoObj) {
                 this.setState({
@@ -172,7 +174,8 @@ class Summary extends React.Component<IProps, IState> {
             const data: any = { ...this.state }
             data.endDate = this.props.data.endDate;
             data.startDate = this.props.data.startDate;
-            data.ICBCode = Number((this.props.companies[this.props.selectedSymbol] || {}).ICBCode)
+            const stock: any = Object.values(this.props.stocks).filter((i: any) => i.Symbol === (this.props.data || {}).symbol)[0]
+            data.ICBCode = Number((this.props.companies[stock.id] || {}).ICBCode)
             data.ChangePrice = -100
             data.MinPrice = 5000
             data.Symbol = ""

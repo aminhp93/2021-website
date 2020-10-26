@@ -575,13 +575,14 @@ export const analysisDailyColumnDefs = (that, importantIndexType = null, allowIC
                     <div className="flex">
                         <div onClick={() => {
                             that.setState({
-                                visibleChart: true
+                                visibleChart: true,
+                                symbol: params.data.Symbol
                             })
-                            that.props.updateSelectedSymbolSuccess(params.data.Stock)
                         }}><BarChartOutlined style={{ fontSize: '16px' }} /></div>
                         <div onClick={() => {
                             that.setState({
-                                visibleInfo: true
+                                visibleInfo: true,
+                                symbol: params.data.Symbol
                             })
                         }}><InfoCircleOutlined style={{ fontSize: '16px' }} /></div>
                     </div>

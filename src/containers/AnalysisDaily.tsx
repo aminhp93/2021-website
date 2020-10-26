@@ -60,6 +60,7 @@ interface IState {
     ChangePrice: number,
     checkBlackList: boolean,
     checkStrong: boolean,
+    symbol: string
 }
 
 class AnalysisDaily extends React.Component<IProps, IState> {
@@ -93,7 +94,8 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             addVN30Stock: [],
             data: [],
             checkBlackList: true,
-            checkStrong: true
+            checkStrong: true,
+            symbol: ''
         }
         this.scan = debounce(this.scan, 300);
         this.scanning = false;
@@ -244,10 +246,9 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             visibleChart, visibleInfo, type,
             importantIndexType, TodayCapital, MinPrice,
             ChangePrice,
-            checkStrong, checkBlackList
+            checkStrong, checkBlackList,
+            symbol
         } = this.state;
-        const { stocks, selectedSymbol } = this.props;
-        const symbol = (stocks[selectedSymbol] || {}).Symbol
         return (
             <div className="AnalysisDaily">
                 <div>
@@ -330,7 +331,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                     >
 
                         <div className="chartTV-container">
-                            <ChartTV />
+                            <ChartTV symbol={symbol}/>
                             {<Summary data={this.state} />}
                         </div>
                     </Modal>
@@ -344,7 +345,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         onCancel={this.handleCancel}
                         footer={null}
                     >
-                        <FinalAnalysis />
+                        <FinalAnalysis symbol={symbol}/>
                     </Modal>
                     : null}
             </div>
@@ -371,5 +372,3 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnalysisDaily);
-
-
