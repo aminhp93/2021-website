@@ -3,7 +3,9 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { cloneDeep, get, uniqBy } from 'lodash';
 import { Table, Button, Tabs, Radio, List } from 'antd';
-import { AgGridReact } from 'ag-grid-react';
+// import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact } from '@ag-grid-community/react';
+
 // import {
 //     BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
 // } from 'recharts';
@@ -26,6 +28,9 @@ import { BILLION_UNIT } from 'utils/unit';
 import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } from 'utils/common'
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
+
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
 
 const { TabPane } = Tabs;
 
@@ -87,8 +92,8 @@ class Financial extends React.Component<IProps, IState> {
             defaultColDef: {
                 flex: 1,
                 filter: true,
-                sortable: true,
-                resizable: true
+                // sortable: true,
+                // resizable: true
             },
             analysisType: null
         }
@@ -608,15 +613,17 @@ class Financial extends React.Component<IProps, IState> {
                 className="ag-theme-alpine"
             >
                 <AgGridReact
+                    modules= {[ClientSideRowModelModule]}
                     columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
                     enableRangeSelection={true}
-                    animateRows={true}
+                    // animateRows={true}
                     defaultColDef={defaultColDef}
                     onGridReady={this.onGridReady}
-                    autoGroupColumnDef={{ minWidth: 200 }}
+                    // autoGroupColumnDef={{ minWidth: 200 }}
                     rowData={mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)}
-                    onFirstDataRendered={params => params.api.sizeColumnsToFit()}
-                    groupDefaultExpanded={3}
+                    // onFirstDataRendered={params => params.api.sizeColumnsToFit()}
+                    // groupDefaultExpanded={3}
+                    rowSelection={'single'}
                 />
             </div>
         </div>
@@ -818,6 +825,13 @@ class Financial extends React.Component<IProps, IState> {
         )
     }
 
+    test = () => {
+        const selectedData = this.gridApi.getSelectedRows();
+        const res = this.gridApi.applyTransaction({ remove: selectedData });
+        
+
+    }
+
     render() {
         const { period, isFinancialReports, analysisType } = this.state;
         const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
@@ -831,6 +845,8 @@ class Financial extends React.Component<IProps, IState> {
                                 <div className="header">
                                     Bao cao tai chinh
                                     <Button onClick={this.handleCloseFinancialReports}>Chi tieu tai chinh</Button>
+                                    <Button onClick={this.test}>test</Button>
+
                                 </div>
                                 <div>
                                     <Radio.Group value={period} onChange={this.handlePeriod}>
@@ -845,8 +861,8 @@ class Financial extends React.Component<IProps, IState> {
                                     <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
                                 </div>
                                 <div>
-                                    <Button disabled={true} onClick={() => this.updateLastestFinancialReportsValue(symbol)}>LastestFinancialReportsValue</Button>
-                                    <Button disabled={true} onClick={this.updateLastestFinancialReportsValueAll}>Update all</Button>
+                                    <Button disabled={false} onClick={() => this.updateLastestFinancialReportsValue(symbol)}>LastestFinancialReportsValue</Button>
+                                    <Button disabled={false} onClick={this.updateLastestFinancialReportsValueAll}>Update all</Button>
                                 </div>
                             </div>
                         </div>
