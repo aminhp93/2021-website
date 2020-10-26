@@ -71,8 +71,8 @@ export const getLastestFinancialReports = (data: any): ThunkActionType => async 
     getStoreValue
 ) => {
     const { selectedSymbol, stocks } = getStoreValue();
-    const { financialType, year, quarter } = data;
-    const symbol = (stocks[selectedSymbol] || {}).Symbol
+    const { financialType, year, quarter, symbol: symbolProps } = data;
+    const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
 
     const response = await StockService.getLastestFinancialReports(symbol, financialType, year, quarter)
     return response

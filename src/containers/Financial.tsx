@@ -55,6 +55,7 @@ interface IProps {
     getQuarterlyFinancialInfo: any,
     getLastestFinancialInfo: any,
     getLastestFinancialReports: any,
+    symbol: string,
 }
 
 interface IState {
@@ -112,11 +113,13 @@ class Financial extends React.Component<IProps, IState> {
 
     crawlData = async () => {
         try {
-            const res1 = await this.props.getYearlyFinancialInfo()
+            const symbol = this.props.symbol;
+            console.log(symbol);
+            const res1 = await this.props.getYearlyFinancialInfo(symbol)
             const YearlyFinancialInfoArray = res1.data
-            const res2 = await this.props.getQuarterlyFinancialInfo()
+            const res2 = await this.props.getQuarterlyFinancialInfo(symbol)
             const QuarterlyFinancialInfoArray = res2.data
-            const res3 = await this.props.getLastestFinancialInfo()
+            const res3 = await this.props.getLastestFinancialInfo(symbol)
             const LastestFinancialInfoObj = res3.data
             if (YearlyFinancialInfoArray && QuarterlyFinancialInfoArray && LastestFinancialInfoObj) {
                 this.setState({
@@ -152,7 +155,7 @@ class Financial extends React.Component<IProps, IState> {
         const quarter = this.state.period === 'quarterly' ? 4 : 0
         const year = 2020
         try {
-            const res = await this.props.getLastestFinancialReports({ financialType: type_index, year, quarter })
+            const res = await this.props.getLastestFinancialReports({ financialType: type_index, year, quarter, symbol: this.props.symbol })
             this.setState({
                 LastestFinancialReportsArray: res.data
             })
@@ -817,8 +820,8 @@ class Financial extends React.Component<IProps, IState> {
 
     render() {
         const { period, isFinancialReports, analysisType } = this.state;
-        const { selectedSymbol, stocks } = this.props;
-        const symbol = (stocks[selectedSymbol] || {}).Symbol
+        const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
+        const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
         if (isFinancialReports) {
             return (
                 <div className="Financial bg-white">

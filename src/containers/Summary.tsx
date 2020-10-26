@@ -14,6 +14,7 @@ import { BILLION_UNIT } from 'utils/unit';
 import { formatNumber } from 'utils/common';
 import { analysisDailyColumnDefs } from 'utils/columnDefs';
 
+import Financial from './Financial';
 
 interface IProps {
     selectedSymbol: number,
@@ -261,6 +262,9 @@ class Summary extends React.Component<IProps, IState> {
                         onFirstDataRendered={params => params.api.sizeColumnsToFit()}
                     />
                 </div>
+            </div>
+            <div>
+                <Financial symbol={(this.props.data || {}).symbol}/>
             </div>
         </div>
     }
