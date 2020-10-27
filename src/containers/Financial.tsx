@@ -61,6 +61,7 @@ interface IProps {
     getLastestFinancialInfo: any,
     getLastestFinancialReports: any,
     symbol: string,
+    
 }
 
 interface IState {
@@ -72,12 +73,14 @@ interface IState {
     lastestFinancialReportsType: string,
     LastestFinancialInfoObj: any,
     defaultColDef: any,
-    analysisType: IAnalysisType
+    analysisType: IAnalysisType,
+    hide: boolean,
 }
 
 class Financial extends React.Component<IProps, IState> {
     gridApi: any;
     gridColumnApi: any;
+    xxx: any;
 
     constructor(props) {
         super(props);
@@ -85,22 +88,25 @@ class Financial extends React.Component<IProps, IState> {
             YearlyFinancialInfoArray: [],
             QuarterlyFinancialInfoArray: [],
             LastestFinancialReportsArray: [],
-            isFinancialReports: false,
-            period: 'yearly',
+            isFinancialReports: true,
+            period: 'quarterly',
             lastestFinancialReportsType: LATEST_FINANCIAL_REPORTS.TYPE_2,
             LastestFinancialInfoObj: {},
             defaultColDef: {
                 flex: 1,
                 filter: true,
-                // sortable: true,
+                sortable: true,
                 // resizable: true
             },
-            analysisType: null
+            analysisType: null,
+            hide: false
         }
+        this.xxx = []
     }
 
     componentDidMount() {
         this.crawlData();
+        this.getLastestFinancialReports()
     }
 
     componentDidUpdate(preProps) {
@@ -535,7 +541,6 @@ class Financial extends React.Component<IProps, IState> {
             }
             columns.push(pushObj)
         })
-        console.log(mappedData)
         return <Table dataSource={mappedData} columns={columns} pagination={false} />
     }
 
@@ -826,14 +831,51 @@ class Financial extends React.Component<IProps, IState> {
     }
 
     test = () => {
-        const selectedData = this.gridApi.getSelectedRows();
-        const res = this.gridApi.applyTransaction({ remove: selectedData });
-        
+        const { lastestFinancialReportsType } = this.state;
+        const xxx = []
+        let removeIds = []
+        switch (lastestFinancialReportsType) {
+            case LATEST_FINANCIAL_REPORTS.TYPE_2:
+                removeIds = [1, 2, 10, 12, 13, 14, 15, 16,17, 18, 19, 20, 21, 701]
+                break;
+            case LATEST_FINANCIAL_REPORTS.TYPE_1:
+                removeIds = [1, 
+                        1010201, 1010201, 1010303, 1010304, 1010305, 1010307,
+                        1010402, 
+                        1010503, 1010504, 1010505, 
+                        10201, 1020101, 1020102, 1020103, 1020104, 1020105, 1020106,
+                        1020202, 102020201, 102020202,
+                        1020501, 1020504, 1020505,
+                        10206, 1020601, 1020602, 1020603,
+                        3,
+                        3010102, 3010106, 3010108, 3010109, 3010110, 3010111, 3010112, 3010113, 3010114, 3010115,
+                        3010201, 3010202, 3010203, 3010204, 3010205, 3010208, 3010209, 3010210, 3010211, 3010212,
+                        3020102, 3020104, 3020106, 3020107, 3020108, 3020109, 3020110, 3020112, 3020113,
+                        30202, 3020201, 3020202, 3020203
+                    ]
+                break;
+            default:
+                break;
+        }
+        this.gridApi.forEachNode(node => {
+            if (removeIds.indexOf(node.data.ID) > -1) {
+                xxx.push(node.data)
+            }
+        })
+
+        this.gridApi.applyTransaction({ remove: xxx });
+    }
+
+    reset = () => {
+        const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
+        const newData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
+        this.gridApi.setRowData(newData)
 
     }
 
     render() {
-        const { period, isFinancialReports, analysisType } = this.state;
+        console.log(850, this.state.LastestFinancialReportsArray)
+        const { period, isFinancialReports } = this.state;
         const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
         const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
         if (isFinancialReports) {
@@ -846,6 +888,7 @@ class Financial extends React.Component<IProps, IState> {
                                     Bao cao tai chinh
                                     <Button onClick={this.handleCloseFinancialReports}>Chi tieu tai chinh</Button>
                                     <Button onClick={this.test}>test</Button>
+                                    <Button onClick={this.reset}>reset</Button>
 
                                 </div>
                                 <div>
