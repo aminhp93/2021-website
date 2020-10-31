@@ -2,7 +2,6 @@ import React from 'react';
 import { get, uniqBy, each } from 'lodash';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
-import { AgGridReact } from 'ag-grid-react';
 
 import {
     getYearlyFinancialInfo,
@@ -12,9 +11,10 @@ import {
 } from 'reducers/stocks';
 import { BILLION_UNIT } from 'utils/unit';
 import { formatNumber } from 'utils/common';
-import { analysisDailyColumnDefs } from 'utils/columnDefs';
+import { dailyAnalysisColumnDefs } from 'utils/columnDefs';
 
 import Financial from './Financial';
+import CustomAgGridReact from './CustomAgGridReact';
 
 interface IProps {
     selectedSymbol: number,
@@ -38,7 +38,7 @@ interface IState {
     defaultColDef: any,
 }
 
-class Summary extends React.Component<IProps, IState> {
+class SymbolAnalysis extends React.Component<IProps, IState> {
     scanning: boolean;
     gridApi: any;
     gridColumnApi: any;
@@ -51,7 +51,7 @@ class Summary extends React.Component<IProps, IState> {
             LastestFinancialInfoObj: {},
             // modules: AllModules,
             rowData: [],
-            columnDefs: analysisDailyColumnDefs(this, "SoSanhCungNganh", true),
+            columnDefs: dailyAnalysisColumnDefs(this, "SoSanhCungNganh", true),
             defaultColDef: {
                 flex: 1,
                 filter: true,
@@ -233,9 +233,9 @@ class Summary extends React.Component<IProps, IState> {
 
     render() {
         const { rowData, columnDefs, defaultColDef } = this.state;
-        return <div className="Summary">
+        return <div className="SymbolAnalysis">
             <div className="flex">
-                <div className="flex-1 Summary-revenue">
+                <div className="flex-1 SymbolAnalysis-revenue">
                     <div className="medium">Doanh thu</div>
                     {this.renderRevenueTable()}
                 </div>
@@ -246,23 +246,12 @@ class Summary extends React.Component<IProps, IState> {
             </div>
 
             <div className="medium">Compare same ICBCode</div>
-            <div style={{ width: '100%', height: '100%' }}>
-                <div
-                    id="myGrid"
-                    style={{
-                        height: '500px',
-                    }}
-                    className="ag-theme-alpine"
-                >
-                    <AgGridReact
-                        columnDefs={columnDefs}
-                        defaultColDef={defaultColDef}
-                        onGridReady={this.onGridReady}
-                        rowData={rowData}
-                        onFirstDataRendered={params => params.api.sizeColumnsToFit()}
-                    />
-                </div>
-            </div>
+            <CustomAgGridReact 
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                onGridReady={this.onGridReady}
+                rowData={rowData}
+            />
             <div>
                 <Financial symbol={(this.props.data || {}).symbol}/>
             </div>
@@ -287,4 +276,4 @@ const mapDispatchToProps = {
     scanStock
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Summary);
+export default connect(mapStateToProps, mapDispatchToProps)(SymbolAnalysis);

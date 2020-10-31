@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { cloneDeep, get, uniqBy } from 'lodash';
 import { Table, Button, Tabs, Radio, List } from 'antd';
 
-import CustomAgGridReact from './CustomAgGridReact';
-
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -26,7 +24,7 @@ import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } 
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import CustomAgGridReact from './CustomAgGridReact';
 
 
 const { TabPane } = Tabs;
@@ -39,7 +37,6 @@ interface IProps {
     getLastestFinancialInfo: any,
     getLastestFinancialReports: any,
     symbol: string,
-    
 }
 
 interface IState {
@@ -55,7 +52,7 @@ interface IState {
     hide: boolean,
 }
 
-class Financial extends React.Component<IProps, IState> {
+class FinancialAnalysis extends React.Component<IProps, IState> {
     gridApi: any;
     gridColumnApi: any;
     xxx: any;
@@ -968,4 +965,4 @@ const mapDispatchToProps = {
     getLastestFinancialReports
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Financial);
+export default connect(mapStateToProps, mapDispatchToProps)(FinancialAnalysis);

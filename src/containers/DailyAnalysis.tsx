@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DatePicker, Button, Modal, Input, Radio, Switch } from 'antd';
+import { DatePicker, Button, Modal, Input, Radio, Switch, Table } from 'antd';
 import { debounce, get, each } from 'lodash';
 import moment from 'moment'
-import { AgGridReact } from 'ag-grid-react';
 
 import {
     filterStocks,
@@ -16,14 +15,13 @@ import { IStock } from 'types';
 import { getPreviousDate, getEndDate } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
 import { STOCK_GROUP } from 'utils/constant';
-import { analysisDailyColumnDefs } from 'utils/columnDefs';
+import { dailyAnalysisColumnDefs } from 'utils/columnDefs';
 
 import ChartTV from './ChartTV/ChartTV';
 import FinalAnalysis from './FinalAnalysis';
-import Summary from './Summary';
+import SymbolAnalysis from './SymbolAnalysis';
+import CustomAgGridReact from './CustomAgGridReact';
 
-import 'ag-grid-community/dist/styles/ag-grid.css'
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const { RangePicker } = DatePicker;
 
@@ -63,7 +61,7 @@ interface IState {
     symbol: string
 }
 
-class AnalysisDaily extends React.Component<IProps, IState> {
+class DailyAnalysis extends React.Component<IProps, IState> {
     gridApi: any;
     gridColumnApi: any;
     scanning: boolean;
@@ -76,7 +74,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             ChangePrice: 1,
             TodayCapital: 5,
             MinPrice: 5000,
-            columnDefs: analysisDailyColumnDefs(this),
+            columnDefs: dailyAnalysisColumnDefs(this),
             defaultColDef: {
                 flex: 1,
                 filter: true,
@@ -230,7 +228,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
     changeImporantIndex = (e) => {
         this.setState({
             importantIndexType: e.target.value,
-            columnDefs: analysisDailyColumnDefs(this, e.target.value)
+            columnDefs: dailyAnalysisColumnDefs(this, e.target.value)
         })
     }
 
@@ -238,6 +236,38 @@ class AnalysisDaily extends React.Component<IProps, IState> {
         if (this.props.selectedSymbol !== preProps.selectedSymbol) {
             this.scan();
         }
+    }
+
+    renderTest = () => {       
+        const dataSource = [
+            {
+              key: '1',
+              name: 'Bau cu tong thong my',
+              content: 'ANh huong den thi truong chung khoan the gioi',
+            },
+            {
+              key: '2',
+              name: 'Covid the gioi',
+              content: 'Dich dang bung phat o chau au lan 2, so sanh them muc do anh huong cua thi truong trung quoc va my',
+            },
+          ];
+          
+          const columns = [
+            {
+              title: 'Su kien',
+              dataIndex: 'name',
+              key: 'name',
+            },
+            {
+              title: 'Noi dung',
+              dataIndex: 'content',
+              key: 'content',
+            },
+          ];
+          
+        return <div>
+            <Table dataSource={dataSource} columns={columns} />;
+        </div>
     }
 
     render() {
@@ -250,7 +280,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
             symbol
         } = this.state;
         return (
-            <div className="AnalysisDaily">
+            <div className="DailyAnalysis">
                 <div>
                     <div>Count: {rowData.length}</div>
                     <div>
@@ -264,7 +294,7 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         </Radio.Group>
                     </div>
                     <div>
-                        <div className="flex AnalysisDaily-Filter">
+                        <div className="flex DailyAnalysis-Filter">
                             <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} />
                             <Input addonBefore="Min Price" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
                             <Input addonBefore="%ChangePrice" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
@@ -302,24 +332,13 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         <Radio.Button value="default">Default</Radio.Button>
                     </Radio.Group>
                 </div>
-                <div style={{ width: '100%', height: '100%' }}>
-                    <div
-                        id="myGrid"
-                        style={{
-                            height: '500px',
-                        }}
-                        className="ag-theme-alpine"
-                    >
-                        <AgGridReact
-                            columnDefs={columnDefs}
-                            defaultColDef={defaultColDef}
-                            onGridReady={this.onGridReady}
-                            rowData={rowData}
-                            onFirstDataRendered={params => params.api.sizeColumnsToFit()}
-                        />
-                    </div>
-                </div>
-
+                <CustomAgGridReact 
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                    onGridReady={this.onGridReady}
+                    rowData={rowData}
+                />
+                
                 {visibleChart ?
                     <Modal
                         wrapClassName="customed-modal-wrap"
@@ -329,10 +348,9 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         onCancel={this.handleCancel}
                         footer={null}
                     >
-
                         <div className="chartTV-container">
                             <ChartTV symbol={symbol}/>
-                            {<Summary data={this.state} />}
+                            <SymbolAnalysis data={this.state} />
                         </div>
                     </Modal>
                     : null}
@@ -348,6 +366,8 @@ class AnalysisDaily extends React.Component<IProps, IState> {
                         <FinalAnalysis symbol={symbol}/>
                     </Modal>
                     : null}
+
+                {this.renderTest()}
             </div>
         )
     }
@@ -371,4 +391,4 @@ const mapDispatchToProps = {
     getLatest
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AnalysisDaily);
+export default connect(mapStateToProps, mapDispatchToProps)(DailyAnalysis);

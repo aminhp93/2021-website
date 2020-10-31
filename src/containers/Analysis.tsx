@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 
-import AnalysisDaily from './AnalysisDaily';
+import DailyAnalysis from './DailyAnalysis';
 
 
 const { TabPane } = Tabs;
@@ -15,8 +15,8 @@ class Analysis extends React.Component<IProps, IState> {
         return (
             <div className="Analysis">
                 <Tabs defaultActiveKey="1">
-                    <TabPane tab="AnalysisDaily" key="1">
-                        <AnalysisDaily />
+                    <TabPane tab="DailyAnalysis" key="1">
+                        <DailyAnalysis />
                     </TabPane>
                 </Tabs>
             </div>
