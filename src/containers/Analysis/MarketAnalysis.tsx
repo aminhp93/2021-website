@@ -22,9 +22,7 @@ import SymbolNote from 'containers/SymbolNote';
 import CompanyAnalysis from 'containers/analysis/CompanyAnalysis';
 import CustomAgGridReact from 'components/CustomAgGridReact';
 
-
 const { RangePicker } = DatePicker;
-
 
 interface IProps {
     stocks: IStock,
@@ -238,38 +236,6 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         }
     }
 
-    renderTest = () => {       
-        const dataSource = [
-            {
-              key: '1',
-              name: 'Bau cu tong thong my',
-              content: 'ANh huong den thi truong chung khoan the gioi',
-            },
-            {
-              key: '2',
-              name: 'Covid the gioi',
-              content: 'Dich dang bung phat o chau au lan 2, so sanh them muc do anh huong cua thi truong trung quoc va my',
-            },
-          ];
-          
-          const columns = [
-            {
-              title: 'Su kien',
-              dataIndex: 'name',
-              key: 'name',
-            },
-            {
-              title: 'Noi dung',
-              dataIndex: 'content',
-              key: 'content',
-            },
-          ];
-          
-        return <div>
-            <Table dataSource={dataSource} columns={columns} />;
-        </div>
-    }
-
     render() {
         const { startDate, endDate, rowData,
             columnDefs, defaultColDef,
@@ -283,54 +249,56 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             <div className="MarketAnalysis">
                 <div>
                     <div>Count: {rowData.length}</div>
-                    <div>
-
-                        <Radio.Group value={type} onChange={this.changeType}>
-                            <Radio.Button value={STOCK_GROUP.CANSLIM}>Canslim</Radio.Button>
-                            <Radio.Button value={STOCK_GROUP.VN30}>VN30</Radio.Button>
-                            <Radio.Button value={STOCK_GROUP.FAVORITE}>Favorite</Radio.Button>
-                            <Radio.Button value={STOCK_GROUP.ONSTUDY}>Study</Radio.Button>
-                            <Radio.Button value={STOCK_GROUP.BLACKLIST}>BlackList</Radio.Button>
-                        </Radio.Group>
-                    </div>
-                    <div>
-                        <div className="flex MarketAnalysis-Filter">
-                            <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} />
-                            <Input addonBefore="Min Price" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
-                            <Input addonBefore="%ChangePrice" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
-                            <Input addonBefore="TodayCapital" onChange={(e) => this.changeInput(e, 'TodayCapital')} value={TodayCapital} />
-                            <Switch
-                                checkedChildren="STR"
-                                unCheckedChildren="STR"
-                                defaultChecked
-                                checked={checkStrong}
-                                onChange={() => this.setState({ checkStrong: !checkStrong })}
-                            />
-                            <Switch
-                                checkedChildren="BLL"
-                                unCheckedChildren="BLL"
-                                defaultChecked
-                                checked={checkBlackList}
-                                onChange={() => this.setState({ checkBlackList: !checkBlackList })}
-                            />
+                    <div className="flex">
+                        <div className="flex-1">
+                            <div>
+                                <Radio.Group value={type} onChange={this.changeType}>
+                                    <Radio.Button value={STOCK_GROUP.CANSLIM}>Canslim</Radio.Button>
+                                    <Radio.Button value={STOCK_GROUP.VN30}>VN30</Radio.Button>
+                                    <Radio.Button value={STOCK_GROUP.FAVORITE}>Favorite</Radio.Button>
+                                    <Radio.Button value={STOCK_GROUP.ONSTUDY}>Study</Radio.Button>
+                                    <Radio.Button value={STOCK_GROUP.BLACKLIST}>BlackList</Radio.Button>
+                                </Radio.Group>
+                            </div>
+                            <div>
+                                <Radio.Group value={importantIndexType} onChange={this.changeImporantIndex}>
+                                    <Radio.Button value="default">Default</Radio.Button>
+                                    <Radio.Button value="KhaNangThanhToan">Kha nang thanh toan</Radio.Button>
+                                    <Radio.Button value="CoCauTaiSan">Co cau tai san</Radio.Button>
+                                    <Radio.Button value="HieuSuatHoatDong">Hieu suat hoat dong</Radio.Button>
+                                </Radio.Group>
+                            </div>
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex MarketAnalysis-Filter">
+                                <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} />
+                                <Input addonBefore="Min P" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
+                                <Input addonBefore="%P" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
+                                <Input addonBefore="TodayCap" onChange={(e) => this.changeInput(e, 'TodayCapital')} value={TodayCapital} />
+                                <Switch
+                                    checkedChildren="STR"
+                                    unCheckedChildren="STR"
+                                    defaultChecked
+                                    checked={checkStrong}
+                                    onChange={() => this.setState({ checkStrong: !checkStrong })}
+                                />
+                                <Switch
+                                    checkedChildren="BLL"
+                                    unCheckedChildren="BLL"
+                                    defaultChecked
+                                    checked={checkBlackList}
+                                    onChange={() => this.setState({ checkBlackList: !checkBlackList })}
+                                />
+                            </div>
+                            <div>
+                                <RangePicker onChange={this.onChange} value={startDate ? [moment(startDate), moment(endDate)] : null} />
+                                <Button onClick={() => {
+                                    this.props.updateSelectedSymbolSuccess(null)
+                                    this.scan()
+                                }}>Xem</Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <RangePicker onChange={this.onChange} value={startDate ? [moment(startDate), moment(endDate)] : null} />
-                    <Button onClick={() => {
-                        this.props.updateSelectedSymbolSuccess(null)
-                        this.scan()
-                    }}>Xem</Button>
-                </div>
-
-                <div>
-                    <Radio.Group value={importantIndexType} onChange={this.changeImporantIndex}>
-                        <Radio.Button value="KhaNangThanhToan">Kha nang thanh toan</Radio.Button>
-                        <Radio.Button value="CoCauTaiSan">Co cau tai san</Radio.Button>
-                        <Radio.Button value="HieuSuatHoatDong">Hieu suat hoat dong</Radio.Button>
-                        <Radio.Button value="default">Default</Radio.Button>
-                    </Radio.Group>
                 </div>
                 <CustomAgGridReact 
                     columnDefs={columnDefs}
@@ -367,7 +335,6 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                     </Modal>
                     : null}
 
-                {this.renderTest()}
             </div>
         )
     }

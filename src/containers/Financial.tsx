@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { cloneDeep, get, uniqBy } from 'lodash';
 import { Table, Button, Tabs, Radio, List } from 'antd';
 
-import CustomAgGridReact from '../components/CustomAgGridReact';
+import CustomAgGridReact from 'components/CustomAgGridReact';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -25,8 +25,6 @@ import { BILLION_UNIT } from 'utils/unit';
 import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } from 'utils/common'
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
-
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 
 
 const { TabPane } = Tabs;
@@ -587,7 +585,8 @@ class Financial extends React.Component<IProps, IState> {
 
     renderLastestFinancialReports = () => {
         const { LastestFinancialReportsArray, defaultColDef, period, lastestFinancialReportsType, analysisType } = this.state;
-        return <CustomAgGridReact 
+        return <CustomAgGridReact
+            height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
             defaultColDef={defaultColDef}
             onGridReady={this.onGridReady}
@@ -791,51 +790,7 @@ class Financial extends React.Component<IProps, IState> {
         )
     }
 
-    test = () => {
-        const { lastestFinancialReportsType } = this.state;
-        const xxx = []
-        let removeIds = []
-        switch (lastestFinancialReportsType) {
-            case LATEST_FINANCIAL_REPORTS.TYPE_2:
-                removeIds = [1, 2, 10, 12, 13, 14, 15, 16,17, 18, 19, 20, 21, 701]
-                break;
-            case LATEST_FINANCIAL_REPORTS.TYPE_1:
-                removeIds = [1, 
-                        1010201, 1010201, 1010303, 1010304, 1010305, 1010307,
-                        1010402, 
-                        1010503, 1010504, 1010505, 
-                        10201, 1020101, 1020102, 1020103, 1020104, 1020105, 1020106,
-                        1020202, 102020201, 102020202,
-                        1020501, 1020504, 1020505,
-                        10206, 1020601, 1020602, 1020603,
-                        3,
-                        3010102, 3010106, 3010108, 3010109, 3010110, 3010111, 3010112, 3010113, 3010114, 3010115,
-                        3010201, 3010202, 3010203, 3010204, 3010205, 3010208, 3010209, 3010210, 3010211, 3010212,
-                        3020102, 3020104, 3020106, 3020107, 3020108, 3020109, 3020110, 3020112, 3020113,
-                        30202, 3020201, 3020202, 3020203
-                    ]
-                break;
-            default:
-                break;
-        }
-        this.gridApi.forEachNode(node => {
-            if (removeIds.indexOf(node.data.ID) > -1) {
-                xxx.push(node.data)
-            }
-        })
-
-        this.gridApi.applyTransaction({ remove: xxx });
-    }
-
-    reset = () => {
-        const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
-        const newData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
-        this.gridApi.setRowData(newData)
-
-    }
-
     render() {
-        console.log(850, this.state.LastestFinancialReportsArray)
         const { period, isFinancialReports } = this.state;
         const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
         const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
@@ -848,9 +803,6 @@ class Financial extends React.Component<IProps, IState> {
                                 <div className="header">
                                     Bao cao tai chinh
                                     <Button onClick={this.handleCloseFinancialReports}>Chi tieu tai chinh</Button>
-                                    <Button onClick={this.test}>test</Button>
-                                    <Button onClick={this.reset}>reset</Button>
-
                                 </div>
                                 <div>
                                     <Radio.Group value={period} onChange={this.handlePeriod}>
@@ -859,7 +811,6 @@ class Financial extends React.Component<IProps, IState> {
                                     </Radio.Group>
                                 </div>
                             </div>
-                            
                             <div>    
                                 <div>
                                     <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
@@ -887,7 +838,6 @@ class Financial extends React.Component<IProps, IState> {
                                 </TabPane>
                             </Tabs>
                         </div>
-
                     </div>
                 </div>
             )
@@ -902,7 +852,6 @@ class Financial extends React.Component<IProps, IState> {
                                 <Button onClick={this.handleOpenFinancialReports}>Bao cao tai chinh</Button>
                             </div>
                             <div>
-                                
                                 <div>
                                     <Button disabled={true} onClick={() => this.updateYearlyFinancialInfo(symbol)}>YearlyFinancialInfo</Button>
                                     <Button disabled={true} onClick={this.updateYearlyFinancialInfoAll}>Update all</Button>

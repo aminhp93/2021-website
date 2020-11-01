@@ -13,7 +13,7 @@ import { BILLION_UNIT } from 'utils/unit';
 import { formatNumber } from 'utils/common';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
 
-import Financial from 'containers/Financial';
+import FinancialAnalysis from 'containers/Analysis/FinancialAnalysis';
 import CustomAgGridReact from 'components/CustomAgGridReact';
 
 interface IProps {
@@ -135,6 +135,7 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
         const result = [];
 
         const keys = uniqBy(data.map(i => i.Year)).sort((a, b) => a - b)
+        console.log(keys, data, data2)
         for (let j = 1; j < keys.length + 1; j++) {
             const itemObj = {}
             for (let i = 0; i < data.length; i++) {
@@ -153,12 +154,26 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
                     }
                 }
             }
-            result.push(itemObj)
+            if (JSON.stringify(itemObj) !== "{}") {
+                result.push(itemObj)
+            }
         }
         const indexTotal = isProfit ? 'ProfitAfterTax' : 'Sales';
-        const obj: any = { 'Quarter': 'total' };
-        keys.map(i => obj[i] = data2.filter(item => item.Year === i).length && (data2.filter(item => item.Year === i)[0][indexTotal] / BILLION_UNIT).toFixed(2))
+        const obj: any = {};
+        
+        
+        result.map(i => {
+            Object.keys(i).map(j => {
+                if (!obj[j]) {
+                    obj[j] = i[j]
+                } else {
+                    obj[j] = String(Number(i[j]) + Number(obj[j]))
+                }
+            })
+        })
+        obj['Quarter'] = 'total'
         result.push(obj)
+        console.log(result)
         return result
     }
 
@@ -234,25 +249,28 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
         const { rowData, columnDefs, defaultColDef } = this.state;
         return <div className="CompanyAnalysis">
             <div className="flex">
-                <div className="flex-1 CompanyAnalysis-revenue">
+                <div className="flex-1">
                     <div className="medium">Doanh thu</div>
                     {this.renderRevenueTable()}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 CompanyAnalysis-profit">
                     <div className="medium">Loi nhuan</div>
                     {this.renderRevenueTable(true)}
                 </div>
+                <div className="flex-1">
+                    <div className="medium">Compare same ICBCode</div>
+                    <CustomAgGridReact 
+                        columnDefs={columnDefs}
+                        defaultColDef={defaultColDef}
+                        onGridReady={this.onGridReady}
+                        rowData={rowData}
+                    />
+                </div>
             </div>
-
-            <div className="medium">Compare same ICBCode</div>
-            <CustomAgGridReact 
-                columnDefs={columnDefs}
-                defaultColDef={defaultColDef}
-                onGridReady={this.onGridReady}
-                rowData={rowData}
-            />
+            <hr/>
+            <br/>
             <div>
-                <Financial symbol={(this.props.data || {}).symbol}/>
+                <FinancialAnalysis symbol={(this.props.data || {}).symbol}/>
             </div>
         </div>
     }

@@ -24,7 +24,7 @@ import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } 
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
-import CustomAgGridReact from '../../components/CustomAgGridReact';
+import CustomAgGridReact from 'components/CustomAgGridReact';
 
 
 const { TabPane } = Tabs;
@@ -144,7 +144,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             const res = await this.props.getLastestFinancialReports({ financialType: type_index, year, quarter, symbol: this.props.symbol })
             this.setState({
                 LastestFinancialReportsArray: res.data
-            })
+            }, () => this.test())
         } catch (error) {
             console.log(error)
         }
@@ -585,6 +585,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     renderLastestFinancialReports = () => {
         const { LastestFinancialReportsArray, defaultColDef, period, lastestFinancialReportsType, analysisType } = this.state;
         return <CustomAgGridReact 
+              height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
             defaultColDef={defaultColDef}
             onGridReady={this.onGridReady}

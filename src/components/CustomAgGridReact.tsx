@@ -10,7 +10,8 @@ interface IProps {
     columnDefs: any, 
     defaultColDef: any,
     rowData: any,
-    onGridReady: any
+    onGridReady: any,
+    height?: any
 }
 
 interface IState {}
@@ -18,13 +19,13 @@ interface IState {}
 class CustomAgGridReact extends React.Component <IProps, IState>{
 
     render() {
-        const { columnDefs, defaultColDef, rowData, onGridReady } = this.props;
+        const { columnDefs, defaultColDef, rowData, onGridReady, height } = this.props;
         return (
             <div style={{ width: '100%', height: '100%' }}>
                 <div
                     id="myGrid"
                     style={{
-                        height: '500px',
+                        height: height || '500px',
                     }}
                     className="ag-theme-alpine"
                 >

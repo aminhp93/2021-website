@@ -203,7 +203,7 @@ class Stock extends React.Component<IProps, IState> {
                 <div className="Stock-container height100">
                     <div className="height100">
                         <div className="height100">
-                            <Tabs defaultActiveKey="4" tabPosition="left" className="height100">
+                            <Tabs defaultActiveKey="2" tabPosition="left" className="height100">
                                 <TabPane tab="Stock" key="1">
                                     <div className="Stock-content">
                                         <div>
