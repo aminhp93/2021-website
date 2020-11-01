@@ -15,12 +15,12 @@ import { IStock } from 'types';
 import { getPreviousDate, getEndDate } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
 import { STOCK_GROUP } from 'utils/constant';
-import { dailyAnalysisColumnDefs } from 'utils/columnDefs';
+import { marketAnalysisColumnDefs } from 'utils/columnDefs';
 
-import ChartTV from './ChartTV/ChartTV';
-import FinalAnalysis from './FinalAnalysis';
-import SymbolAnalysis from './SymbolAnalysis';
-import CustomAgGridReact from './CustomAgGridReact';
+import ChartTV from 'containers/ChartTV/ChartTV';
+import SymbolNote from 'containers/SymbolNote';
+import CompanyAnalysis from 'containers/analysis/CompanyAnalysis';
+import CustomAgGridReact from 'components/CustomAgGridReact';
 
 
 const { RangePicker } = DatePicker;
@@ -61,7 +61,7 @@ interface IState {
     symbol: string
 }
 
-class DailyAnalysis extends React.Component<IProps, IState> {
+class MarketAnalysis extends React.Component<IProps, IState> {
     gridApi: any;
     gridColumnApi: any;
     scanning: boolean;
@@ -74,7 +74,7 @@ class DailyAnalysis extends React.Component<IProps, IState> {
             ChangePrice: 1,
             TodayCapital: 5,
             MinPrice: 5000,
-            columnDefs: dailyAnalysisColumnDefs(this),
+            columnDefs: marketAnalysisColumnDefs(this),
             defaultColDef: {
                 flex: 1,
                 filter: true,
@@ -228,7 +228,7 @@ class DailyAnalysis extends React.Component<IProps, IState> {
     changeImporantIndex = (e) => {
         this.setState({
             importantIndexType: e.target.value,
-            columnDefs: dailyAnalysisColumnDefs(this, e.target.value)
+            columnDefs: marketAnalysisColumnDefs(this, e.target.value)
         })
     }
 
@@ -280,7 +280,7 @@ class DailyAnalysis extends React.Component<IProps, IState> {
             symbol
         } = this.state;
         return (
-            <div className="DailyAnalysis">
+            <div className="MarketAnalysis">
                 <div>
                     <div>Count: {rowData.length}</div>
                     <div>
@@ -294,7 +294,7 @@ class DailyAnalysis extends React.Component<IProps, IState> {
                         </Radio.Group>
                     </div>
                     <div>
-                        <div className="flex DailyAnalysis-Filter">
+                        <div className="flex MarketAnalysis-Filter">
                             <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} />
                             <Input addonBefore="Min Price" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
                             <Input addonBefore="%ChangePrice" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
@@ -350,7 +350,7 @@ class DailyAnalysis extends React.Component<IProps, IState> {
                     >
                         <div className="chartTV-container">
                             <ChartTV symbol={symbol}/>
-                            <SymbolAnalysis data={this.state} />
+                            <CompanyAnalysis data={this.state} />
                         </div>
                     </Modal>
                     : null}
@@ -363,7 +363,7 @@ class DailyAnalysis extends React.Component<IProps, IState> {
                         onCancel={this.handleCancel}
                         footer={null}
                     >
-                        <FinalAnalysis symbol={symbol}/>
+                        <SymbolNote symbol={symbol}/>
                     </Modal>
                     : null}
 
@@ -391,4 +391,4 @@ const mapDispatchToProps = {
     getLatest
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DailyAnalysis);
+export default connect(mapStateToProps, mapDispatchToProps)(MarketAnalysis);

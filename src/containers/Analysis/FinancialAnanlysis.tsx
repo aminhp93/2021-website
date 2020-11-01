@@ -24,7 +24,7 @@ import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } 
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
-import CustomAgGridReact from './CustomAgGridReact';
+import CustomAgGridReact from '../../components/CustomAgGridReact';
 
 
 const { TabPane } = Tabs;

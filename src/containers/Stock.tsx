@@ -15,9 +15,10 @@ import {
     getHistoricalQuotesUpdateUrl,
 } from 'utils/request';
 
-import Analysis from './Analysis';
+import Analysis from './Analysis/Analysis';
 import MarketNews from './MarketNews';
 import Financial from './Financial';
+import Report from './Report/Report';
 
 
 const { TabPane } = Tabs;
@@ -172,9 +173,9 @@ class Stock extends React.Component<IProps, IState> {
         const symbol = (stocks[selectedSymbol] || {}).Symbol
         if (loading) return <Spin size='large' />
         return (
-            <div className="App">
-                <div className="App-header">
-                    <div className="App-search">
+            <div className="Stock height100">
+                <div className="Stock-header">
+                    <div className="Stock-search">
                         <Select
                             mode="multiple"
                             labelInValue
@@ -193,18 +194,18 @@ class Stock extends React.Component<IProps, IState> {
                         <Button onClick={this.udpateHistoricalQuotesDaily}>Update daily all</Button>
 
                     </div>
-                    <div className="App-header-symbol">
+                    <div className="Stock-header-symbol">
                         {symbol || 'No symbol selected'} |
                         Last udpated: {moment(lastUpdatedDate.value).format('YYYY-MM-DD')}
                         <span onClick={() => this.props.updateSelectedSymbolSuccess(null)}>Clear</span>
                     </div>
                 </div>
-                <div className="App-container">
-                    <div className="App-navigation">
-                        <div>
-                            <Tabs defaultActiveKey="2" tabPosition="left">
+                <div className="Stock-container height100">
+                    <div className="height100">
+                        <div className="height100">
+                            <Tabs defaultActiveKey="4" tabPosition="left" className="height100">
                                 <TabPane tab="Stock" key="1">
-                                    <div className="App-content">
+                                    <div className="Stock-content">
                                         <div>
                                             <Tabs defaultActiveKey="7">
                                                 <TabPane tab="Transaction" key="1">
@@ -243,6 +244,9 @@ class Stock extends React.Component<IProps, IState> {
                                 </TabPane>
                                 <TabPane tab="News" key="3">
                                     <MarketNews />
+                                </TabPane>
+                                <TabPane tab="Report" key="4">
+                                    <Report />
                                 </TabPane>
                             </Tabs>
                         </div>

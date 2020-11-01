@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { cloneDeep, get, uniqBy } from 'lodash';
 import { Table, Button, Tabs, Radio, List } from 'antd';
 
-import CustomAgGridReact from './CustomAgGridReact';
+import CustomAgGridReact from '../components/CustomAgGridReact';
 
 import { v4 as uuidv4 } from 'uuid';
 

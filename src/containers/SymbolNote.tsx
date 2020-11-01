@@ -25,7 +25,7 @@ interface IState {
     symbolObj: any,
 }
 
-class FinalAnalysis extends React.Component<IProps, IState> {
+class SymbolNote extends React.Component<IProps, IState> {
 
     constructor(props) {
         super(props);
@@ -65,14 +65,14 @@ class FinalAnalysis extends React.Component<IProps, IState> {
         const { allowEdit, symbolObj } = this.state;
         const note = (symbolObj || {}).Note || ''
         return (
-            <div className="FinalAnalysis">
+            <div className="SymbolNote">
                 {
                     allowEdit
                         ? <TextArea onChange={(e) => this.update(e)} defaultValue={note}></TextArea>
-                        : <div className="FinalAnalysis-note">{this.parseMarkdown(note)}</div>
+                        : <div className="SymbolNote-note">{this.parseMarkdown(note)}</div>
                 }
 
-                <div className="FinalAnalysis-preview" onClick={() => this.setState({ allowEdit: !allowEdit })}>{allowEdit ? <EditOutlined className="medium" /> : <EyeOutlined className="medium" />}</div>
+                <div className="SymbolNote-preview" onClick={() => this.setState({ allowEdit: !allowEdit })}>{allowEdit ? <EditOutlined className="medium" /> : <EyeOutlined className="medium" />}</div>
             </div>
         )
     }
@@ -88,6 +88,6 @@ const mapDispatchToProps = {
     updateStock
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FinalAnalysis);
+export default connect(mapStateToProps, mapDispatchToProps)(SymbolNote);
 
 

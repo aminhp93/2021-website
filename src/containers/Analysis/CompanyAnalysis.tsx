@@ -11,10 +11,10 @@ import {
 } from 'reducers/stocks';
 import { BILLION_UNIT } from 'utils/unit';
 import { formatNumber } from 'utils/common';
-import { dailyAnalysisColumnDefs } from 'utils/columnDefs';
+import { marketAnalysisColumnDefs } from 'utils/columnDefs';
 
-import Financial from './Financial';
-import CustomAgGridReact from './CustomAgGridReact';
+import Financial from 'containers/Financial';
+import CustomAgGridReact from 'components/CustomAgGridReact';
 
 interface IProps {
     selectedSymbol: number,
@@ -38,7 +38,7 @@ interface IState {
     defaultColDef: any,
 }
 
-class SymbolAnalysis extends React.Component<IProps, IState> {
+class CompanyAnalysis extends React.Component<IProps, IState> {
     scanning: boolean;
     gridApi: any;
     gridColumnApi: any;
@@ -49,9 +49,8 @@ class SymbolAnalysis extends React.Component<IProps, IState> {
             QuarterlyFinancialInfoArray: [],
             YearlyFinancialInfoArray: [],
             LastestFinancialInfoObj: {},
-            // modules: AllModules,
             rowData: [],
-            columnDefs: dailyAnalysisColumnDefs(this, "SoSanhCungNganh", true),
+            columnDefs: marketAnalysisColumnDefs(this, "SoSanhCungNganh", true),
             defaultColDef: {
                 flex: 1,
                 filter: true,
@@ -233,9 +232,9 @@ class SymbolAnalysis extends React.Component<IProps, IState> {
 
     render() {
         const { rowData, columnDefs, defaultColDef } = this.state;
-        return <div className="SymbolAnalysis">
+        return <div className="CompanyAnalysis">
             <div className="flex">
-                <div className="flex-1 SymbolAnalysis-revenue">
+                <div className="flex-1 CompanyAnalysis-revenue">
                     <div className="medium">Doanh thu</div>
                     {this.renderRevenueTable()}
                 </div>
@@ -276,4 +275,4 @@ const mapDispatchToProps = {
     scanStock
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SymbolAnalysis);
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyAnalysis);

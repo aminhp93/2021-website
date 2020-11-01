@@ -554,7 +554,7 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
     return period === 'yearly' ? year : quarter
 }
 
-export const dailyAnalysisColumnDefs = (that, importantIndexType = null, allowICBCode = false) => {
+export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowICBCode = false) => {
     const Stock = {
         headerName: 'Stock',
         field: 'Symbol',
