@@ -19,7 +19,7 @@ class Analysis extends React.Component<IProps, IState> {
                     <TabPane tab="MarketAnalysis" key="1">
                         <MarketAnalysis />
                     </TabPane>
-                    <TabPane tab="OverallAnalysis" key="2">
+                    <TabPane tab="CompanyAnalysis" key="2">
                         <CompanyAnalysis />
                     </TabPane>
                 </Tabs>

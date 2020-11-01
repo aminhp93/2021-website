@@ -1,10 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import history from 'utils/history';
-import {
-  Router, Route, Switch, Redirect,
-} from 'react-router-dom';
 
 import App from 'containers/App';
 
