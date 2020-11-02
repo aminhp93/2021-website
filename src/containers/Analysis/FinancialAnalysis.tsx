@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { cloneDeep, get, uniqBy } from 'lodash';
 import { Table, Button, Tabs, Radio, List } from 'antd';
-
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -25,7 +24,6 @@ import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
 import CustomAgGridReact from 'components/CustomAgGridReact';
-
 
 const { TabPane } = Tabs;
 
@@ -841,7 +839,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             case LATEST_FINANCIAL_REPORTS.TYPE_4:
                 return this.renderFinancialReportHighlight4()
             default:
-                break;
+                return null
         }
     }
 
@@ -948,7 +946,33 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     renderFinancialReportHighlight2 = () => {
         // ket qua kinh doanh
         return <div>
-            type2
+            {`
+            - So sanh giai doan 3 thang, 30/09/2020 - 30/09/2019
+            - So sanh giai doan 9 thang, 30/09/2020 - 30/09/2019
+            - VNM
+            - Doanh thu tang 8.5%
+            - LN truoc thue 15%
+            - Bien LNG > 2 con so: keo dai trong 10 nam --> loi the canh tranh
+            - 6 Thang dau nam 2020, VNM mua lai sua moc chau
+                + cat bot doi thu canh tranh
+                + gia tang Doanh thu + loi nhuan
+            - Thoi ky khung hoang (covid): doanh nghiep gia tang tien mat (vay no, ban hang, thu lai khoan phai thu, giam hang ton kho)
+                + Tai san ngan han: 24721 --> 31541
+                + Dau tu tai chinh ngan han: 12435 --> 17872
+                + --> tang 20% khoan tiet kiem gui ngan hang
+            - Muon tien tang:
+                + phai thu: giam (thu tien lai tu cac khoan phai thu, khoan kho doi)
+                + hang ton kho: giam (ban duoc hang hoac nhap ve nhung khong nhieu)
+            - VNM:
+                + phai thu: tang --> vong quay ban hang tang
+                    + khoan phai thu ngan han: 4503 --> 5976
+                + ton kho: tang --> vong quay SX cua doanh nghiep van duy tri va phat trien
+                    + hang ton kho: 4983 --> 5246
+            - VNM: Tong no / VCSH cao, tang dan
+            - Gia cao: P/E 17.63 --> thoi gian hoan von 17 nam
+            - 3/11: VNM phat hanh 350 trieu CP. Cung tang --> gia giam
+
+            `}
         </div>
     }
 
@@ -1003,7 +1027,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                         </div>
                        
                         <div className="Financial-reports">
-                            <Tabs defaultActiveKey="1" onChange={this.handleChangeLastestFinancialReportsType}>
+                            <Tabs defaultActiveKey={LATEST_FINANCIAL_REPORTS.TYPE_1} onChange={this.handleChangeLastestFinancialReportsType}>
                                 <TabPane tab={LATEST_FINANCIAL_REPORTS.TYPE_2} key={LATEST_FINANCIAL_REPORTS.TYPE_2}>
                                     {this.renderLastestFinancialReports()}
                                 </TabPane>
