@@ -101,7 +101,6 @@ class Financial extends React.Component<IProps, IState> {
     crawlData = async () => {
         try {
             const symbol = this.props.symbol;
-            console.log(symbol);
             const res1 = await this.props.getYearlyFinancialInfo(symbol)
             const YearlyFinancialInfoArray = res1.data
             const res2 = await this.props.getQuarterlyFinancialInfo(symbol)

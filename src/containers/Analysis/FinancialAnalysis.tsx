@@ -65,7 +65,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             LastestFinancialReportsArray: [],
             isFinancialReports: true,
             period: 'quarterly',
-            lastestFinancialReportsType: LATEST_FINANCIAL_REPORTS.TYPE_2,
+            lastestFinancialReportsType: LATEST_FINANCIAL_REPORTS.TYPE_1,
             LastestFinancialInfoObj: {},
             defaultColDef: {
                 flex: 1,
@@ -100,7 +100,6 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     crawlData = async () => {
         try {
             const symbol = this.props.symbol;
-            console.log(symbol);
             const res1 = await this.props.getYearlyFinancialInfo(symbol)
             const YearlyFinancialInfoArray = res1.data
             const res2 = await this.props.getQuarterlyFinancialInfo(symbol)
@@ -585,7 +584,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     renderLastestFinancialReports = () => {
         const { LastestFinancialReportsArray, defaultColDef, period, lastestFinancialReportsType, analysisType } = this.state;
         return <CustomAgGridReact 
-              height="1000px"
+            height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
             defaultColDef={defaultColDef}
             onGridReady={this.onGridReady}
@@ -829,11 +828,145 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
         const newData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
         this.gridApi.setRowData(newData)
+    }
 
+    renderFinancialReportHighlight = () => {
+        switch (this.state.lastestFinancialReportsType) {
+            case LATEST_FINANCIAL_REPORTS.TYPE_1:
+                return this.renderFinancialReportHighlight1()
+            case LATEST_FINANCIAL_REPORTS.TYPE_2:
+                return this.renderFinancialReportHighlight2()
+            case LATEST_FINANCIAL_REPORTS.TYPE_3:
+                return this.renderFinancialReportHighlight3()
+            case LATEST_FINANCIAL_REPORTS.TYPE_4:
+                return this.renderFinancialReportHighlight4()
+            default:
+                break;
+        }
+    }
+
+    renderFinancialReportHighlight1 = () => {
+        // Can doi ke toan
+        
+          
+        // return <div>
+        //     - Chu y den tai san ngan han, dung chu y qua nhieu den tai san dai han: so ssanh quy 3 vs quy 1 (1/4 - 30/9)
+        //     - A. Tai san luu dong va dau tu ngan han: 5,905 --> 7,628
+        //     - II. Cac khoan dau tu tai chinh ngan han: 1,317 --> 3,558
+        //     - III. Cac khoan phai thu ngan han: 426 --> 1,577
+        //     - IV. Hang ton kho: 3,680 --> 2,077
+        //     - B. Von chu so huu: 4,470 --> 7,131
+        //     - 14. Loi ich co dong khong kiem soat: 120 --> 2,095 !!!
+        //     --> Luong tien tang len do cau truc gop von
+        //     --> Tien do ve tu hoat dong kinh doanh: khong co`}
+        // </div>
+        const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
+
+        const data = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
+        console.log(LastestFinancialReportsArray, data);
+        let quarterArray = []
+        if (LastestFinancialReportsArray.length > 0 && LastestFinancialReportsArray[0].Values.length > 0) {
+            const Values = LastestFinancialReportsArray[0].Values
+            const thirdLast = Values[Values.length - 3]
+            const last = Values[Values.length - 1]
+            quarterArray.push({
+                Year: thirdLast.Year,
+                Quarter: thirdLast.Quarter
+            })
+            quarterArray.push({
+                Year: last.Year,
+                Quarter: last.Quarter
+            })
+        }
+        console.log(quarterArray)
+        const columnDefs = [];
+
+        columnDefs.push({
+            field: 'Name'
+        })
+        quarterArray.map(quarterItem => (
+            columnDefs.push({
+                headerName: `${quarterItem.Year} ${quarterItem.Quarter}`,
+                type: 'rightAligned',
+                cellRenderer: (params) => {
+                    if (params.data && params.data.Values && params.data.Values.length) {
+                        const data = params.data.Values.filter(item => item.Year === quarterItem.Year && item.Quarter === quarterItem.Quarter)
+                        return formatNumber(data.length && (data[0].Value / BILLION_UNIT).toFixed(0))
+                    }
+                }
+            })
+        ))
+
+        columnDefs.push({
+            headerName: '+/-',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
+                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
+                    return formatNumber(((data2[0].Value - data1[0].Value) / BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+        columnDefs.push({
+            headerName: '%',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
+                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
+                    return ((data2[0].Value - data1[0].Value) * 100 / data1[0].Value).toFixed(0) + '%'
+                }
+            }
+        })
+
+        const listIndex = [
+            101, // A. Tài sản lưu động và đầu tư ngắn hạn
+            10102, // II. Các khoản đầu tư tài chính ngắn hạn
+            10103, // III. Các khoản phải thu ngắn hạn
+            10104, // IV. Tổng hàng tồn kho
+            302, // B. Nguồn vốn chủ sở hữu
+            3020114, // 14. Lợi ích của cổ đông không kiểm soát
+        ]
+
+        const rowData = data.filter(i => listIndex.includes(i.ID))
+
+        const defaultColDef = {
+            flex: 1,
+            filter: true,
+            sortable: true,
+        }
+        
+        return <CustomAgGridReact 
+            height="1000px"
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+            rowData={rowData}
+        />
+    }
+
+    renderFinancialReportHighlight2 = () => {
+        // ket qua kinh doanh
+        return <div>
+            type2
+        </div>
+    }
+
+    renderFinancialReportHighlight3 = () => {
+        // Luu chuyen tien te - truc tiep
+        return <div>
+            type3
+        </div>
+    }
+
+    renderFinancialReportHighlight4 = () => {
+        // Luu chuyen tien te - gian tiep
+        return <div>
+            type4
+        </div>
     }
 
     render() {
-        console.log(850, this.state.LastestFinancialReportsArray)
         const { period, isFinancialReports } = this.state;
         const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
         const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
@@ -884,6 +1017,10 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                     {this.renderLastestFinancialReports()}
                                 </TabPane>
                             </Tabs>
+                            <hr/>
+                            <br/>
+                            <div>Highlight</div>
+                            {this.renderFinancialReportHighlight()}
                         </div>
 
                     </div>

@@ -7,10 +7,10 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 
 interface IProps {
-    columnDefs: any, 
-    defaultColDef: any,
-    rowData: any,
-    onGridReady: any,
+    columnDefs?: any, 
+    defaultColDef?: any,
+    rowData?: any,
+    onGridReady?: any,
     height?: any
 }
 

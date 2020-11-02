@@ -38,7 +38,6 @@ class MarketNews extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(preProps) {
-        console.log('componentDidUpdate News', this.props, preProps)
         if (this.props.selectedSymbol !== preProps.selectedSymbol) {
             this.crawlData();
         }

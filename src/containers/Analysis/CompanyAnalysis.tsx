@@ -135,7 +135,6 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
         const result = [];
 
         const keys = uniqBy(data.map(i => i.Year)).sort((a, b) => a - b)
-        console.log(keys, data, data2)
         for (let j = 1; j < keys.length + 1; j++) {
             const itemObj = {}
             for (let i = 0; i < data.length; i++) {
@@ -158,9 +157,7 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
                 result.push(itemObj)
             }
         }
-        const indexTotal = isProfit ? 'ProfitAfterTax' : 'Sales';
         const obj: any = {};
-        
         
         result.map(i => {
             Object.keys(i).map(j => {
@@ -173,7 +170,6 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
         })
         obj['Quarter'] = 'total'
         result.push(obj)
-        console.log(result)
         return result
     }
 
