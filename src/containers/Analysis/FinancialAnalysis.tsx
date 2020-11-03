@@ -935,12 +935,43 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             sortable: true,
         }
         
-        return <CustomAgGridReact 
-            height="1000px"
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            rowData={rowData}
-        />
+        return (
+        <>
+        
+            <CustomAgGridReact 
+                height="1000px"
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                rowData={rowData}
+            />
+            {
+                `
+                    - FPT
+                    - 31/12/2019 - 30/09/2020
+                    - Tai san ngan han: +18%: 18.979 --> 22.473
+                    - Tien va tuong duong tien + dau tu tai chinh ngan han: + 40%: 3.453 + 6.708 --> 4.306 + 9.990
+                    - Tien tang --> khoan phai thu giam: 5.812 --> 5.144
+
+                    - Luu chuyen tien te - gian tiep
+                    - Luu chuyen tien thuan tu HDKD: 1910 --> 3919
+
+                    - Tien ve nhieu --> tot. Nhung chua chac la yeu to de gia tang
+                    - Cau truc tai san/no
+                        + Vay no tai chinh ngan han: tang: 7.513 -->  10.256
+                        + vay no tai chinh dai han: tang: 349 --> 753
+                        + tong 2 khoan vay: 11.000 / VCSH: 18.000 = 60%
+                        + 
+                    
+                    - Ket qua kinh doanh
+                    - Quy 3
+                        + Doanh thu: +5%
+                        + loi nhuan gop: +5%
+                        + loi nhuan thuan: 0%
+                        + loi nhuan sau thue: 0%
+                `
+            }
+        </>
+        )
     }
 
     renderFinancialReportHighlight2 = () => {
