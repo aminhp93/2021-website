@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { cloneDeep, get, uniqBy } from 'lodash';
-import { Table, Button, Tabs, Radio, List } from 'antd';
+import { Table, Button, Tabs, Radio, List, Input } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -19,7 +19,7 @@ import {
     getLastestFinancialReportsValueUpdateUrl
 } from 'utils/request';
 import { BILLION_UNIT } from 'utils/unit';
-import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } from 'utils/common'
+import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport, formatNumber } from 'utils/common'
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
@@ -48,6 +48,11 @@ interface IState {
     defaultColDef: any,
     analysisType: IAnalysisType,
     hide: boolean,
+    numberOfQuarter: number,
+    startQuarter: number,
+    endQuarter: number,
+    endYear: number,
+    startYear: number,
 }
 
 class FinancialAnalysis extends React.Component<IProps, IState> {
@@ -72,7 +77,12 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 // resizable: true
             },
             analysisType: null,
-            hide: false
+            hide: false,
+            numberOfQuarter: 4,
+            startQuarter: 1,
+            endQuarter: 1,
+            startYear: 2019,
+            endYear: 2020,
         }
         this.xxx = []
     }
@@ -858,22 +868,26 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         //     --> Luong tien tang len do cau truc gop von
         //     --> Tien do ve tu hoat dong kinh doanh: khong co`}
         // </div>
-        const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
+        const {
+            LastestFinancialReportsArray,
+            lastestFinancialReportsType, 
+            startYear,
+            startQuarter,
+            endYear,
+            endQuarter
+        } = this.state;
 
         const data = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
         console.log(LastestFinancialReportsArray, data);
         let quarterArray = []
         if (LastestFinancialReportsArray.length > 0 && LastestFinancialReportsArray[0].Values.length > 0) {
-            const Values = LastestFinancialReportsArray[0].Values
-            const thirdLast = Values[Values.length - 3]
-            const last = Values[Values.length - 1]
             quarterArray.push({
-                Year: thirdLast.Year,
-                Quarter: thirdLast.Quarter
+                Year: startYear,
+                Quarter: startQuarter
             })
             quarterArray.push({
-                Year: last.Year,
-                Quarter: last.Quarter
+                Year: endYear,
+                Quarter: endQuarter
             })
         }
         console.log(quarterArray)
@@ -901,8 +915,8 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
-                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
-                    return formatNumber(((data2[0].Value - data1[0].Value) / BILLION_UNIT).toFixed(0))
+                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter) 
+                    return formatNumber((((data2[0] || {}).Value - (data1[0] || {}).Value) / BILLION_UNIT).toFixed(0))
                 }
             }
         })
@@ -913,7 +927,58 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
                     const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
-                    return ((data2[0].Value - data1[0].Value) * 100 / data1[0].Value).toFixed(0) + '%'
+                    return (((data2[0] || {}).Value - (data1[0] || {}).Value) * 100 / (data1[0] || {}).Value).toFixed(0) + '%'
+                }
+            }
+        })
+
+        columnDefs.push({
+            headerName: 'Cum 2019',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let sum = 0;
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => sum += i.Value)
+                    return formatNumber((sum/BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+
+        columnDefs.push({
+            headerName: 'Cum 2020',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let sum = 0;
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => sum += i.Value)
+                    return formatNumber((sum/BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+        columnDefs.push({
+            headerName: '+/-',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let startSum = 0;
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => startSum += i.Value)
+                    let endSum = 0;
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => endSum += i.Value)
+                    return formatNumber(((endSum - startSum)/BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+        columnDefs.push({
+            headerName: '%',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let startSum = 0;
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => startSum += i.Value)
+                    let endSum = 0;
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => endSum += i.Value)
+
+                    return ((endSum - startSum) * 100 / startSum).toFixed(0) + '%'
                 }
             }
         })
@@ -1021,8 +1086,29 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         </div>
     }
 
+    changeInput = (e) => {
+        console.log(e)
+        this.setState({
+            numberOfQuarter: Number(e.target.value)
+        })
+    }
+
+    changeStartQuarter = (e) => {
+        console.log(e)
+        this.setState({
+            startQuarter: Number(e.target.value)
+        })
+    }
+
+    changeEndQuarter = (e) => {
+        console.log(e)
+        this.setState({
+            endQuarter: Number(e.target.value)
+        })
+    }
+
     render() {
-        const { period, isFinancialReports } = this.state;
+        const { period, isFinancialReports, startYear, endYear, startQuarter, endQuarter } = this.state;
         const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
         const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
         if (isFinancialReports) {
@@ -1074,7 +1160,13 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                             </Tabs>
                             <hr/>
                             <br/>
-                            <div>Highlight</div>
+                            <div className="flex">
+                                <Input value={startQuarter} onChange={this.changeStartQuarter}/>
+                                <Input disabled={true} value={startYear} onChange={this.changeInput}/>
+                                <Input value={endQuarter} onChange={this.changeEndQuarter}/>
+                                <Input disabled={true} value={endYear} onChange={this.changeInput}/>
+                                
+                            </div>
                             {this.renderFinancialReportHighlight()}
                         </div>
 

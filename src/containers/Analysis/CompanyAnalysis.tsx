@@ -245,13 +245,17 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
         const { rowData, columnDefs, defaultColDef } = this.state;
         return <div className="CompanyAnalysis">
             <div className="flex">
-                <div className="flex-1">
-                    <div className="medium">Doanh thu</div>
-                    {this.renderRevenueTable()}
-                </div>
-                <div className="flex-1 CompanyAnalysis-profit">
-                    <div className="medium">Loi nhuan</div>
-                    {this.renderRevenueTable(true)}
+                <div className="flex-1 flex">
+                    <div className="flex-1">
+                        <div className="medium">Doanh thu</div>
+                        {this.renderRevenueTable()}
+                    </div>
+                    
+                    <div className="flex-1 CompanyAnalysis-profit">
+                        <div className="medium">Loi nhuan</div>
+                        {this.renderRevenueTable(true)}
+                    </div>
+                    
                 </div>
                 <div className="flex-1">
                     <div className="medium">Compare same ICBCode</div>
