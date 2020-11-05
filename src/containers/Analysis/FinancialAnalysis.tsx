@@ -19,7 +19,7 @@ import {
     getLastestFinancialReportsValueUpdateUrl
 } from 'utils/request';
 import { BILLION_UNIT } from 'utils/unit';
-import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport, formatNumber } from 'utils/common'
+import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } from 'utils/common'
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
@@ -93,6 +93,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(preProps) {
+        this.autoSizeAll(false)
         if (this.props.selectedSymbol !== preProps.selectedSymbol) {
             if (this.state.isFinancialReports) {
                 this.setState({
@@ -149,12 +150,53 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         const year = 2020
         try {
             const res = await this.props.getLastestFinancialReports({ financialType: type_index, year, quarter, symbol: this.props.symbol })
+            const LastestFinancialReportsArray = this.mapLastestFinancialReportsArray(res.data, lastestFinancialReportsType);
             this.setState({
-                LastestFinancialReportsArray: res.data
+                LastestFinancialReportsArray
             }, () => this.test())
         } catch (error) {
             console.log(error)
         }
+    }
+
+    mapLastestFinancialReportsArray = (data, lastestFinancialReportsType) => {
+        console.log(data);
+        switch (lastestFinancialReportsType) {
+            case LATEST_FINANCIAL_REPORTS.TYPE_2:
+                break;
+            case LATEST_FINANCIAL_REPORTS.TYPE_1:
+                const NO_VAY_VSCH = {
+                    ID: 501,
+                    Name: "No vay / VCSH",
+                    Values: []
+                }
+                const NO_NGAN_HAN = data.filter(i => i.ID === 3010101)[0]
+                const NO_DAI_HAN = data.filter(i => i.ID === 3010206)[0]
+                const VCSH = data.filter(i => i.ID === 302)[0]
+                console.log(NO_NGAN_HAN, NO_DAI_HAN, VCSH)
+                if (NO_NGAN_HAN && NO_DAI_HAN && VCSH) {
+                    NO_NGAN_HAN.Values.map(i => {
+                        let xxx: any = {}
+                        xxx.Quarter = i.Quarter
+                        xxx.Year = i.Year
+                        const NGAN_HAN_VALUE = i.Value
+                        const DAI_HAN_VALUE = NO_DAI_HAN.Values.filter(j => j.Year === i.Year && j.Quarter === i.Quarter)[0].Value
+                        const VCSH_VALUE = VCSH.Values.filter(j => j.Year === i.Year && j.Quarter === i.Quarter)[0].Value
+                        xxx.Value = (NGAN_HAN_VALUE + DAI_HAN_VALUE)/VCSH_VALUE
+                        NO_VAY_VSCH.Values.push(xxx)
+                    })
+                    // console.log(NO_VAY_VSCH)
+                    data.push(NO_VAY_VSCH)
+                }
+                break;
+            case LATEST_FINANCIAL_REPORTS.TYPE_3:
+                break;
+            case LATEST_FINANCIAL_REPORTS.TYPE_4:
+                break;
+            default:
+                break;
+        }
+        return data
     }
 
     mapDataRevenueTable = (data, data2, isProfit) => {
@@ -497,6 +539,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     onGridReady = params => {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
+        
     };
 
     // RENDER PART
@@ -878,7 +921,6 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         } = this.state;
 
         const data = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
-        console.log(LastestFinancialReportsArray, data);
         let quarterArray = []
         if (LastestFinancialReportsArray.length > 0 && LastestFinancialReportsArray[0].Values.length > 0) {
             quarterArray.push({
@@ -890,7 +932,6 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 Quarter: endQuarter
             })
         }
-        console.log(quarterArray)
         const columnDefs = [];
 
         columnDefs.push({
@@ -903,6 +944,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 cellRenderer: (params) => {
                     if (params.data && params.data.Values && params.data.Values.length) {
                         const data = params.data.Values.filter(item => item.Year === quarterItem.Year && item.Quarter === quarterItem.Quarter)
+                        if (params.data.ID === 501) {
+                            return (data[0].Value * 100).toFixed(1)
+                        }
                         return formatNumber(data.length && (data[0].Value / BILLION_UNIT).toFixed(0))
                     }
                 }
@@ -916,6 +960,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
                     const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter) 
+                    if (params.data.ID === 501) {
+                        return (((data2[0] || {}).Value - (data1[0] || {}).Value) * 100).toFixed(1)
+                    }
                     return formatNumber((((data2[0] || {}).Value - (data1[0] || {}).Value) / BILLION_UNIT).toFixed(0))
                 }
             }
@@ -927,6 +974,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
                     const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
                     return (((data2[0] || {}).Value - (data1[0] || {}).Value) * 100 / (data1[0] || {}).Value).toFixed(0) + '%'
                 }
             }
@@ -939,6 +989,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     let sum = 0;
                     params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => sum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
                     return formatNumber((sum/BILLION_UNIT).toFixed(0))
                 }
             }
@@ -951,6 +1004,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     let sum = 0;
                     params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => sum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
                     return formatNumber((sum/BILLION_UNIT).toFixed(0))
                 }
             }
@@ -964,6 +1020,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                     params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => startSum += i.Value)
                     let endSum = 0;
                     params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => endSum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
                     return formatNumber(((endSum - startSum)/BILLION_UNIT).toFixed(0))
                 }
             }
@@ -977,7 +1036,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                     params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => startSum += i.Value)
                     let endSum = 0;
                     params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => endSum += i.Value)
-
+                    if (params.data.ID === 501) {
+                        return null
+                    }
                     return ((endSum - startSum) * 100 / startSum).toFixed(0) + '%'
                 }
             }
@@ -990,6 +1051,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             10104, // IV. Tổng hàng tồn kho
             302, // B. Nguồn vốn chủ sở hữu
             3020114, // 14. Lợi ích của cổ đông không kiểm soát
+            3010101, // 1. Vay và nợ thuê tài chính ngắn hạn
+            3010206, // 6. Vay và nợ thuê tài chính dài hạn
+            501, // Ty le no vay / VCSH
         ]
 
         const rowData = data.filter(i => listIndex.includes(i.ID))
@@ -1033,6 +1097,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                         + loi nhuan gop: +5%
                         + loi nhuan thuan: 0%
                         + loi nhuan sau thue: 0%
+
+                    - Tach ty le vay no / VCSH qua cac quy
+                    - Tong no / VCSH
                 `
             }
         </>
@@ -1087,27 +1154,40 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     }
 
     changeInput = (e) => {
-        console.log(e)
         this.setState({
             numberOfQuarter: Number(e.target.value)
         })
     }
 
     changeStartQuarter = (e) => {
-        console.log(e)
         this.setState({
             startQuarter: Number(e.target.value)
         })
     }
 
     changeEndQuarter = (e) => {
-        console.log(e)
         this.setState({
             endQuarter: Number(e.target.value)
         })
     }
 
+
+
+  sizeToFit = () => {
+    this.gridApi.sizeColumnsToFit();
+  };
+
+  autoSizeAll = (skipHeader) => {
+    var allColumnIds = [];
+    this.gridColumnApi.getAllColumns().forEach(function (column) {
+      allColumnIds.push(column.colId);
+    });
+    this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+  };
+
+
     render() {
+        console.log(this.state)
         const { period, isFinancialReports, startYear, endYear, startQuarter, endQuarter } = this.state;
         const { selectedSymbol, stocks, symbol: symbolProps } = this.props;
         const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
@@ -1144,6 +1224,13 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                         </div>
                        
                         <div className="Financial-reports">
+                        <button onClick={() => this.sizeToFit()}>Size to Fit</button>
+                        <button onClick={() => this.autoSizeAll(false)}>
+                        Auto-Size All
+                        </button>
+                        <button onClick={() => this.autoSizeAll(true)}>
+                        Auto-Size All (Skip Header)
+                        </button>
                             <Tabs defaultActiveKey={LATEST_FINANCIAL_REPORTS.TYPE_1} onChange={this.handleChangeLastestFinancialReportsType}>
                                 <TabPane tab={LATEST_FINANCIAL_REPORTS.TYPE_2} key={LATEST_FINANCIAL_REPORTS.TYPE_2}>
                                     {this.renderLastestFinancialReports()}
