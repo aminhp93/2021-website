@@ -45,7 +45,6 @@ interface IState {
     period: string,
     lastestFinancialReportsType: string,
     LastestFinancialInfoObj: any,
-    defaultColDef: any,
     analysisType: IAnalysisType,
     hide: boolean,
     numberOfQuarter: number,
@@ -70,12 +69,6 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             period: 'quarterly',
             lastestFinancialReportsType: LATEST_FINANCIAL_REPORTS.TYPE_1,
             LastestFinancialInfoObj: {},
-            defaultColDef: {
-                flex: 1,
-                filter: true,
-                sortable: true,
-                // resizable: true
-            },
             analysisType: null,
             hide: false,
             numberOfQuarter: 4,
@@ -182,7 +175,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                         const NGAN_HAN_VALUE = i.Value
                         const DAI_HAN_VALUE = NO_DAI_HAN.Values.filter(j => j.Year === i.Year && j.Quarter === i.Quarter)[0].Value
                         const VCSH_VALUE = VCSH.Values.filter(j => j.Year === i.Year && j.Quarter === i.Quarter)[0].Value
-                        xxx.Value = (NGAN_HAN_VALUE + DAI_HAN_VALUE)/VCSH_VALUE
+                        xxx.Value = (NGAN_HAN_VALUE + DAI_HAN_VALUE) / VCSH_VALUE
                         NO_VAY_VSCH.Values.push(xxx)
                     })
                     // console.log(NO_VAY_VSCH)
@@ -539,7 +532,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     onGridReady = params => {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
-        
+
     };
 
     // RENDER PART
@@ -633,11 +626,10 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     }
 
     renderLastestFinancialReports = () => {
-        const { LastestFinancialReportsArray, defaultColDef, period, lastestFinancialReportsType, analysisType } = this.state;
-        return <CustomAgGridReact 
+        const { LastestFinancialReportsArray, period, lastestFinancialReportsType, analysisType } = this.state;
+        return <CustomAgGridReact
             height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
-            defaultColDef={defaultColDef}
             onGridReady={this.onGridReady}
             rowData={mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)}
         />
@@ -845,23 +837,23 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         let removeIds = []
         switch (lastestFinancialReportsType) {
             case LATEST_FINANCIAL_REPORTS.TYPE_2:
-                removeIds = [1, 2, 10, 12, 13, 14, 15, 16,17, 18, 19, 20, 21, 701]
+                removeIds = [1, 2, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 701]
                 break;
             case LATEST_FINANCIAL_REPORTS.TYPE_1:
-                removeIds = [1, 
-                        1010201, 1010201, 1010303, 1010304, 1010305, 1010307,
-                        1010402, 
-                        1010503, 1010504, 1010505, 
-                        10201, 1020101, 1020102, 1020103, 1020104, 1020105, 1020106,
-                        1020202, 102020201, 102020202,
-                        1020501, 1020504, 1020505,
-                        10206, 1020601, 1020602, 1020603,
-                        3,
-                        3010102, 3010106, 3010108, 3010109, 3010110, 3010111, 3010112, 3010113, 3010114, 3010115,
-                        3010201, 3010202, 3010203, 3010204, 3010205, 3010208, 3010209, 3010210, 3010211, 3010212,
-                        3020102, 3020104, 3020106, 3020107, 3020108, 3020109, 3020110, 3020112, 3020113,
-                        30202, 3020201, 3020202, 3020203
-                    ]
+                removeIds = [1,
+                    1010201, 1010201, 1010303, 1010304, 1010305, 1010307,
+                    1010402,
+                    1010503, 1010504, 1010505,
+                    10201, 1020101, 1020102, 1020103, 1020104, 1020105, 1020106,
+                    1020202, 102020201, 102020202,
+                    1020501, 1020504, 1020505,
+                    10206, 1020601, 1020602, 1020603,
+                    3,
+                    3010102, 3010106, 3010108, 3010109, 3010110, 3010111, 3010112, 3010113, 3010114, 3010115,
+                    3010201, 3010202, 3010203, 3010204, 3010205, 3010208, 3010209, 3010210, 3010211, 3010212,
+                    3020102, 3020104, 3020106, 3020107, 3020108, 3020109, 3020110, 3020112, 3020113,
+                    30202, 3020201, 3020202, 3020203
+                ]
                 break;
             default:
                 break;
@@ -898,8 +890,8 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
 
     renderFinancialReportHighlight1 = () => {
         // Can doi ke toan
-        
-          
+
+
         // return <div>
         //     - Chu y den tai san ngan han, dung chu y qua nhieu den tai san dai han: so ssanh quy 3 vs quy 1 (1/4 - 30/9)
         //     - A. Tai san luu dong va dau tu ngan han: 5,905 --> 7,628
@@ -913,7 +905,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         // </div>
         const {
             LastestFinancialReportsArray,
-            lastestFinancialReportsType, 
+            lastestFinancialReportsType,
             startYear,
             startQuarter,
             endYear,
@@ -959,7 +951,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
-                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter) 
+                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
                     if (params.data.ID === 501) {
                         return (((data2[0] || {}).Value - (data1[0] || {}).Value) * 100).toFixed(1)
                     }
@@ -988,11 +980,11 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     let sum = 0;
-                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => sum += i.Value)
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map(i => sum += i.Value)
                     if (params.data.ID === 501) {
                         return null
                     }
-                    return formatNumber((sum/BILLION_UNIT).toFixed(0))
+                    return formatNumber((sum / BILLION_UNIT).toFixed(0))
                 }
             }
         })
@@ -1003,11 +995,11 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     let sum = 0;
-                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => sum += i.Value)
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map(i => sum += i.Value)
                     if (params.data.ID === 501) {
                         return null
                     }
-                    return formatNumber((sum/BILLION_UNIT).toFixed(0))
+                    return formatNumber((sum / BILLION_UNIT).toFixed(0))
                 }
             }
         })
@@ -1017,13 +1009,13 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     let startSum = 0;
-                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => startSum += i.Value)
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map(i => startSum += i.Value)
                     let endSum = 0;
-                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => endSum += i.Value)
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map(i => endSum += i.Value)
                     if (params.data.ID === 501) {
                         return null
                     }
-                    return formatNumber(((endSum - startSum)/BILLION_UNIT).toFixed(0))
+                    return formatNumber(((endSum - startSum) / BILLION_UNIT).toFixed(0))
                 }
             }
         })
@@ -1033,9 +1025,9 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             cellRenderer: (params) => {
                 if (params.data && params.data.Values && params.data.Values.length) {
                     let startSum = 0;
-                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map( i => startSum += i.Value)
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map(i => startSum += i.Value)
                     let endSum = 0;
-                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map( i => endSum += i.Value)
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map(i => endSum += i.Value)
                     if (params.data.ID === 501) {
                         return null
                     }
@@ -1058,23 +1050,16 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
 
         const rowData = data.filter(i => listIndex.includes(i.ID))
 
-        const defaultColDef = {
-            flex: 1,
-            filter: true,
-            sortable: true,
-        }
-        
         return (
-        <>
-        
-            <CustomAgGridReact 
-                height="1000px"
-                columnDefs={columnDefs}
-                defaultColDef={defaultColDef}
-                rowData={rowData}
-            />
-            {
-                `
+            <>
+
+                <CustomAgGridReact
+                    height="1000px"
+                    columnDefs={columnDefs}
+                    rowData={rowData}
+                />
+                {
+                    `
                     - FPT
                     - 31/12/2019 - 30/09/2020
                     - Tai san ngan han: +18%: 18.979 --> 22.473
@@ -1101,8 +1086,8 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                     - Tach ty le vay no / VCSH qua cac quy
                     - Tong no / VCSH
                 `
-            }
-        </>
+                }
+            </>
         )
     }
 
@@ -1173,17 +1158,17 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
 
 
 
-  sizeToFit = () => {
-    this.gridApi.sizeColumnsToFit();
-  };
+    sizeToFit = () => {
+        this.gridApi.sizeColumnsToFit();
+    };
 
-  autoSizeAll = (skipHeader) => {
-    var allColumnIds = [];
-    this.gridColumnApi.getAllColumns().forEach(function (column) {
-      allColumnIds.push(column.colId);
-    });
-    this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
-  };
+    autoSizeAll = (skipHeader) => {
+        var allColumnIds = [];
+        this.gridColumnApi.getAllColumns().forEach(function (column) {
+            allColumnIds.push(column.colId);
+        });
+        this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
+    };
 
 
     render() {
@@ -1211,8 +1196,8 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                     </Radio.Group>
                                 </div>
                             </div>
-                            
-                            <div>    
+
+                            <div>
                                 <div>
                                     <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
                                 </div>
@@ -1222,14 +1207,14 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                 </div>
                             </div>
                         </div>
-                       
+
                         <div className="Financial-reports">
-                        <button onClick={() => this.sizeToFit()}>Size to Fit</button>
-                        <button onClick={() => this.autoSizeAll(false)}>
-                        Auto-Size All
+                            <button onClick={() => this.sizeToFit()}>Size to Fit</button>
+                            <button onClick={() => this.autoSizeAll(false)}>
+                                Auto-Size All
                         </button>
-                        <button onClick={() => this.autoSizeAll(true)}>
-                        Auto-Size All (Skip Header)
+                            <button onClick={() => this.autoSizeAll(true)}>
+                                Auto-Size All (Skip Header)
                         </button>
                             <Tabs defaultActiveKey={LATEST_FINANCIAL_REPORTS.TYPE_1} onChange={this.handleChangeLastestFinancialReportsType}>
                                 <TabPane tab={LATEST_FINANCIAL_REPORTS.TYPE_2} key={LATEST_FINANCIAL_REPORTS.TYPE_2}>
@@ -1245,14 +1230,14 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                     {this.renderLastestFinancialReports()}
                                 </TabPane>
                             </Tabs>
-                            <hr/>
-                            <br/>
+                            <hr />
+                            <br />
                             <div className="flex">
-                                <Input value={startQuarter} onChange={this.changeStartQuarter}/>
-                                <Input disabled={true} value={startYear} onChange={this.changeInput}/>
-                                <Input value={endQuarter} onChange={this.changeEndQuarter}/>
-                                <Input disabled={true} value={endYear} onChange={this.changeInput}/>
-                                
+                                <Input value={startQuarter} onChange={this.changeStartQuarter} />
+                                <Input disabled={true} value={startYear} onChange={this.changeInput} />
+                                <Input value={endQuarter} onChange={this.changeEndQuarter} />
+                                <Input disabled={true} value={endYear} onChange={this.changeInput} />
+
                             </div>
                             {this.renderFinancialReportHighlight()}
                         </div>
@@ -1271,7 +1256,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                 <Button onClick={this.handleOpenFinancialReports}>Bao cao tai chinh</Button>
                             </div>
                             <div>
-                                
+
                                 <div>
                                     <Button disabled={true} onClick={() => this.updateYearlyFinancialInfo(symbol)}>YearlyFinancialInfo</Button>
                                     <Button disabled={true} onClick={this.updateYearlyFinancialInfoAll}>Update all</Button>

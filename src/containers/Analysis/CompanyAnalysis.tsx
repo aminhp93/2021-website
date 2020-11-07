@@ -35,7 +35,6 @@ interface IState {
     LastestFinancialInfoObj: any,
     rowData: any,
     columnDefs: any,
-    defaultColDef: any,
 }
 
 class CompanyAnalysis extends React.Component<IProps, IState> {
@@ -51,15 +50,6 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
             LastestFinancialInfoObj: {},
             rowData: [],
             columnDefs: marketAnalysisColumnDefs(this, "SoSanhCungNganh", true),
-            defaultColDef: {
-                flex: 1,
-                filter: true,
-                sortable: true,
-                minWidth: 100,
-                enableValue: true,
-                enableRowGroup: true,
-                enablePivot: true,
-            },
         }
     }
 
@@ -158,7 +148,7 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
             }
         }
         const obj: any = {};
-        
+
         result.map(i => {
             Object.keys(i).map(j => {
                 if (!obj[j]) {
@@ -242,7 +232,7 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { rowData, columnDefs, defaultColDef } = this.state;
+        const { rowData, columnDefs } = this.state;
         return <div className="CompanyAnalysis">
             <div className="flex">
                 <div className="flex-1 flex">
@@ -250,27 +240,26 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
                         <div className="medium">Doanh thu</div>
                         {this.renderRevenueTable()}
                     </div>
-                    
+
                     <div className="flex-1 CompanyAnalysis-profit">
                         <div className="medium">Loi nhuan</div>
                         {this.renderRevenueTable(true)}
                     </div>
-                    
+
                 </div>
                 <div className="flex-1">
                     <div className="medium">Compare same ICBCode</div>
-                    <CustomAgGridReact 
+                    <CustomAgGridReact
                         columnDefs={columnDefs}
-                        defaultColDef={defaultColDef}
                         onGridReady={this.onGridReady}
                         rowData={rowData}
                     />
                 </div>
             </div>
-            <hr/>
-            <br/>
+            <hr />
+            <br />
             <div>
-                <FinancialAnalysis symbol={(this.props.data || {}).symbol}/>
+                <FinancialAnalysis symbol={(this.props.data || {}).symbol} />
             </div>
         </div>
     }

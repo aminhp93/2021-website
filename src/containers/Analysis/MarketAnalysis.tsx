@@ -39,7 +39,6 @@ interface IProps {
 
 interface IState {
     columnDefs: any,
-    defaultColDef: any,
     rowData: any,
     visibleChart: boolean,
     visibleInfo: boolean,
@@ -73,15 +72,6 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             TodayCapital: 5,
             MinPrice: 5000,
             columnDefs: marketAnalysisColumnDefs(this),
-            defaultColDef: {
-                flex: 1,
-                filter: true,
-                sortable: true,
-                minWidth: 100,
-                enableValue: true,
-                enableRowGroup: true,
-                enablePivot: true,
-            },
             rowData: [],
             startDate: getPreviousDate(this.props.lastUpdatedDate.value),
             endDate: getEndDate(this.props.lastUpdatedDate.value),
@@ -238,7 +228,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
 
     render() {
         const { startDate, endDate, rowData,
-            columnDefs, defaultColDef,
+            columnDefs,
             visibleChart, visibleInfo, type,
             importantIndexType, TodayCapital, MinPrice,
             ChangePrice,
@@ -300,13 +290,12 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                         </div>
                     </div>
                 </div>
-                <CustomAgGridReact 
+                <CustomAgGridReact
                     columnDefs={columnDefs}
-                    defaultColDef={defaultColDef}
                     onGridReady={this.onGridReady}
                     rowData={rowData}
                 />
-                
+
                 {visibleChart ?
                     <Modal
                         wrapClassName="customed-modal-wrap"
@@ -317,7 +306,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                         footer={null}
                     >
                         <div className="chartTV-container">
-                            <ChartTV symbol={symbol}/>
+                            <ChartTV symbol={symbol} />
                             <CompanyAnalysis data={this.state} />
                         </div>
                     </Modal>
@@ -331,7 +320,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                         onCancel={this.handleCancel}
                         footer={null}
                     >
-                        <SymbolNote symbol={symbol}/>
+                        <SymbolNote symbol={symbol} />
                     </Modal>
                     : null}
 

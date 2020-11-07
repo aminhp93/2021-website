@@ -7,16 +7,33 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 
 interface IProps {
-    columnDefs?: any, 
+    columnDefs?: any,
     defaultColDef?: any,
     rowData?: any,
     onGridReady?: any,
     height?: any
 }
 
-interface IState {}
+interface IState { }
 
-class CustomAgGridReact extends React.Component <IProps, IState>{
+class CustomAgGridReact extends React.Component<IProps, IState>{
+    constructor(props) {
+        super(props);
+        this.state = {}
+    }
+
+    static defaultProps = {
+        defaultColDef: {
+            flex: 1,
+            filter: true,
+            sortable: true,
+            // minWidth: 100,
+            // enableValue: true,
+            // enableRowGroup: true,
+            // enablePivot: true,
+            // resizable: true
+        }
+    }
 
     render() {
         const { columnDefs, defaultColDef, rowData, onGridReady, height } = this.props;
@@ -30,7 +47,7 @@ class CustomAgGridReact extends React.Component <IProps, IState>{
                     className="ag-theme-alpine"
                 >
                     <AgGridReact
-                        modules= {[ClientSideRowModelModule]}
+                        modules={[ClientSideRowModelModule]}
                         enableRangeSelection={true}
                         columnDefs={columnDefs}
                         defaultColDef={defaultColDef}

@@ -37,7 +37,7 @@ interface IProps {
     getLastestFinancialInfo: any,
     getLastestFinancialReports: any,
     symbol: string,
-    
+
 }
 
 interface IState {
@@ -48,7 +48,6 @@ interface IState {
     period: string,
     lastestFinancialReportsType: string,
     LastestFinancialInfoObj: any,
-    defaultColDef: any,
     analysisType: IAnalysisType,
     hide: boolean,
 }
@@ -68,12 +67,6 @@ class Financial extends React.Component<IProps, IState> {
             period: 'quarterly',
             lastestFinancialReportsType: LATEST_FINANCIAL_REPORTS.TYPE_2,
             LastestFinancialInfoObj: {},
-            defaultColDef: {
-                flex: 1,
-                filter: true,
-                sortable: true,
-                // resizable: true
-            },
             analysisType: null,
             hide: false
         }
@@ -583,11 +576,10 @@ class Financial extends React.Component<IProps, IState> {
     }
 
     renderLastestFinancialReports = () => {
-        const { LastestFinancialReportsArray, defaultColDef, period, lastestFinancialReportsType, analysisType } = this.state;
+        const { LastestFinancialReportsArray, period, lastestFinancialReportsType, analysisType } = this.state;
         return <CustomAgGridReact
             height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
-            defaultColDef={defaultColDef}
             onGridReady={this.onGridReady}
             rowData={mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)}
         />
@@ -810,7 +802,7 @@ class Financial extends React.Component<IProps, IState> {
                                     </Radio.Group>
                                 </div>
                             </div>
-                            <div>    
+                            <div>
                                 <div>
                                     <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>
                                 </div>
@@ -820,7 +812,7 @@ class Financial extends React.Component<IProps, IState> {
                                 </div>
                             </div>
                         </div>
-                       
+
                         <div className="Financial-reports">
                             <Tabs defaultActiveKey="1" onChange={this.handleChangeLastestFinancialReportsType}>
                                 <TabPane tab={LATEST_FINANCIAL_REPORTS.TYPE_2} key={LATEST_FINANCIAL_REPORTS.TYPE_2}>
