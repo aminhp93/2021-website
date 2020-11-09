@@ -19,7 +19,13 @@ import {
     getLastestFinancialReportsValueUpdateUrl
 } from 'utils/request';
 import { BILLION_UNIT } from 'utils/unit';
-import { LATEST_FINANCIAL_REPORTS, formatNumber, mapDataLatestFinancialReport } from 'utils/common'
+import {
+    LATEST_FINANCIAL_REPORTS,
+    formatNumber,
+    mapDataLatestFinancialReport,
+    getIndustryType,
+    getNote
+} from 'utils/common';
 import { getLastestFinancialReportsColumnDefs } from 'utils/columnDefs';
 import { IStock, IAnalysisType } from 'types'
 
@@ -1093,35 +1099,190 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
 
     renderFinancialReportHighlight2 = () => {
         // ket qua kinh doanh
-        return <div>
-            {`
-            - So sanh giai doan 3 thang, 30/09/2020 - 30/09/2019
-            - So sanh giai doan 9 thang, 30/09/2020 - 30/09/2019
-            - VNM
-            - Doanh thu tang 8.5%
-            - LN truoc thue 15%
-            - Bien LNG > 2 con so: keo dai trong 10 nam --> loi the canh tranh
-            - 6 Thang dau nam 2020, VNM mua lai sua moc chau
-                + cat bot doi thu canh tranh
-                + gia tang Doanh thu + loi nhuan
-            - Thoi ky khung hoang (covid): doanh nghiep gia tang tien mat (vay no, ban hang, thu lai khoan phai thu, giam hang ton kho)
-                + Tai san ngan han: 24721 --> 31541
-                + Dau tu tai chinh ngan han: 12435 --> 17872
-                + --> tang 20% khoan tiet kiem gui ngan hang
-            - Muon tien tang:
-                + phai thu: giam (thu tien lai tu cac khoan phai thu, khoan kho doi)
-                + hang ton kho: giam (ban duoc hang hoac nhap ve nhung khong nhieu)
-            - VNM:
-                + phai thu: tang --> vong quay ban hang tang
-                    + khoan phai thu ngan han: 4503 --> 5976
-                + ton kho: tang --> vong quay SX cua doanh nghiep van duy tri va phat trien
-                    + hang ton kho: 4983 --> 5246
-            - VNM: Tong no / VCSH cao, tang dan
-            - Gia cao: P/E 17.63 --> thoi gian hoan von 17 nam
-            - 3/11: VNM phat hanh 350 trieu CP. Cung tang --> gia giam
 
-            `}
-        </div>
+        // {`
+        //     - So sanh giai doan 3 thang, 30/09/2020 - 30/09/2019
+        //     - So sanh giai doan 9 thang, 30/09/2020 - 30/09/2019
+        //     - VNM
+        //     - Doanh thu tang 8.5%
+        //     - LN truoc thue 15%
+        //     - Bien LNG > 2 con so: keo dai trong 10 nam --> loi the canh tranh
+        //     - 6 Thang dau nam 2020, VNM mua lai sua moc chau
+        //         + cat bot doi thu canh tranh
+        //         + gia tang Doanh thu + loi nhuan
+        //     - Thoi ky khung hoang (covid): doanh nghiep gia tang tien mat (vay no, ban hang, thu lai khoan phai thu, giam hang ton kho)
+        //         + Tai san ngan han: 24721 --> 31541
+        //         + Dau tu tai chinh ngan han: 12435 --> 17872
+        //         + --> tang 20% khoan tiet kiem gui ngan hang
+        //     - Muon tien tang:
+        //         + phai thu: giam (thu tien lai tu cac khoan phai thu, khoan kho doi)
+        //         + hang ton kho: giam (ban duoc hang hoac nhap ve nhung khong nhieu)
+        //     - VNM:
+        //         + phai thu: tang --> vong quay ban hang tang
+        //             + khoan phai thu ngan han: 4503 --> 5976
+        //         + ton kho: tang --> vong quay SX cua doanh nghiep van duy tri va phat trien
+        //             + hang ton kho: 4983 --> 5246
+        //     - VNM: Tong no / VCSH cao, tang dan
+        //     - Gia cao: P/E 17.63 --> thoi gian hoan von 17 nam
+        //     - 3/11: VNM phat hanh 350 trieu CP. Cung tang --> gia giam
+
+        //     `}
+        const {
+            LastestFinancialReportsArray,
+            lastestFinancialReportsType,
+            startYear,
+            startQuarter,
+            endYear,
+            endQuarter
+        } = this.state;
+
+        const data = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
+        let quarterArray = []
+        if (LastestFinancialReportsArray.length > 0 && LastestFinancialReportsArray[0].Values.length > 0) {
+            quarterArray.push({
+                Year: startYear,
+                Quarter: startQuarter
+            })
+            quarterArray.push({
+                Year: endYear,
+                Quarter: endQuarter
+            })
+        }
+        const columnDefs = [];
+
+        columnDefs.push({
+            field: 'Name'
+        })
+        quarterArray.map(quarterItem => (
+            columnDefs.push({
+                headerName: `${quarterItem.Year} ${quarterItem.Quarter}`,
+                type: 'rightAligned',
+                cellRenderer: (params) => {
+                    if (params.data && params.data.Values && params.data.Values.length) {
+                        const data = params.data.Values.filter(item => item.Year === quarterItem.Year && item.Quarter === quarterItem.Quarter)
+                        if (params.data.ID === 501) {
+                            return (data[0].Value * 100).toFixed(1)
+                        }
+                        return formatNumber(data.length && (data[0].Value / BILLION_UNIT).toFixed(0))
+                    }
+                }
+            })
+        ))
+
+        columnDefs.push({
+            headerName: '+/-',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
+                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
+                    if (params.data.ID === 501) {
+                        return (((data2[0] || {}).Value - (data1[0] || {}).Value) * 100).toFixed(1)
+                    }
+                    return formatNumber((((data2[0] || {}).Value - (data1[0] || {}).Value) / BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+        columnDefs.push({
+            headerName: '%',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    const data1 = params.data.Values.filter(item => item.Year === quarterArray[0].Year && item.Quarter === quarterArray[0].Quarter)
+                    const data2 = params.data.Values.filter(item => item.Year === quarterArray[1].Year && item.Quarter === quarterArray[1].Quarter)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
+                    return (((data2[0] || {}).Value - (data1[0] || {}).Value) * 100 / (data1[0] || {}).Value).toFixed(0) + '%'
+                }
+            }
+        })
+
+        columnDefs.push({
+            headerName: 'Cum 2019',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let sum = 0;
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map(i => sum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
+                    return formatNumber((sum / BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+
+        columnDefs.push({
+            headerName: 'Cum 2020',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let sum = 0;
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map(i => sum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
+                    return formatNumber((sum / BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+        columnDefs.push({
+            headerName: '+/-',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let startSum = 0;
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map(i => startSum += i.Value)
+                    let endSum = 0;
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map(i => endSum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
+                    return formatNumber(((endSum - startSum) / BILLION_UNIT).toFixed(0))
+                }
+            }
+        })
+        columnDefs.push({
+            headerName: '%',
+            type: 'rightAligned',
+            cellRenderer: (params) => {
+                if (params.data && params.data.Values && params.data.Values.length) {
+                    let startSum = 0;
+                    params.data.Values.filter(i => i.Year === startYear && i.Quarter < startQuarter + 1).map(i => startSum += i.Value)
+                    let endSum = 0;
+                    params.data.Values.filter(i => i.Year === endYear && i.Quarter < endQuarter + 1).map(i => endSum += i.Value)
+                    if (params.data.ID === 501) {
+                        return null
+                    }
+                    return ((endSum - startSum) * 100 / startSum).toFixed(0) + '%'
+                }
+            }
+        })
+
+        const listIndex = [
+            101, // A. Tài sản lưu động và đầu tư ngắn hạn
+            10102, // II. Các khoản đầu tư tài chính ngắn hạn
+            10103, // III. Các khoản phải thu ngắn hạn
+            10104, // IV. Tổng hàng tồn kho
+            302, // B. Nguồn vốn chủ sở hữu
+            3020114, // 14. Lợi ích của cổ đông không kiểm soát
+            3010101, // 1. Vay và nợ thuê tài chính ngắn hạn
+            3010206, // 6. Vay và nợ thuê tài chính dài hạn
+            501, // Ty le no vay / VCSH
+        ]
+
+        const rowData = data.filter(i => listIndex.includes(i.ID))
+
+        return (
+            <>
+                <CustomAgGridReact
+                    height="1000px"
+                    columnDefs={columnDefs}
+                    rowData={rowData}
+                />
+            </>
+        )
     }
 
     renderFinancialReportHighlight3 = () => {
@@ -1156,19 +1317,26 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         })
     }
 
-
-
     sizeToFit = () => {
         this.gridApi.sizeColumnsToFit();
     };
 
     autoSizeAll = (skipHeader) => {
-        var allColumnIds = [];
+        const allColumnIds = [];
         this.gridColumnApi.getAllColumns().forEach(function (column) {
             allColumnIds.push(column.colId);
         });
         this.gridColumnApi.autoSizeColumns(allColumnIds, skipHeader);
     };
+
+    renderNoteHighlight = () => {
+        const { selectedSymbol, stocks } = this.props;
+        const { lastestFinancialReportsType } = this.state;
+        const symbol = stocks[selectedSymbol].Symbol
+        const industryType = getIndustryType(symbol);
+        const note = getNote(industryType, lastestFinancialReportsType)
+        return <div>{note}</div>
+    }
 
 
     render() {
@@ -1239,6 +1407,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                 <Input disabled={true} value={endYear} onChange={this.changeInput} />
 
                             </div>
+                            {this.renderNoteHighlight()}
                             {this.renderFinancialReportHighlight()}
                         </div>
 
