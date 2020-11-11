@@ -731,7 +731,7 @@ export const getEndDate = (date) => {
 }
 
 export const getIndustryType = (symbol) => {
-    let type = null;
+    let type = 'TYPE_DEFAULT';
     Object.keys(INDUSTRY_TYPE_LIST_STOCK).map(i => {
         if (INDUSTRY_TYPE_LIST_STOCK[i].includes(symbol)) {
             type = i;
@@ -744,7 +744,57 @@ export const getIndustryType = (symbol) => {
 export const getNote = (industryType, lastestFinancialReportsType) => {
     switch (lastestFinancialReportsType) {
         case LATEST_FINANCIAL_REPORTS.TYPE_1:
-            return []
+            if (industryType === 'TYPE_DEFAULT') {
+                return [
+                    {
+                        index: 101,
+                        title: 'A. Tài sản lưu động và đầu tư ngắn hạn',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 10102,
+                        title: 'II. Các khoản đầu tư tài chính ngắn hạn',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 10103,
+                        title: 'III. Các khoản phải thu ngắn hạn',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 10104,
+                        title: 'IV. Tổng hàng tồn kho',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 302,
+                        title: 'B. Nguồn vốn chủ sở hữu',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 3020114,
+                        title: '14. Lợi ích của cổ đông không kiểm soát',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 3010101,
+                        title: '1. Vay và nợ thuê tài chính ngắn hạn',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 3010206,
+                        title: '6. Vay và nợ thuê tài chính dài hạn',
+                        meaning: 'tang thi tot'
+                    },
+                    {
+                        index: 501,
+                        title: 'Ty le no vay / VCSH',
+                        meaning: 'tang thi tot'
+                    }
+                ]
+            } else {
+                return []
+            }
         case LATEST_FINANCIAL_REPORTS.TYPE_2:
             return []
         case LATEST_FINANCIAL_REPORTS.TYPE_3:
@@ -752,53 +802,7 @@ export const getNote = (industryType, lastestFinancialReportsType) => {
         case LATEST_FINANCIAL_REPORTS.TYPE_4:
             return []
         default:
-            return [
-                {
-                    index: 101,
-                    title: 'A. Tài sản lưu động và đầu tư ngắn hạn',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 10102,
-                    title: 'II. Các khoản đầu tư tài chính ngắn hạn',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 10103,
-                    title: 'III. Các khoản phải thu ngắn hạn',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 10104,
-                    title: 'IV. Tổng hàng tồn kho',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 302,
-                    title: 'B. Nguồn vốn chủ sở hữu',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 3020114,
-                    title: '14. Lợi ích của cổ đông không kiểm soát',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 3010101,
-                    title: '1. Vay và nợ thuê tài chính ngắn hạn',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 3010206,
-                    title: '6. Vay và nợ thuê tài chính dài hạn',
-                    meaning: 'tang thi tot'
-                },
-                {
-                    index: 501,
-                    title: 'Ty le no vay / VCSH',
-                    meaning: 'tang thi tot'
-                } 
-        ]
+            return []
     }
 }
 

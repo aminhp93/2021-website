@@ -92,7 +92,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(preProps) {
-        this.autoSizeAll(false)
+        // this.autoSizeAll(false)
         if (this.props.selectedSymbol !== preProps.selectedSymbol) {
             if (this.state.isFinancialReports) {
                 this.setState({
@@ -1330,12 +1330,36 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     };
 
     renderNoteHighlight = () => {
+        const columns = [
+            {
+                title: 'index',
+                dataIndex: 'index',
+                key: 'index',
+            },
+            {
+                title: 'title',
+                dataIndex: 'title',
+                key: 'title',
+            },
+            {
+                title: 'meaning',
+                dataIndex: 'meaning',
+                key: 'meaning',
+            },
+        ];
         const { selectedSymbol, stocks } = this.props;
         const { lastestFinancialReportsType } = this.state;
-        const symbol = stocks[selectedSymbol].Symbol
+        const symbol = (stocks[selectedSymbol] || {}).Symbol
         const industryType = getIndustryType(symbol);
         const note = getNote(industryType, lastestFinancialReportsType)
-        return <div>{note}</div>
+        console.log(note)
+        return <div>
+            <div>Noi dung: {lastestFinancialReportsType}</div>
+            <div>industryType: {industryType}</div>
+            <div>
+                <Table dataSource={note} columns={columns} />
+            </div>
+        </div>
     }
 
 
@@ -1364,7 +1388,6 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                                     </Radio.Group>
                                 </div>
                             </div>
-
                             <div>
                                 <div>
                                     <Button disabled={true} onClick={this.updateLastestFinancialReportsNameAll}>LastestFinancialReportsName</Button>

@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import moment from 'moment';
 import ReactDOM from 'react-dom';
@@ -14,6 +15,10 @@ import {
     LATEST_FINANCIAL_REPORTS,
     mapColorVolumeChange
 } from './common';
+
+import {
+    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+} from 'recharts';
 
 
 export function getYearlyFinancialInfoColumnDefs() {
@@ -387,11 +392,11 @@ export const HistoricalQuotesSupplyDemandColumns = [
     }
 ]
 
-export const getLastestFinancialReportsColumnDefs = (period, type, analysisType = null, LastestFinancialReportsArray=[]) => {
+export const getLastestFinancialReportsColumnDefs = (period, type, analysisType = null, LastestFinancialReportsArray = []) => {
     if (LastestFinancialReportsArray.length === 0) return;
     let yearArray = []
     let quarterArray = []
-    
+
     yearArray = LastestFinancialReportsArray[0].Values.map(i => i.Year)
     quarterArray = LastestFinancialReportsArray[0].Values.map(i => {
         return {
@@ -400,8 +405,8 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
         }
     })
     let year = []
-    let quarter = []
-    let rowGroup = [
+    const quarter = []
+    const rowGroup = [
         {
             field: 'ParentID1',
             rowGroup: true,
@@ -434,6 +439,19 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
     year.push({
         field: 'Name'
     })
+    year.push({
+        headerName: 'Chart',
+        cellRendererFramework: (params) => {
+            const data = params.data.Values;
+            return <BarChart width={100} height={40} data={data}>
+                <Bar dataKey="Value">
+                    {data.map((entry, index) => (
+                        <Cell key={index} fill={entry.Value > 0 ? 'green' : 'red'} />
+                    ))}
+                </Bar>
+            </BarChart>
+        }
+    })
     yearArray.forEach(yearItem => {
         year.push({
             headerName: yearItem,
@@ -447,8 +465,6 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
         })
     })
     if (type === LATEST_FINANCIAL_REPORTS.TYPE_1) {
-
-
         if (analysisType === 'tyTrong') {
             let tyTrongArray = ['%2015', '%2016', '%2017', '%2018', '%2019']
             tyTrongArray.forEach((yearItem, index) => {
@@ -537,6 +553,20 @@ export const getLastestFinancialReportsColumnDefs = (period, type, analysisType 
 
     quarter.push({
         field: 'Name'
+    })
+
+    quarter.push({
+        headerName: 'Chart',
+        cellRendererFramework: (params) => {
+            const data = params.data.Values;
+            return <BarChart width={100} height={40} data={data}>
+                <Bar dataKey="Value">
+                    {data.map((entry, index) => (
+                        <Cell key={index} fill={entry.Value > 0 ? 'green' : 'red'} />
+                    ))}
+                </Bar>
+            </BarChart>
+        }
     })
     quarterArray.map(quarterItem => (
         quarter.push({
