@@ -638,7 +638,19 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
             onGridReady={this.onGridReady}
             rowData={mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)}
+            rowClassRules={this.rowClassRules}
         />
+    }
+    
+    rowClassRules = {
+        'bg-red': (params) => {
+            console.log(params)
+            const Values = params.data.Values;
+            const last = Values[Values.length - 1]
+            const pre = Values[Values.length - 2]
+            const lastQuarter = Values[Values.length - 5]
+            return  last.Value / pre.Value > 2 || last.Value / pre.Value < 1/2 || last.Value / lastQuarter.Value > 2 || last.Value / lastQuarter.Value < 1/2
+        }
     }
 
     renderEvaluation = () => {
@@ -1370,7 +1382,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
         const symbol = symbolProps || (stocks[selectedSymbol] || {}).Symbol
         if (isFinancialReports) {
             return (
-                <div className="Financial bg-white">
+                <div className="Financial bg-white Financial-Analysis">
                     <div style={{ width: '100%' }}>
                         <div className="flex flex-sp-bt">
                             <div>
@@ -1439,7 +1451,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             )
         }
         return (
-            <div className="Financial">
+            <div className="Financial Financial-Analysis">
                 <div className="Financial-left-container">
                     <div className="Financial-revenue bg-white">
                         <div className="flex flex-sp-bt">

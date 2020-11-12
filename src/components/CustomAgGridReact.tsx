@@ -11,7 +11,8 @@ interface IProps {
     defaultColDef?: any,
     rowData?: any,
     onGridReady?: any,
-    height?: any
+    height?: any,
+    rowClassRules?: any,
 }
 
 interface IState { }
@@ -36,7 +37,7 @@ class CustomAgGridReact extends React.Component<IProps, IState>{
     }
 
     render() {
-        const { columnDefs, defaultColDef, rowData, onGridReady, height } = this.props;
+        const { columnDefs, defaultColDef, rowData, onGridReady, height, rowClassRules } = this.props;
         return (
             <div style={{ width: '100%', height: '100%' }}>
                 <div
@@ -54,6 +55,7 @@ class CustomAgGridReact extends React.Component<IProps, IState>{
                         onGridReady={onGridReady}
                         rowData={rowData}
                         rowSelection={'single'}
+                        rowClassRules={rowClassRules}
                     />
                 </div>
             </div>
