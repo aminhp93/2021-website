@@ -465,7 +465,28 @@ export const mapDataImportantIndexes = (dataType1, dataType2, dataType3, dataTyp
 }
 
 export const mapDataLatestFinancialReport = (data, period = null, type = null) => {
+    console.log(data);
+
+
     const cloneData = cloneDeep(data);
+    // // Add +/-, % last same quarter
+    // cloneData.map(i => {
+    //     const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
+    //     const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
+
+    //     if (value_Q3_2020 && value_Q2_2020 && value_Q3_2019 && (
+    //         value_Q3_2020 / value_Q2_2020 > 2
+    //         || value_Q3_2020 / value_Q2_2020 < 1 / 2
+    //         || value_Q3_2020 / value_Q3_2019 > 2
+    //         || value_Q3_2020 / value_Q3_2019 < 1 / 2
+    //     )) {
+    //         return true
+    //     }
+    //     i.Change_Last_Quarter = i
+    // })
+
+
+
     // let tongDoanhThuValues = []
     // let tongChiPhiValues = []
 

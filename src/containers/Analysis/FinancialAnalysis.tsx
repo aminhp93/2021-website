@@ -635,12 +635,26 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
 
     renderLastestFinancialReports = () => {
         const { LastestFinancialReportsArray, period, lastestFinancialReportsType, analysisType } = this.state;
+        const rowData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType).filter(i => {
+            const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
+            const value_Q2_2020 = ((i.Values || []).filter(j => j.Quarter === 2 && j.Year === 2020)[0] || {}).Value
+            const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
+
+            if (value_Q3_2020 && value_Q2_2020 && value_Q3_2019 && (
+                value_Q3_2020 / value_Q2_2020 > 2
+                || value_Q3_2020 / value_Q2_2020 < 1 / 2
+                || value_Q3_2020 / value_Q3_2019 > 2
+                || value_Q3_2020 / value_Q3_2019 < 1 / 2
+            )) {
+                return true
+            }
+        });
         return <CustomAgGridReact
             height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
             onGridReady={this.onGridReady}
-            rowData={mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)}
-            rowClassRules={this.rowClassRules}
+            rowData={rowData}
+        // rowClassRules={this.rowClassRules}
         />
     }
 
@@ -851,39 +865,56 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     }
 
     test = () => {
-        const { lastestFinancialReportsType } = this.state;
-        const xxx = []
-        let removeIds = []
-        switch (lastestFinancialReportsType) {
-            case LATEST_FINANCIAL_REPORTS.TYPE_2:
-                removeIds = [1, 2, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 701]
-                break;
-            case LATEST_FINANCIAL_REPORTS.TYPE_1:
-                removeIds = [1,
-                    1010201, 1010201, 1010303, 1010304, 1010305, 1010307,
-                    1010402,
-                    1010503, 1010504, 1010505,
-                    10201, 1020101, 1020102, 1020103, 1020104, 1020105, 1020106,
-                    1020202, 102020201, 102020202,
-                    1020501, 1020504, 1020505,
-                    10206, 1020601, 1020602, 1020603,
-                    3,
-                    3010102, 3010106, 3010108, 3010109, 3010110, 3010111, 3010112, 3010113, 3010114, 3010115,
-                    3010201, 3010202, 3010203, 3010204, 3010205, 3010208, 3010209, 3010210, 3010211, 3010212,
-                    3020102, 3020104, 3020106, 3020107, 3020108, 3020109, 3020110, 3020112, 3020113,
-                    30202, 3020201, 3020202, 3020203
-                ]
-                break;
-            default:
-                break;
-        }
-        this.gridApi.forEachNode(node => {
-            if (removeIds.indexOf(node.data.ID) > -1) {
-                xxx.push(node.data)
-            }
-        })
+        // const { lastestFinancialReportsType } = this.state;
 
-        this.gridApi.applyTransaction({ remove: xxx });
+        // const xxx = []
+        // let removeIds = []
+        // switch (lastestFinancialReportsType) {
+        //     case LATEST_FINANCIAL_REPORTS.TYPE_2:
+        //         removeIds = [1, 2, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 701]
+        //         break;
+        //     case LATEST_FINANCIAL_REPORTS.TYPE_1:
+        //         removeIds = [1,
+        //             1010201, 1010201, 1010303, 1010304, 1010305, 1010307,
+        //             1010402,
+        //             1010503, 1010504, 1010505,
+        //             10201, 1020101, 1020102, 1020103, 1020104, 1020105, 1020106,
+        //             1020202, 102020201, 102020202,
+        //             1020501, 1020504, 1020505,
+        //             10206, 1020601, 1020602, 1020603,
+        //             3,
+        //             3010102, 3010106, 3010108, 3010109, 3010110, 3010111, 3010112, 3010113, 3010114, 3010115,
+        //             3010201, 3010202, 3010203, 3010204, 3010205, 3010208, 3010209, 3010210, 3010211, 3010212,
+        //             3020102, 3020104, 3020106, 3020107, 3020108, 3020109, 3020110, 3020112, 3020113,
+        //             30202, 3020201, 3020202, 3020203
+        //         ]
+        //         break;
+        //     default:
+        //         break;
+        // }
+        // this.gridApi.forEachNode(node => {
+        //     if (removeIds.indexOf(node.data.ID) > -1) {
+        //         xxx.push(node.data)
+        //     }
+        // })
+
+        // this.gridApi.applyTransaction({ remove: xxx });
+        const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
+        const newData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType).filter(i => {
+            const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
+            const value_Q2_2020 = ((i.Values || []).filter(j => j.Quarter === 2 && j.Year === 2020)[0] || {}).Value
+            const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
+
+            if (value_Q3_2020 && value_Q2_2020 && value_Q3_2019 && (
+                value_Q3_2020 / value_Q2_2020 > 2
+                || value_Q3_2020 / value_Q2_2020 < 1 / 2
+                || value_Q3_2020 / value_Q3_2019 > 2
+                || value_Q3_2020 / value_Q3_2019 < 1 / 2
+            )) {
+                return true
+            }
+        });
+        this.gridApi.setRowData(newData)
     }
 
     reset = () => {
@@ -1076,19 +1107,31 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             }
         })
 
-        const listIndex = [
-            101, // A. Tài sản lưu động và đầu tư ngắn hạn
-            10102, // II. Các khoản đầu tư tài chính ngắn hạn
-            10103, // III. Các khoản phải thu ngắn hạn
-            10104, // IV. Tổng hàng tồn kho
-            302, // B. Nguồn vốn chủ sở hữu
-            3020114, // 14. Lợi ích của cổ đông không kiểm soát
-            3010101, // 1. Vay và nợ thuê tài chính ngắn hạn
-            3010206, // 6. Vay và nợ thuê tài chính dài hạn
-            501, // Ty le no vay / VCSH
-        ]
+        // const listIndex = [
+        //     101, // A. Tài sản lưu động và đầu tư ngắn hạn
+        //     10102, // II. Các khoản đầu tư tài chính ngắn hạn
+        //     10103, // III. Các khoản phải thu ngắn hạn
+        //     10104, // IV. Tổng hàng tồn kho
+        //     302, // B. Nguồn vốn chủ sở hữu
+        //     3020114, // 14. Lợi ích của cổ đông không kiểm soát
+        //     3010101, // 1. Vay và nợ thuê tài chính ngắn hạn
+        //     3010206, // 6. Vay và nợ thuê tài chính dài hạn
+        //     501, // Ty le no vay / VCSH
+        // ]
 
-        const rowData = data.filter(i => listIndex.includes(i.ID))
+        // const rowData = data.filter(i => listIndex.includes(i.ID))
+
+        const rowData = data.filter(i => {
+            const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
+            const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
+
+            if (value_Q3_2020 && value_Q3_2019 && (
+                value_Q3_2020 / value_Q3_2019 > 2
+                || value_Q3_2020 / value_Q3_2019 < 1 / 2
+            )) {
+                return true
+            }
+        })
 
         return (
             <>
@@ -1302,19 +1345,31 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             }
         })
 
-        const listIndex = [
-            101, // A. Tài sản lưu động và đầu tư ngắn hạn
-            10102, // II. Các khoản đầu tư tài chính ngắn hạn
-            10103, // III. Các khoản phải thu ngắn hạn
-            10104, // IV. Tổng hàng tồn kho
-            302, // B. Nguồn vốn chủ sở hữu
-            3020114, // 14. Lợi ích của cổ đông không kiểm soát
-            3010101, // 1. Vay và nợ thuê tài chính ngắn hạn
-            3010206, // 6. Vay và nợ thuê tài chính dài hạn
-            501, // Ty le no vay / VCSH
-        ]
+        const rowData = data.filter(i => {
+            const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
+            const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
 
-        const rowData = data.filter(i => listIndex.includes(i.ID))
+            if (value_Q3_2020 && value_Q3_2019 && (
+                value_Q3_2020 / value_Q3_2019 > 2
+                || value_Q3_2020 / value_Q3_2019 < 1 / 2
+            )) {
+                return true
+            }
+        })
+
+        // const listIndex = [
+        //     101, // A. Tài sản lưu động và đầu tư ngắn hạn
+        //     10102, // II. Các khoản đầu tư tài chính ngắn hạn
+        //     10103, // III. Các khoản phải thu ngắn hạn
+        //     10104, // IV. Tổng hàng tồn kho
+        //     302, // B. Nguồn vốn chủ sở hữu
+        //     3020114, // 14. Lợi ích của cổ đông không kiểm soát
+        //     3010101, // 1. Vay và nợ thuê tài chính ngắn hạn
+        //     3010206, // 6. Vay và nợ thuê tài chính dài hạn
+        //     501, // Ty le no vay / VCSH
+        // ]
+
+        // const rowData = data.filter(i => listIndex.includes(i.ID))
 
         return (
             <>
