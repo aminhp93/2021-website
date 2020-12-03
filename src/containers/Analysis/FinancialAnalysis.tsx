@@ -1527,7 +1527,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                             </Tabs>
                             <hr />
                             <br />
-                            {this.renderNoteHighlight()}
+                            {/* {this.renderNoteHighlight()} */}
                             <div className="flex">
                                 <Input value={startQuarter} onChange={this.changeStartQuarter} />
                                 <Input disabled={true} value={startYear} onChange={this.changeInput} />

@@ -23,6 +23,7 @@ interface IState {
     total: any,
     postIds: any,
     replies: any,
+    data2: any,
 }
 
 const NUMBER_CALL_POST = 200
@@ -32,17 +33,18 @@ class Test extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             data: [],
+            data2: [],
             total: [],
             postIds: [],
             replies: []
         }
     }
     async componentDidMount() {
-        // const res = await this.props.getListUrlGoValue();
-        // if (!res.data.results) return;
-        // this.setState({ 
-        //     data: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
-        // })
+        const res = await this.props.getListUrlGoValue();
+        if (!res.data.results) return;
+        this.setState({ 
+            data2: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
+        })
         if (window.location.pathname !== "/stickies") {
             const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
             a && a.remove();
@@ -145,16 +147,19 @@ class Test extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { data, total, postIds, replies } = this.state;
+        const { data, total, postIds, replies, data2 } = this.state;
         const mappedDateObj = groupBy(data, 'mappedDate')
         const dataGroupByPostID = groupBy(data, 'postID')
         
         return (
             <div className="flex">
-                {/* {data.map(i => {
+                {/* <div>
+                    
+                {data2.map(i => {
                     const slug = 'https://app.govalue.vn/' + i.slug
                     return <div><a href={slug} target="_blank">{i.idea_id} - {moment(i.create_date).format('YYYY-MM-DD')} - {slug}</a></div>
-                })} */}
+                })}
+                </div> */}
                 
                 <div>
                     <div>Count - { data.length }</div>
