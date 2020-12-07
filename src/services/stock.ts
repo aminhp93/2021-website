@@ -26,10 +26,11 @@ const StockService = {
             url: StockUrls.getQuarterlyFinancialInfo(symbol)
         })
     },
-    getLastestFinancialInfo(stockId) {
+    getLastestFinancialInfo(params=null) {
         return request({
             method: 'GET',
-            url: StockUrls.getLastestFinancialInfo(stockId)
+            url: StockUrls.getLastestFinancialInfo(),
+            params
         })
     },
     getLastestFinancialReports(symbol, financialType, year, quarter) {

@@ -55,17 +55,6 @@ export const getQuarterlyFinancialInfo = (data: string): ThunkActionType => asyn
     return response
 }
 
-export const getLastestFinancialInfo = (data: string): ThunkActionType => async (
-    _,
-    getStoreValue
-) => {
-    const { selectedSymbol, stocks } = getStoreValue();
-    const symbol = data || (stocks[selectedSymbol] || {}).Symbol
-    const stock: any = Object.values(stocks).filter((i: any) => i.Symbol === symbol)[0]
-    const response = await StockService.getLastestFinancialInfo(stock.id)
-    return response
-}
-
 export const getLastestFinancialReports = (data: any): ThunkActionType => async (
     _,
     getStoreValue

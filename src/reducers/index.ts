@@ -8,6 +8,7 @@ import decisiveIndexes from './decisiveIndexes';
 import notes from './notes';
 import account from './account';
 import post from './post';
+import latestFinancialInfo from './latestFinancialInfo'
 
 const rootReducer = combineReducers({
   stocks,
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   decisiveIndexes,
   notes,
   account,
-  post
+  post,
+  latestFinancialInfo
 });
 
 export default rootReducer;

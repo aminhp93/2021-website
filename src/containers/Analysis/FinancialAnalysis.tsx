@@ -113,7 +113,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             const YearlyFinancialInfoArray = res1.data
             const res2 = await this.props.getQuarterlyFinancialInfo(symbol)
             const QuarterlyFinancialInfoArray = res2.data
-            const res3 = await this.props.getLastestFinancialInfo(symbol)
+            const res3 = await this.props.getLastestFinancialInfo({ stockId: symbol })
             const LastestFinancialInfoObj = res3.data
             if (YearlyFinancialInfoArray && QuarterlyFinancialInfoArray && LastestFinancialInfoObj) {
                 this.setState({

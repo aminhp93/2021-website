@@ -6,7 +6,8 @@ import { get, debounce, cloneDeep } from 'lodash';
 import moment from 'moment';
 
 import { IStock } from 'types'
-import { fetchListStocks, } from 'reducers/stocks';
+import { fetchListStocks } from 'reducers/stocks';
+import { getLastestFinancialInfo } from 'reducers/latestFinancialInfo';
 import { fetchCompany } from 'reducers/companies';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { getLastUpdatedDate, updateLastUpdatedDate } from 'reducers/lastUpdatedDate';
@@ -24,7 +25,6 @@ import Report from './Report/Report';
 const { TabPane } = Tabs;
 const { Option } = Select;
 
-
 interface IProps {
     selectedSymbol: number,
     stocks: IStock,
@@ -35,6 +35,7 @@ interface IProps {
     fetchCompany: any,
     fetchDecisiveIndexes: any,
     updateLastUpdatedDate: any,
+    getLastestFinancialInfo: any,
 }
 
 interface IState {
@@ -69,7 +70,8 @@ class Stock extends React.Component<IProps, IState> {
             const promise2 = this.props.fetchListStocks()
             const promise3 = this.props.fetchCompany()
             const promise4 = this.props.fetchDecisiveIndexes()
-            Promise.all([promise1, promise2, promise3, promise4])
+            const promise5 = this.props.getLastestFinancialInfo()
+            Promise.all([promise1, promise2, promise3, promise4, promise5])
                 .then(response => {
                     this.setState({ loading: false })
                 })
@@ -271,7 +273,8 @@ const mapDispatchToProps = {
     updateSelectedSymbolSuccess,
     fetchCompany,
     fetchDecisiveIndexes,
-    updateLastUpdatedDate
+    updateLastUpdatedDate,
+    getLastestFinancialInfo
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Stock);
