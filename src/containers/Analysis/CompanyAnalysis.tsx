@@ -6,9 +6,10 @@ import { Table } from 'antd';
 import {
     getYearlyFinancialInfo,
     getQuarterlyFinancialInfo,
-    getLastestFinancialInfo,
     scanStock
 } from 'reducers/stocks';
+import { getLastestFinancialInfo } from 'reducers/latestFinancialInfo'
+
 import { BILLION_UNIT } from 'utils/unit';
 import { formatNumber } from 'utils/common';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';

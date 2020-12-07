@@ -8,9 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     getYearlyFinancialInfo,
     getQuarterlyFinancialInfo,
-    getLastestFinancialInfo,
     getLastestFinancialReports,
 } from 'reducers/stocks';
+import { getLastestFinancialInfo } from 'reducers/latestFinancialInfo'
+
 import {
     getYearlyFinancialInfoUpdateUrl,
     getQuarterlyFinancialInfoUpdateUrl,
