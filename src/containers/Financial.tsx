@@ -834,7 +834,7 @@ class Financial extends React.Component<IProps, IState> {
             )
         }
         return (
-            <div className="Financial">
+            <div className="Financial flex">
                 <div className="Financial-left-container">
                     <div className="Financial-revenue bg-white">
                         <div className="flex flex-sp-bt">
