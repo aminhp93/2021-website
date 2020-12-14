@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, each } from 'lodash';
 import moment from 'moment';
 import { INDUSTRY_TYPE_LIST_STOCK } from 'utils/constant'
 
@@ -730,7 +730,7 @@ export const mapDataLatestFinancialReport = (data, period = null, type = null) =
 export const getPreviousDate = (date) => {
     let count = -1
     if (moment(date).format('ddd') === 'Mon') {
-        count = -4
+        count = -3
     } else if (moment(date).format('ddd') === 'Sun') {
         count = -3
     } else if (moment(date).format('ddd') === 'Sat') {
@@ -742,7 +742,7 @@ export const getPreviousDate = (date) => {
 export const getEndDate = (date) => {
     let count = 0
     if (moment(date).format('ddd') === 'Mon') {
-        count = -3
+        count = 0
     } else if (moment(date).format('ddd') === 'Sun') {
         count = -2
     } else if (moment(date).format('ddd') === 'Sat') {
@@ -827,4 +827,30 @@ export const getNote = (industryType, lastestFinancialReportsType) => {
     }
 }
 
-
+export const mapData = (data, source) => {
+    const { companies, stocks, decisiveIndexes, latestFinancialInfo } = source;
+    if (!source || !companies || !stocks || !decisiveIndexes || !latestFinancialInfo ) return data
+    each(data, i => {
+        i.ICBCode = Number((companies[i.Stock] || {}).ICBCode)
+        i.Symbol = (stocks[i.Stock] || {}).Symbol
+        i.LowestPoint = (decisiveIndexes[i.Stock] || {}).LowestPoint
+        i.LowestPointChange = (i.PriceClose - (decisiveIndexes[i.Stock] || {}).LowestPoint) / (decisiveIndexes[i.Stock] || {}).LowestPoint * 100
+        i.LastBuyPoint = (decisiveIndexes[i.Stock] || {}).LastBuyPoint
+        i.SellPoint = (decisiveIndexes[i.Stock] || {}).SellPoint
+        i.PercentSellPoint = Number(((1 - (i.PriceClose / 1000) / i.SellPoint) * 100).toFixed(1))
+        i.PercentLastBuyPoint = Number(((1 - (i.PriceClose / 1000) / i.LastBuyPoint) * 100).toFixed(1))
+        i.EPS = Number(Number((latestFinancialInfo[i.Stock] || {}).EPS)).toFixed(0)
+        i.PE = Number(Number((latestFinancialInfo[i.Stock] || {}).PE)).toFixed(0)
+        i.PS = Number(Number((latestFinancialInfo[i.Stock] || {}).PS)).toFixed(0)
+        i.PB = Number(Number((latestFinancialInfo[i.Stock] || {}).PB)).toFixed(0)
+        i.ROA = Number(Number((latestFinancialInfo[i.Stock] || {}).ROA) * 100).toFixed(0)
+        i.ROE = Number(Number((latestFinancialInfo[i.Stock] || {}).ROE) * 100).toFixed(0)
+        i.DividendInCash_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInCash_03YrAvg)).toFixed(0)
+        i.DividendInShares_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInShares_03YrAvg) * 100).toFixed(1)
+        i.PriceClose = Number((i.PriceClose / 1000).toFixed(1))
+        i.FreeShares = Number(Number((latestFinancialInfo[i.Stock] || {}).FreeShares)).toFixed(0)
+        return i
+    })
+    console.log(data)
+    return data
+}

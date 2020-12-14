@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { DatePicker, Button, Modal, Input, Radio, Switch, Table } from 'antd';
-import { debounce, get, each } from 'lodash';
+import { debounce, get } from 'lodash';
 import moment from 'moment'
 
 import {
@@ -12,7 +12,7 @@ import {
 } from 'reducers/stocks';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { IStock } from 'types';
-import { getPreviousDate, getEndDate } from 'utils/common';
+import { getPreviousDate, getEndDate, mapData } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
 import { STOCK_GROUP } from 'utils/constant';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
@@ -35,6 +35,7 @@ interface IProps {
     updateSelectedSymbolSuccess: any,
     getLatest: any,
     selectedSymbol: number,
+    latestFinancialInfo: any;
 }
 
 interface IState {
@@ -94,38 +95,6 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         this.scan(true)
     };
 
-    mapData = (data) => {
-        const { companies, stocks, decisiveIndexes } = this.props;
-
-        each(data, i => {
-            i.ICBCode = Number((companies[i.Stock] || {}).ICBCode)
-            i.Symbol = (stocks[i.Stock] || {}).Symbol
-            i.LowestPoint = (decisiveIndexes[i.Stock] || {}).LowestPoint
-            i.LowestPointChange = (i.PriceClose - (decisiveIndexes[i.Stock] || {}).LowestPoint) / (decisiveIndexes[i.Stock] || {}).LowestPoint * 100
-            i.PE = Number(i.PE)
-            i.PS = Number(i.PS)
-            i.PB = Number(i.PB)
-            i.EPS = Number(i.EPS)
-            i.QuickRatio = Number(i.QuickRatio)
-            i.CurrentRatio = Number(i.CurrentRatio)
-            i.TotalDebtOverEquity = Number(i.TotalDebtOverEquity)
-            i.TotalDebtOverAssets = Number(i.TotalDebtOverAssets)
-            i.TotalAssetsTurnover = Number(i.TotalAssetsTurnover)
-            i.InventoryTurnover = Number(i.InventoryTurnover)
-            i.ReceivablesTurnover = Number(i.ReceivablesTurnover)
-            i.GrossMargin = Number(i.GrossMargin)
-            i.OperatingMargin = Number(i.OperatingMargin)
-            i.EBITMargin = Number(i.EBITMargin)
-            i.NetProfitMargin = Number(i.NetProfitMargin)
-            i.ROA = Number(i.ROA)
-            i.ROE = Number(i.ROE)
-            i.ROIC = Number(i.ROIC)
-            i.VolumeChange = Number(i.DealVolume / i.AverageVolume30)
-            return i
-        })
-        return data
-    }
-
     onChange = (date, dateString) => {
         if (dateString && dateString.length === 2) {
             this.setState({
@@ -180,15 +149,11 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                     startDate: data.startDate,
                 }
             }
-            if (useLatest) {
-                res = await this.props.getLatest(data);
-            } else {
-                res = await this.props.scanStock(data);
-            }
+            res = await this.props.scanStock(data);
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
-                rowData: this.mapData(res.data)
+                rowData: mapData(res.data, this.props)
             })
         } catch (error) {
             this.scanning = false
@@ -335,7 +300,8 @@ const mapStateToProps = state => {
         lastUpdatedDate: get(state, 'lastUpdatedDate') || {},
         companies: get(state, 'companies'),
         decisiveIndexes: get(state, 'decisiveIndexes'),
-        selectedSymbol: get(state, 'selectedSymbol')
+        selectedSymbol: get(state, 'selectedSymbol'),
+        latestFinancialInfo: get(state, 'latestFinancialInfo')
     }
 }
 

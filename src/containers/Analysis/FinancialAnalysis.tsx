@@ -650,6 +650,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
                 return true
             }
         });
+        console.log(rowData)
         return <CustomAgGridReact
             height="1000px"
             columnDefs={getLastestFinancialReportsColumnDefs(period, lastestFinancialReportsType, analysisType, LastestFinancialReportsArray)}
@@ -921,6 +922,7 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
     reset = () => {
         const { LastestFinancialReportsArray, lastestFinancialReportsType } = this.state;
         const newData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
+        console.log(newData, LastestFinancialReportsArray, lastestFinancialReportsType);
         this.gridApi.setRowData(newData)
     }
 

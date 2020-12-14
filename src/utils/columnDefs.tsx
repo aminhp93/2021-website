@@ -656,13 +656,13 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
     }
 
     const TodayCapital = {
-        field: 'TodayCapital',
+        field: 'TotalValue',
         type: 'rightAligned',
-        headerName: 'TodayCapital',
+        headerName: 'TotalValue',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
-            div.innerText = formatNumber((params.data.TodayCapital / BILLION_UNIT).toFixed(0))
+            div.innerText = formatNumber((params.data.TotalValue / BILLION_UNIT).toFixed(0))
             return div
         }
     }
@@ -1059,7 +1059,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
-            div.innerText = params.data.VolumeChange.toFixed(2)
+            div.innerText = Number(params.data.VolumeChange).toFixed(2)
             div.className = mapColorVolumeChange(params.data.VolumeChange)
             return div
         }

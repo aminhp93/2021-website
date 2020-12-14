@@ -4,7 +4,7 @@ import { get, each, groupBy } from 'lodash';
 import { Tabs } from 'antd';
 
 import CustomAgGridReact from 'components/CustomAgGridReact';
-import { getPreviousDate, getEndDate } from 'utils/common';
+import { getPreviousDate, getEndDate, mapData } from 'utils/common';
 import { scanStock } from 'reducers/stocks';
 
 import {
@@ -103,19 +103,19 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
                     },
                     {
                         headerName: 'KLTB 10ngay',
-                        field: 'PercentSellPoint',
+                        field: '',
                     },
                     {
                         headerName: 'Cao nhat 52W',
-                        field: 'PercenCao nhat 52W',
+                        field: '',
                     },
                     {
                         headerName: 'Thap Nhat 52W',
-                        field: 'PercentSellPoint',
+                        field: '',
                     },
                     {
                         headerName: 'Thay doi 1 nam',
-                        field: 'PercentSellPoint',
+                        field: '',
                     },
                     {
                         headerName: 'CP FREE',
@@ -123,15 +123,15 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
                     },
                     {
                         headerName: 'Room NN',
-                        field: 'LastBuyPoint',
+                        field: '',
                     },
                     {
                         headerName: 'GTGD/San',
-                        field: 'PercentLastBuyPoint',
+                        field: '',
                     },
                     {
                         headerName: 'KLGD/CP FREE',
-                        field: 'SellPoint',
+                        field: '',
                     },
                 ]
             })
@@ -187,35 +187,8 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
         const res = await this.props.scanStock(data);
         this.gridApi.hideOverlay()
         this.setState({
-            rowData: this.mapData(res.data).sort((a, b) => a.Symbol.localeCompare(b.Symbol))
+            rowData: mapData(res.data, this.props).sort((a, b) => a.Symbol.localeCompare(b.Symbol))
         })
-    }
-
-    mapData = (data) => {
-        const { companies, stocks, decisiveIndexes, latestFinancialInfo } = this.props;
-
-        each(data, i => {
-            i.ICBCode = Number((companies[i.Stock] || {}).ICBCode)
-            i.Symbol = (stocks[i.Stock] || {}).Symbol
-            i.LowestPoint = (decisiveIndexes[i.Stock] || {}).LowestPoint
-            i.LowestPointChange = (i.PriceClose - (decisiveIndexes[i.Stock] || {}).LowestPoint) / (decisiveIndexes[i.Stock] || {}).LowestPoint * 100
-            i.LastBuyPoint = (decisiveIndexes[i.Stock] || {}).LastBuyPoint
-            i.SellPoint = (decisiveIndexes[i.Stock] || {}).SellPoint
-            i.PercentSellPoint = Number(((1 - (i.PriceClose / 1000) / i.SellPoint) * 100).toFixed(1))
-            i.PercentLastBuyPoint = Number(((1 - (i.PriceClose / 1000) / i.LastBuyPoint) * 100).toFixed(1))
-            i.EPS = Number(Number((latestFinancialInfo[i.Stock] || {}).EPS)).toFixed(0)
-            i.PE = Number(Number((latestFinancialInfo[i.Stock] || {}).PE)).toFixed(0)
-            i.PS = Number(Number((latestFinancialInfo[i.Stock] || {}).PS)).toFixed(0)
-            i.PB = Number(Number((latestFinancialInfo[i.Stock] || {}).PB)).toFixed(0)
-            i.ROA = Number(Number((latestFinancialInfo[i.Stock] || {}).ROA) * 100).toFixed(0)
-            i.ROE = Number(Number((latestFinancialInfo[i.Stock] || {}).ROE) * 100).toFixed(0)
-            i.DividendInCash_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInCash_03YrAvg)).toFixed(0)
-            i.DividendInShares_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInShares_03YrAvg) * 100).toFixed(1)
-            i.PriceClose = Number((i.PriceClose / 1000).toFixed(1))
-            i.FreeShares = Number(Number((latestFinancialInfo[i.Stock] || {}).FreeShares)).toFixed(0)
-            return i
-        })
-        return data
     }
 
     onGridReady = params => {
@@ -234,7 +207,6 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
                 value: groupData[i].length
             }
         })
-        console.log(data);
         return <div>
             <PieChart width={400} height={400}>
                 <Pie dataKey="value" isAnimationActive={false} data={data} cx={200} cy={200} outerRadius={80} fill="#8884d8" label />
@@ -245,7 +217,6 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
 
     render() {
         const { columnDefs, rowData } = this.state;
-        console.log(rowData);
         return (
             <div className="AccumulatedAssets height100">
                 <div>
