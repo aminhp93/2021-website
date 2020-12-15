@@ -684,7 +684,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
-            div.innerText = Number(params.data.PriceChange).toFixed(2)
+            div.innerText = Number(params.data.PriceChange).toFixed(1)
             div.className = mapColorPriceChange(params.data.PriceChange)
             return div
         }
@@ -1059,7 +1059,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
-            div.innerText = Number(params.data.VolumeChange).toFixed(2)
+            div.innerText = Number(params.data.VolumeChange).toFixed(1)
             div.className = mapColorVolumeChange(params.data.VolumeChange)
             return div
         }

@@ -16,7 +16,7 @@ class Analysis extends React.Component<IProps, IState> {
     render() {
         return (
             <div className="Analysis height100">
-                <Tabs defaultActiveKey="2" className="height100">
+                <Tabs defaultActiveKey="1" className="height100">
                     <TabPane tab="MarketAnalysis" key="1">
                         <MarketAnalysis />
                     </TabPane>

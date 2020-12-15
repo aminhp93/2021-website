@@ -839,18 +839,32 @@ export const mapData = (data, source) => {
         i.SellPoint = (decisiveIndexes[i.Stock] || {}).SellPoint
         i.PercentSellPoint = Number(((1 - (i.PriceClose / 1000) / i.SellPoint) * 100).toFixed(1))
         i.PercentLastBuyPoint = Number(((1 - (i.PriceClose / 1000) / i.LastBuyPoint) * 100).toFixed(1))
-        i.EPS = Number(Number((latestFinancialInfo[i.Stock] || {}).EPS)).toFixed(0)
-        i.PE = Number(Number((latestFinancialInfo[i.Stock] || {}).PE)).toFixed(0)
-        i.PS = Number(Number((latestFinancialInfo[i.Stock] || {}).PS)).toFixed(0)
-        i.PB = Number(Number((latestFinancialInfo[i.Stock] || {}).PB)).toFixed(0)
-        i.ROA = Number(Number((latestFinancialInfo[i.Stock] || {}).ROA) * 100).toFixed(0)
-        i.ROE = Number(Number((latestFinancialInfo[i.Stock] || {}).ROE) * 100).toFixed(0)
-        i.DividendInCash_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInCash_03YrAvg)).toFixed(0)
-        i.DividendInShares_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInShares_03YrAvg) * 100).toFixed(1)
+        i.EPS = Number(Number((latestFinancialInfo[i.Stock] || {}).EPS).toFixed(0))
+        i.PE = Number(Number((latestFinancialInfo[i.Stock] || {}).PE).toFixed(0))
+        i.PS = Number(Number((latestFinancialInfo[i.Stock] || {}).PS).toFixed(0))
+        i.PB = Number(Number((latestFinancialInfo[i.Stock] || {}).PB).toFixed(0))
+        i.ROA = Number((Number((latestFinancialInfo[i.Stock] || {}).ROA) * 100).toFixed(0))
+        i.ROE = Number((Number((latestFinancialInfo[i.Stock] || {}).ROE) * 100).toFixed(0))
+        i.DividendInCash_03YrAvg = Number(Number((latestFinancialInfo[i.Stock] || {}).DividendInCash_03YrAvg).toFixed(0))
+        i.DividendInShares_03YrAvg = Number((Number((latestFinancialInfo[i.Stock] || {}).DividendInShares_03YrAvg) * 100).toFixed(1))
+        i.PriceChange = Number(((i.PriceClose - i.PreviousClose) * 100 /i.PreviousClose).toFixed(1))
         i.PriceClose = Number((i.PriceClose / 1000).toFixed(1))
-        i.FreeShares = Number(Number((latestFinancialInfo[i.Stock] || {}).FreeShares)).toFixed(0)
+        i.FreeShares = Number(Number((latestFinancialInfo[i.Stock] || {}).FreeShares).toFixed(0))
+        i.VolumeChange = Number(((i.DealVolume - i.PreviousVolume) * 100 /i.PreviousVolume).toFixed(1))
         return i
     })
     console.log(data)
     return data
+}
+
+export const getData = (data: any = {}) => {
+    const { endData, startData } = data;
+    if (!data || !endData || !startData) return [];
+    endData.map(i => {
+        i.PreviousClose = (startData.filter(j => j.Stock === i.Stock)[0] || {}).PriceClose
+        i.PreviousVolume = (startData.filter(j => j.Stock === i.Stock)[0] || {}).DealVolume
+        return i
+    })
+    console.log(endData)
+    return endData
 }

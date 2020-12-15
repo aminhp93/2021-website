@@ -4,7 +4,7 @@ import { get, each, groupBy } from 'lodash';
 import { Tabs } from 'antd';
 
 import CustomAgGridReact from 'components/CustomAgGridReact';
-import { getPreviousDate, getEndDate, mapData } from 'utils/common';
+import { getPreviousDate, getEndDate, mapData, getData } from 'utils/common';
 import { scanStock } from 'reducers/stocks';
 
 import {
@@ -187,7 +187,7 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
         const res = await this.props.scanStock(data);
         this.gridApi.hideOverlay()
         this.setState({
-            rowData: mapData(res.data, this.props).sort((a, b) => a.Symbol.localeCompare(b.Symbol))
+            rowData: mapData(getData(res.data), this.props).sort((a, b) => a.Symbol.localeCompare(b.Symbol))
         })
     }
 

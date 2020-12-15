@@ -12,7 +12,7 @@ import {
 } from 'reducers/stocks';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { IStock } from 'types';
-import { getPreviousDate, getEndDate, mapData } from 'utils/common';
+import { getPreviousDate, getEndDate, mapData, getData } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
 import { STOCK_GROUP } from 'utils/constant';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
@@ -153,7 +153,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
-                rowData: mapData(res.data, this.props)
+                rowData: mapData(getData(res.data), this.props).filter(i => i.PriceChange > 1)
             })
         } catch (error) {
             this.scanning = false

@@ -11,31 +11,32 @@ import {
 import { getLastestFinancialInfo } from 'reducers/latestFinancialInfo'
 
 import { BILLION_UNIT } from 'utils/unit';
-import { formatNumber } from 'utils/common';
+import { formatNumber, mapData, getData } from 'utils/common';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
 
 import FinancialAnalysis from 'containers/Analysis/FinancialAnalysis';
 import CustomAgGridReact from 'components/CustomAgGridReact';
 
 interface IProps {
-    selectedSymbol: number,
-    getYearlyFinancialInfo: any,
-    getQuarterlyFinancialInfo: any,
-    getLastestFinancialInfo: any,
-    scanStock: any,
-    data: any,
-    companies: any,
-    stocks: any,
-    decisiveIndexes: any,
-    symbol: string,
+    selectedSymbol: number;
+    getYearlyFinancialInfo: any;
+    getQuarterlyFinancialInfo: any;
+    getLastestFinancialInfo: any;
+    scanStock: any;
+    data: any;
+    companies: any;
+    stocks: any;
+    decisiveIndexes: any;
+    symbol: string;
+    latestFinancialInfo: any;
 }
 
 interface IState {
-    QuarterlyFinancialInfoArray: any,
-    YearlyFinancialInfoArray: any,
-    LastestFinancialInfoObj: any,
-    rowData: any,
-    columnDefs: any,
+    QuarterlyFinancialInfoArray: any;
+    YearlyFinancialInfoArray: any;
+    LastestFinancialInfoObj: any;
+    rowData: any;
+    columnDefs: any;
 }
 
 class CompanyAnalysis extends React.Component<IProps, IState> {
@@ -190,46 +191,11 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
-                rowData: this.mapData(res.data)
+                rowData: mapData(getData(res.data), this.props)
             })
         } catch (error) {
             this.scanning = false
         }
-    }
-
-    mapData = (data) => {
-        const { companies, stocks, decisiveIndexes } = this.props;
-
-        each(data, i => {
-            i.ICBCode = Number((companies[i.Stock] || {}).ICBCode)
-            i.Symbol = (stocks[i.Stock] || {}).Symbol
-            i.LowestPoint = (decisiveIndexes[i.Stock] || {}).LowestPoint
-            i.LowestPointChange = (i.PriceClose - (decisiveIndexes[i.Stock] || {}).LowestPoint) / (decisiveIndexes[i.Stock] || {}).LowestPoint * 100
-            i.PE = Number(i.PE)
-            i.PS = Number(i.PS)
-            i.PB = Number(i.PB)
-            i.EPS = Number(i.EPS)
-            i.QuickRatio = Number(i.QuickRatio)
-            i.CurrentRatio = Number(i.CurrentRatio)
-            i.TotalDebtOverEquity = Number(i.TotalDebtOverEquity)
-            i.TotalDebtOverAssets = Number(i.TotalDebtOverAssets)
-            i.TotalAssetsTurnover = Number(i.TotalAssetsTurnover)
-            i.InventoryTurnover = Number(i.InventoryTurnover)
-            i.ReceivablesTurnover = Number(i.ReceivablesTurnover)
-            i.GrossMargin = Number(i.GrossMargin)
-            i.OperatingMargin = Number(i.OperatingMargin)
-            i.EBITMargin = Number(i.EBITMargin)
-            i.NetProfitMargin = Number(i.NetProfitMargin)
-            i.ROA = Number(i.ROA)
-            i.ROE = Number(i.ROE)
-            i.ROIC = Number(i.ROIC)
-            i.LastQuarterRev = Number(i.LastQuarterRev)
-            i.LastQuarterProfit = Number(i.LastQuarterProfit)
-            i.CurrentQuarterRev = Number(i.CurrentQuarterRev)
-            i.CurrentQuarterProfit = Number(i.CurrentQuarterProfit)
-            return i
-        })
-        return data
     }
 
     render() {
@@ -259,8 +225,8 @@ const mapStateToProps = state => {
         selectedSymbol: get(state, 'selectedSymbol'),
         companies: get(state, 'companies'),
         stocks: get(state, 'stocks'),
-        decisiveIndexes: get(state, 'decisiveIndexes')
-
+        decisiveIndexes: get(state, 'decisiveIndexes'),
+        latestFinancialInfo: get(state, 'latestFinancialInfo')
     }
 }
 
