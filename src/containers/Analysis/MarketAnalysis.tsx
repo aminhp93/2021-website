@@ -92,7 +92,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.props.updateSelectedSymbolSuccess(null)
-        this.scan(true)
+        this.scan()
     };
 
     onChange = (date, dateString) => {
@@ -129,7 +129,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         this.setState(data)
     }
 
-    scan = async (useLatest = false) => {
+    scan = async () => {
         if (this.scanning) return;
         try {
             const { type, ChangePrice, TodayCapital } = this.state;
@@ -153,7 +153,8 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
-                rowData: mapData(getData(res.data), this.props).filter(i => i.PriceChange > 1)
+                rowData: mapData(getData(res.data), this.props)
+                .filter(i => i.PriceChange > ChangePrice && i.TotalValue > TodayCapital)
             })
         } catch (error) {
             this.scanning = false
