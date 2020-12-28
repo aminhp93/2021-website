@@ -12,7 +12,7 @@ import {
 } from 'reducers/stocks';
 import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { IStock } from 'types';
-import { getPreviousDate, getEndDate, mapData, getData } from 'utils/common';
+import { getPreviousDate, getEndDate } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
 import { STOCK_GROUP } from 'utils/constant';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
@@ -153,8 +153,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
-                rowData: mapData(getData(res.data), this.props)
-                .filter(i => i.PriceChange > ChangePrice && i.TotalValue > TodayCapital)
+                rowData: res
             })
         } catch (error) {
             this.scanning = false
@@ -211,17 +210,17 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                                 <Radio.Group value={type} onChange={this.changeType}>
                                     <Radio.Button value={STOCK_GROUP.CANSLIM}>Canslim</Radio.Button>
                                     <Radio.Button value={STOCK_GROUP.VN30}>VN30</Radio.Button>
-                                    <Radio.Button value={STOCK_GROUP.FAVORITE}>Favorite</Radio.Button>
+                                    <Radio.Button value={STOCK_GROUP.FAVORITE}>Tich san</Radio.Button>
                                     <Radio.Button value={STOCK_GROUP.ONSTUDY}>Study</Radio.Button>
-                                    <Radio.Button value={STOCK_GROUP.BLACKLIST}>BlackList</Radio.Button>
+                                    <Radio.Button disabled={true} value={STOCK_GROUP.BLACKLIST}>BlackList</Radio.Button>
                                 </Radio.Group>
                             </div>
                             <div>
                                 <Radio.Group value={importantIndexType} onChange={this.changeImporantIndex}>
                                     <Radio.Button value="default">Default</Radio.Button>
-                                    <Radio.Button value="KhaNangThanhToan">Kha nang thanh toan</Radio.Button>
-                                    <Radio.Button value="CoCauTaiSan">Co cau tai san</Radio.Button>
-                                    <Radio.Button value="HieuSuatHoatDong">Hieu suat hoat dong</Radio.Button>
+                                    <Radio.Button disabled={true} value="KhaNangThanhToan">Kha nang thanh toan</Radio.Button>
+                                    <Radio.Button disabled={true} value="CoCauTaiSan">Co cau tai san</Radio.Button>
+                                    <Radio.Button disabled={true} value="HieuSuatHoatDong">Hieu suat hoat dong</Radio.Button>
                                 </Radio.Group>
                             </div>
                         </div>

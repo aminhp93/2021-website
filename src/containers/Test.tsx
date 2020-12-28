@@ -40,11 +40,11 @@ class Test extends React.Component<IProps, IState> {
         }
     }
     async componentDidMount() {
-        const res = await this.props.getListUrlGoValue();
-        if (!res.data.results) return;
-        this.setState({ 
-            data2: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
-        })
+        // const res = await this.props.getListUrlGoValue();
+        // if (!res.data.results) return;
+        // this.setState({ 
+        //     data2: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
+        // })
         if (window.location.pathname !== "/stickies") {
             const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
             a && a.remove();

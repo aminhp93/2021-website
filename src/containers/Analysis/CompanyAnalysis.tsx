@@ -11,7 +11,7 @@ import {
 import { getLastestFinancialInfo } from 'reducers/latestFinancialInfo'
 
 import { BILLION_UNIT } from 'utils/unit';
-import { formatNumber, mapData, getData } from 'utils/common';
+import { formatNumber } from 'utils/common';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
 
 import FinancialAnalysis from 'containers/Analysis/FinancialAnalysis';
@@ -191,7 +191,7 @@ class CompanyAnalysis extends React.Component<IProps, IState> {
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
-                rowData: mapData(getData(res.data), this.props)
+                rowData: res
             })
         } catch (error) {
             this.scanning = false

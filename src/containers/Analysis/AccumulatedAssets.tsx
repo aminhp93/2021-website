@@ -1,15 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { get, each, groupBy } from 'lodash';
+import { get, groupBy } from 'lodash';
 import { Tabs } from 'antd';
 
 import CustomAgGridReact from 'components/CustomAgGridReact';
-import { getPreviousDate, getEndDate, mapData, getData } from 'utils/common';
+import { getPreviousDate, getEndDate } from 'utils/common';
 import { scanStock } from 'reducers/stocks';
 
-import {
-    PieChart, Pie, Legend, Tooltip,
-  } from 'recharts';
+import { PieChart, Pie, Tooltip } from 'recharts';
 
 const { TabPane } = Tabs;
 
@@ -182,12 +180,17 @@ class AccumulatedAssets extends React.Component<IProps, IState> {
             IsFavorite: true,
             startDate: getPreviousDate(this.props.lastUpdatedDate.value),
             endDate: getEndDate(this.props.lastUpdatedDate.value),
+            ChangePrice: -100,
+            MinPrice: -1,
+            TodayCapital: -1000000000,
+            checkBlackList: true,
+            checkStrong: true
         }
         this.gridApi.showLoadingOverlay();
         const res = await this.props.scanStock(data);
         this.gridApi.hideOverlay()
         this.setState({
-            rowData: mapData(getData(res.data), this.props).sort((a, b) => a.Symbol.localeCompare(b.Symbol))
+            rowData: res
         })
     }
 

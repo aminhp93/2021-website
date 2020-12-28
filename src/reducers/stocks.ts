@@ -4,6 +4,8 @@ import moment from 'moment';
 
 import { ThunkActionType } from 'store';
 import StockService from 'services/stock';
+import { mapData, getData } from 'utils/common';
+
 
 const stocksSlice = createSlice({
     name: 'stocks',
@@ -96,7 +98,10 @@ export const updateStock = (data: any): ThunkActionType => async (
     return response
 }
 
-export const scanStock = (data: any): ThunkActionType => async () => {
+export const scanStock = (data: any): ThunkActionType => async (
+    _,
+    getStoreValue
+) => {
     const dataRequest = {}
     const ALLOW_CONDITION_SEARCH = [
         'Symbol', 'TodayCapital',
@@ -115,7 +120,10 @@ export const scanStock = (data: any): ThunkActionType => async () => {
     }
 
     const response = await StockService.scanStock(dataRequest)
-    return response
+    const res =  mapData(getData(response.data), getStoreValue())
+                    .filter(i => i.PriceChange > data['ChangePrice'])
+                    .sort((a, b) => a.Symbol.localeCompare(b.Symbol))
+    return res
 }
 
 export const getLatest = (data: any): ThunkActionType => async () => {
