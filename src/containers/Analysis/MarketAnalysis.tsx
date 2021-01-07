@@ -147,6 +147,9 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                     Symbol: symbol,
                     endDate: data.endDate,
                     startDate: data.startDate,
+                    ChangePrice: -100,
+                    MinPrice: 0,
+                    TodayCapital: 0,
                 }
             }
             res = await this.props.scanStock(data);
