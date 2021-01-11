@@ -814,6 +814,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
     const EPS = {
         field: 'EPS',
         headerName: 'EPS',
+        type: 'rightAligned',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -956,6 +957,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
     const ROE = {
         field: 'ROE',
         headerName: 'ROE',
+        type: 'rightAligned',
         filter: 'agNumberColumnFilter',
         cellRenderer: params => {
             const div = document.createElement("div");
@@ -1085,7 +1087,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
             case 'HieuSuatHoatDong':
                 return [Stock, Actions, ICBCode, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, MarketCap]
             default:
-                return [Stock, Actions, ICBCode, TodayCapital, PriceChange, VolumeChange, MarketCap]
+                return [Stock, Actions, ICBCode, TodayCapital, PriceChange, VolumeChange, MarketCap, ROE, EPS]
             // Price, LastPrice
         }
     }
