@@ -21,6 +21,7 @@ import ChartTV from 'containers/ChartTV/ChartTV';
 import SymbolNote from 'containers/SymbolNote';
 import CompanyAnalysis from 'containers/analysis/CompanyAnalysis';
 import CustomAgGridReact from 'components/CustomAgGridReact';
+import HighlightedIndex from 'containers/analysis/HighlightedIndex';
 
 const { RangePicker } = DatePicker;
 
@@ -274,6 +275,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                         footer={null}
                     >
                         <div className="chartTV-container">
+                            <HighlightedIndex />
                             <ChartTV symbol={symbol} />
                             <CompanyAnalysis data={this.state} />
                         </div>
