@@ -1087,7 +1087,7 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
             case 'HieuSuatHoatDong':
                 return [Stock, Actions, ICBCode, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, MarketCap]
             default:
-                return [Stock, Actions, ICBCode, TodayCapital, PriceChange, VolumeChange, MarketCap, ROE, EPS]
+                return [Stock, Actions, TodayCapital, PriceChange, VolumeChange, MarketCap, ROE, EPS]
             // Price, LastPrice
         }
     }
