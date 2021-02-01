@@ -63,7 +63,7 @@ class Account extends React.Component<IProps, IState> {
                     cellRenderer: (params) => {
                         if (params.data && params.data.costPrice) {
                             const div = document.createElement("div");
-                            div.innerText = formatNumber(params.data.costPrice)
+                            div.innerText = formatNumber(params.data.costPrice.toFixed(0))
                             return div
                         }
                     }

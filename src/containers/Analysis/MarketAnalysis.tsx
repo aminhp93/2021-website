@@ -275,7 +275,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                         footer={null}
                     >
                         <div className="chartTV-container">
-                            <HighlightedIndex />
+                            {/* <HighlightedIndex /> */}
                             <ChartTV symbol={symbol} />
                             <CompanyAnalysis data={this.state} />
                         </div>
