@@ -11,7 +11,10 @@ import { getPosts, getReplies } from 'reducers/post';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
-  
+import Axios from 'axios';
+import {
+    getHistoricalQuotesUpdateUrl,
+} from 'utils/request';
 interface IProps {
     getListUrlGoValue: any,
     getPosts: any,
@@ -40,16 +43,33 @@ class Test extends React.Component<IProps, IState> {
         }
     }
     async componentDidMount() {
-        const res = await this.props.getListUrlGoValue();
-        if (!res.data.results) return;
-        this.setState({ 
-            data2: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
-        })
-        if (window.location.pathname !== "/stickies") {
-            const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
-            a && a.remove();
-        }
-        this.getAllPosts()
+        // const res = await this.props.getListUrlGoValue();
+        // if (!res.data.results) return;
+        // this.setState({ 
+        //     data2: res.data.results.sort((a,b) => b.idea_id - a.idea_id)
+        // })
+        // if (window.location.pathname !== "/stickies") {
+        //     const a = document.querySelector(".lm_goldenlayout.lm_item.lm_root");
+        //     a && a.remove();
+        // }
+        // this.getAllPosts()
+        // const a = await Axios.get('https://chart-api.vndirect.com.vn/1.1/charts?client=vnds_trading_view&user=vnds-0001813109')
+        // console.log(a.data)
+        // a.data.data.map(i => {
+        //     let url = `https://chart-api.vndirect.com.vn/1.1/charts?client=vnds_trading_view&user=vnds-0001813109&chart=${i.id}`
+        //     Axios.delete(url)
+        // })
+
+        // Axios({
+        //     method: 'put',
+        //     url: getHistoricalQuotesUpdateUrl('FPT', '2021-02-05', '2021-02-05')
+        // })
+        //     .then(response => {
+        //         console.log(response)
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     })
     }
 
     getAllPosts = () => {
