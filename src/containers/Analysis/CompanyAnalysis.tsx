@@ -1,5 +1,5 @@
 import React from 'react';
-import { get, uniqBy, each } from 'lodash';
+import { get, uniqBy } from 'lodash';
 import { connect } from 'react-redux';
 import { Table } from 'antd';
 

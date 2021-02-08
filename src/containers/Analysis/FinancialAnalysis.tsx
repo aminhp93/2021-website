@@ -154,7 +154,8 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
             const LastestFinancialReportsArray = this.mapLastestFinancialReportsArray(res.data, lastestFinancialReportsType);
             this.setState({
                 LastestFinancialReportsArray
-            }, () => this.test())
+            }) 
+            // }, () => this.test())
         } catch (error) {
             console.log(error)
         }
@@ -636,20 +637,21 @@ class FinancialAnalysis extends React.Component<IProps, IState> {
 
     renderLastestFinancialReports = () => {
         const { LastestFinancialReportsArray, period, lastestFinancialReportsType, analysisType } = this.state;
-        const rowData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType).filter(i => {
-            const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
-            const value_Q2_2020 = ((i.Values || []).filter(j => j.Quarter === 2 && j.Year === 2020)[0] || {}).Value
-            const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
+        const rowData = mapDataLatestFinancialReport(LastestFinancialReportsArray, null, lastestFinancialReportsType)
+        // .filter(i => {
+        //     const value_Q3_2020 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2020)[0] || {}).Value
+        //     const value_Q2_2020 = ((i.Values || []).filter(j => j.Quarter === 2 && j.Year === 2020)[0] || {}).Value
+        //     const value_Q3_2019 = ((i.Values || []).filter(j => j.Quarter === 3 && j.Year === 2019)[0] || {}).Value
 
-            if (value_Q3_2020 && value_Q2_2020 && value_Q3_2019 && (
-                value_Q3_2020 / value_Q2_2020 > 2
-                || value_Q3_2020 / value_Q2_2020 < 1 / 2
-                || value_Q3_2020 / value_Q3_2019 > 2
-                || value_Q3_2020 / value_Q3_2019 < 1 / 2
-            )) {
-                return true
-            }
-        });
+        //     if (value_Q3_2020 && value_Q2_2020 && value_Q3_2019 && (
+        //         value_Q3_2020 / value_Q2_2020 > 2
+        //         || value_Q3_2020 / value_Q2_2020 < 1 / 2
+        //         || value_Q3_2020 / value_Q3_2019 > 2
+        //         || value_Q3_2020 / value_Q3_2019 < 1 / 2
+        //     )) {
+        //         return true
+        //     }
+        // });
         console.log(rowData)
         return <CustomAgGridReact
             height="1000px"
