@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DatePicker, Button, Modal, Input, Radio, Switch, Table } from 'antd';
+import { DatePicker, Button, Modal, Input, Radio, Switch, Menu, Dropdown } from 'antd';
 import { debounce, get } from 'lodash';
 import moment from 'moment'
 
@@ -14,7 +14,7 @@ import { updateSelectedSymbolSuccess } from 'reducers/selectedSymbol';
 import { IStock } from 'types';
 import { getPreviousDate, getEndDate } from 'utils/common';
 import { BILLION_UNIT } from 'utils/unit';
-import { STOCK_GROUP } from 'utils/constant';
+import { STOCK_GROUP, STOCK_INDEX } from 'utils/constant';
 import { marketAnalysisColumnDefs } from 'utils/columnDefs';
 
 import ChartTV from 'containers/ChartTV/ChartTV';
@@ -22,6 +22,7 @@ import SymbolNote from 'containers/SymbolNote';
 import CompanyAnalysis from 'containers/analysis/CompanyAnalysis';
 import CustomAgGridReact from 'components/CustomAgGridReact';
 import HighlightedIndex from 'containers/analysis/HighlightedIndex';
+import Axios from 'axios';
 
 const { RangePicker } = DatePicker;
 
@@ -57,7 +58,10 @@ interface IState {
     ChangePrice: number,
     checkBlackList: boolean,
     checkStrong: boolean,
-    symbol: string
+    symbol: string,
+    stockIndex: any,
+    watchlistArr: any,
+    selectedWatchlist: any,
 }
 
 class MarketAnalysis extends React.Component<IProps, IState> {
@@ -68,7 +72,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {
-            type: STOCK_GROUP.CANSLIM,
+            type: null,
             importantIndexType: 'default',
             ChangePrice: 1,
             TodayCapital: 5,
@@ -83,7 +87,10 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             data: [],
             checkBlackList: true,
             checkStrong: true,
-            symbol: ''
+            symbol: '',
+            stockIndex: STOCK_INDEX.OTHER,
+            watchlistArr: [],
+            selectedWatchlist: null
         }
         this.scan = debounce(this.scan, 300);
         this.scanning = false;
@@ -130,7 +137,7 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         this.setState(data)
     }
 
-    scan = async () => {
+    scan = async (list=[]) => {
         if (this.scanning) return;
         try {
             const { type, ChangePrice, TodayCapital } = this.state;
@@ -154,6 +161,12 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                 }
             }
             res = await this.props.scanStock(data);
+
+            if (list && list.length) {
+                res = res.filter(item => list.includes(item.Symbol))
+            }
+            console.log(list, res)
+            
             this.scanning = false
             this.gridApi.hideOverlay()
             this.setState({
@@ -182,6 +195,13 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         }
     }
 
+    changeStockIndex = (e) => {
+        this.setState({
+            stockIndex: e.target.value,
+            columnDefs: marketAnalysisColumnDefs(this, e.target.value)
+        })
+    }
+
     changeImporantIndex = (e) => {
         this.setState({
             importantIndexType: e.target.value,
@@ -189,10 +209,36 @@ class MarketAnalysis extends React.Component<IProps, IState> {
         })
     }
 
+    componentDidMount() {
+        Axios({
+            url: 'https://restv2.fireant.vn/me/watchlists',
+            method: 'GET',
+            headers: {
+                "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkdYdExONzViZlZQakdvNERWdjV4QkRITHpnSSIsImtpZCI6IkdYdExONzViZlZQakdvNERWdjV4QkRITHpnSSJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmZpcmVhbnQudm4iLCJhdWQiOiJodHRwczovL2FjY291bnRzLmZpcmVhbnQudm4vcmVzb3VyY2VzIiwiZXhwIjoxOTEwNTE0MDI2LCJuYmYiOjE2MTA1MTQwMjYsImNsaWVudF9pZCI6ImZpcmVhbnQudHJhZGVzdGF0aW9uIiwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSIsInJvbGVzIiwiZW1haWwiLCJhY2NvdW50cy1yZWFkIiwiYWNjb3VudHMtd3JpdGUiLCJvcmRlcnMtcmVhZCIsIm9yZGVycy13cml0ZSIsImNvbXBhbmllcy1yZWFkIiwiaW5kaXZpZHVhbHMtcmVhZCIsImZpbmFuY2UtcmVhZCIsInBvc3RzLXdyaXRlIiwicG9zdHMtcmVhZCIsInN5bWJvbHMtcmVhZCIsInVzZXItZGF0YS1yZWFkIiwidXNlci1kYXRhLXdyaXRlIiwidXNlcnMtcmVhZCIsInNlYXJjaCIsImFjYWRlbXktcmVhZCIsImFjYWRlbXktd3JpdGUiLCJibG9nLXJlYWQiLCJpbnZlc3RvcGVkaWEtcmVhZCJdLCJzdWIiOiIxZmI5NjI3Yy1lZDZjLTQwNGUtYjE2NS0xZjgzZTkwM2M1MmQiLCJhdXRoX3RpbWUiOjE2MTA1MTQwMjYsImlkcCI6IkZhY2Vib29rIiwibmFtZSI6Im1pbmhwbi5vcmcuZWMxQGdtYWlsLmNvbSIsInNlY3VyaXR5X3N0YW1wIjoiODIzMzcwOGUtYjFjOS00ZmQ3LTkwYmYtMzI2NTYzYmU4N2JkIiwianRpIjoiMGVlNjE3N2RkNmFhYzlhOGVmN2Y4NTA3MTEzMzAwODYiLCJhbXIiOlsiZXh0ZXJuYWwiXX0.TWE9VqMDzOdwUAkjuknjJoEAfebS0Pug2LpZ4EIDDdpdO5OdKG-uWNEkEQ_858IPGziGG59uktqrWLUMQcSANI3ogEuRyw6wut1AfYxTimWciTQNqKXiINLB9IUK5TDV6rJceBNXduNVKGJLBeZ3L5oRU4gSo-IVbLruNGbDcAyiJGEk1bBccGjZgQ3soLYEF4wEQShdmvQj4hXCOWTlXP_-PPqbOjO__YsaInx6o2sxtjM6ZeaG0SHb7SeE98LGDyl_Jt9wqkvXmZfMplFG5YktHaS9JG_5AajHqDonvDn3G7jlVxm-cc8sWxXv_kmnz4Sjny7R9WDSAN7dmxUiMg"
+            }
+        })
+            .then(res => {
+                this.setState({
+                    watchlistArr: res.data
+                })
+            })
+            .catch(err => err)
+    }
+
     componentDidUpdate(preProps) {
         if (this.props.selectedSymbol !== preProps.selectedSymbol) {
             this.scan();
         }
+    }
+
+    handleClickDropdown = (data) => {
+        
+        this.setState({
+            selectedWatchlist: data.name,
+            MinPrice: -1,
+            TodayCapital: -1,
+            ChangePrice: -100
+        }, () => this.scan(data.symbols))
     }
 
     render() {
@@ -202,39 +248,72 @@ class MarketAnalysis extends React.Component<IProps, IState> {
             importantIndexType, TodayCapital, MinPrice,
             ChangePrice,
             checkStrong, checkBlackList,
-            symbol
+            symbol,
+            stockIndex,
+            watchlistArr,
+            selectedWatchlist
         } = this.state;
+        const menu = (
+            <Menu>
+              <Menu.Item>
+                Canslim
+              </Menu.Item>
+              <Menu.Item>
+                Favorite
+              </Menu.Item>
+              {watchlistArr.map(i => {
+                  return <Menu.Item onClick={() => this.handleClickDropdown(i)}>
+                      {i.name}
+                  </Menu.Item>
+              })}
+            </Menu>
+          );
+          
         return (
             <div className="MarketAnalysis">
                 <div>
-                    <div>Count: {rowData.length}</div>
+                    
                     <div className="flex">
                         <div className="flex-1">
-                            <div>
-                                <Radio.Group value={type} onChange={this.changeType}>
-                                    <Radio.Button value={STOCK_GROUP.CANSLIM}>Canslim</Radio.Button>
+                            <div className="flex">
+                                <Radio.Group value={type} onChange={this.changeType} size="small">
+                                    <Radio.Button value={STOCK_GROUP.ALL}>All</Radio.Button>
+                                    {/* <Radio.Button value={STOCK_GROUP.CANSLIM}>Canslim</Radio.Button>
                                     <Radio.Button value={STOCK_GROUP.VN30}>VN30</Radio.Button>
                                     <Radio.Button value={STOCK_GROUP.FAVORITE}>Tich san</Radio.Button>
                                     <Radio.Button value={STOCK_GROUP.ONSTUDY}>Study</Radio.Button>
-                                    <Radio.Button disabled={true} value={STOCK_GROUP.BLACKLIST}>BlackList</Radio.Button>
+                                    <Radio.Button disabled={true} value={STOCK_GROUP.BLACKLIST}>BlackList</Radio.Button> */}
                                 </Radio.Group>
+                                <Dropdown overlay={menu}>
+                                    <div>{selectedWatchlist ? selectedWatchlist : 'Danh muc'}</div>
+                                </Dropdown>
                             </div>
-                            <div>
+                            {/* <div>
                                 <Radio.Group value={importantIndexType} onChange={this.changeImporantIndex}>
                                     <Radio.Button value="default">Default</Radio.Button>
                                     <Radio.Button disabled={true} value="KhaNangThanhToan">Kha nang thanh toan</Radio.Button>
                                     <Radio.Button disabled={true} value="CoCauTaiSan">Co cau tai san</Radio.Button>
                                     <Radio.Button disabled={true} value="HieuSuatHoatDong">Hieu suat hoat dong</Radio.Button>
                                 </Radio.Group>
-                            </div>
+                            </div> */}
                         </div>
-                        <div className="flex-1">
+                        <div className="flex">
+                            <Radio.Group value={stockIndex} onChange={this.changeStockIndex} size="small">
+                                <Radio.Button value={STOCK_INDEX.BANGGIA}>Bang gia</Radio.Button>
+                                <Radio.Button value={STOCK_INDEX.THONGKE}>Thong ke</Radio.Button>
+                                <Radio.Button value={STOCK_INDEX.COBAN}>Co ban</Radio.Button>
+                                <Radio.Button value={STOCK_INDEX.OTHER}>Other</Radio.Button>
+                            </Radio.Group>
+                        </div>
+                    </div>
+                    <div className="flex flex-sp-bt">
                             <div className="flex MarketAnalysis-Filter">
-                                <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} />
-                                <Input addonBefore="Min P" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
-                                <Input addonBefore="%P" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
-                                <Input addonBefore="TodayCap" onChange={(e) => this.changeInput(e, 'TodayCapital')} value={TodayCapital} />
-                                <Switch
+                            
+                                {/* <Input addonBefore="ICBCode" onChange={(e) => this.changeInput(e, 'ICBCode')} /> */}
+                                <Input size="small" addonBefore="Min P" onChange={(e) => this.changeInput(e, 'MinPrice')} value={MinPrice} />
+                                <Input size="small" addonBefore="%P" onChange={(e) => this.changeInput(e, 'ChangePrice')} value={ChangePrice} />
+                                <Input size="small" addonBefore="TodayCap" onChange={(e) => this.changeInput(e, 'TodayCapital')} value={TodayCapital} />
+                                {/* <Switch
                                     checkedChildren="STR"
                                     unCheckedChildren="STR"
                                     defaultChecked
@@ -247,17 +326,24 @@ class MarketAnalysis extends React.Component<IProps, IState> {
                                     defaultChecked
                                     checked={checkBlackList}
                                     onChange={() => this.setState({ checkBlackList: !checkBlackList })}
-                                />
+                                /> */}
+                                <div>
+                                    <RangePicker 
+                                        size="small"
+                                        onChange={this.onChange} 
+                                        value={startDate ? [moment(startDate), moment(endDate)] : null} />
+                                    <Button
+                                        size="small"
+                                        onClick={() => {
+                                            this.props.updateSelectedSymbolSuccess(null)
+                                            this.scan()
+                                        }}>Xem</Button>
+                                </div>
                             </div>
-                            <div>
-                                <RangePicker onChange={this.onChange} value={startDate ? [moment(startDate), moment(endDate)] : null} />
-                                <Button onClick={() => {
-                                    this.props.updateSelectedSymbolSuccess(null)
-                                    this.scan()
-                                }}>Xem</Button>
-                            </div>
+                            <div>Count: {rowData.length}</div>
+                            
                         </div>
-                    </div>
+                    
                 </div>
                 <CustomAgGridReact
                     columnDefs={columnDefs}

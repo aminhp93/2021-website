@@ -15,6 +15,8 @@ import {
     LATEST_FINANCIAL_REPORTS,
     mapColorVolumeChange
 } from './common';
+import { STOCK_GROUP, STOCK_INDEX } from 'utils/constant';
+
 
 import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -1067,6 +1069,54 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         }
     }
 
+    const BuyForeignQuantity = {
+        field: 'BuyForeignQuantity',
+        headerName: 'BuyForeignQuantity',
+        type: 'rightAligned',
+        filter: 'agNumberColumnFilter',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.BuyForeignQuantity
+            return div
+        }
+    }
+
+    const SellForeignQuantity = {
+        field: 'SellForeignQuantity',
+        headerName: 'SellForeignQuantity',
+        type: 'rightAligned',
+        filter: 'agNumberColumnFilter',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.SellForeignQuantity
+            return div
+        }
+    }
+
+    const BuyQuantity = {
+        field: 'BuyQuantity',
+        headerName: 'BuyQuantity',
+        type: 'rightAligned',
+        filter: 'agNumberColumnFilter',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.BuyQuantity
+            return div
+        }
+    }
+
+    const SellQuantity = {
+        field: 'SellQuantity',
+        headerName: 'SellQuantity',
+        type: 'rightAligned',
+        filter: 'agNumberColumnFilter',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.SellQuantity
+            return div
+        }
+    }
+
     const { selectedSymbol, companies } = that.props;
     const ICBCodeIndex = Number((companies[selectedSymbol] || {}).ICBCode)
     if (allowICBCode) {
@@ -1080,12 +1130,12 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         }
     } else {
         switch (importantIndexType) {
-            case 'KhaNangThanhToan':
-                return [Stock, Actions, ICBCode, PE, PS, PB, EPS, QuickRatio, CurrentRatio, TotalDebtOverEquity, TotalDebtOverAssets, MarketCap]
-            case 'CoCauTaiSan':
-                return [Stock, Actions, ICBCode, TotalAssetsTurnover, InventoryTurnover, ReceivablesTurnover, GrossMargin, OperatingMargin, EBITMargin, NetProfitMargin, ROA, ROE, ROIC, MarketCap]
-            case 'HieuSuatHoatDong':
-                return [Stock, Actions, ICBCode, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, MarketCap]
+            case STOCK_INDEX.BANGGIA:
+                return [Stock, Actions, BuyQuantity, SellQuantity, BuyForeignQuantity, SellForeignQuantity, DealVolume]
+            case STOCK_INDEX.COBAN:
+                return [Stock, Actions, MarketCap, EPS, PE, PB, PS, ROA, ROE]
+            case STOCK_INDEX.THONGKE:
+                return []
             default:
                 return [Stock, Actions, TodayCapital, PriceChange, VolumeChange, MarketCap, ROE, EPS]
             // Price, LastPrice
