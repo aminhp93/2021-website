@@ -592,7 +592,14 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         field: 'Symbol',
         cellRenderer: params => {
             const div = document.createElement("div");
-            div.innerText = params.data.Symbol
+            ReactDOM.render(
+                <div onClick={() => {
+                    that.setState({
+                        visibleChart: true,
+                        symbol: params.data.Symbol
+                    })
+                }}>{params.data.Symbol}</div>
+            , div);
             return div
         }
     }
@@ -1121,27 +1128,19 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
     const ICBCodeIndex = Number((companies[selectedSymbol] || {}).ICBCode)
     if (allowICBCode) {
         switch (ICBCodeIndex) {
-            // case 8355:
-            // return [Stock, PE, PS, PB, EPS, MarketCap, TotalAssetsTurnover, ReceivablesTurnover, OperatingMargin, EBITMargin, NetProfitMargin, ROE, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, DealVolume, TodayCapital, PriceChange]
-            // QuickRatio, CurrentRatio, TotalDebtOverEquity, TotalDebtOverAssets, InventoryTurnover, GrossMargin, ROIC, LastPrice, Price, ROA
             default:
                 return [Stock, MarketCap, PriceChange, LastQuarterRev, CurrentQuarterRev, LastQuarterProfit, CurrentQuarterProfit]
-            // Price, LastPrice, PE, PS, PB, EPS, MarketCap, TotalAssetsTurnover, ReceivablesTurnover, OperatingMargin, EBITMargin, NetProfitMargin, ROA, ROE, LowestPoint, LowestPointChange, LastRevenue, CurrentRevenue, RevenueChange, LastProfit, CurrentProfit, ProfitChange, DealVolume, TodayCapital, QuickRatio, CurrentRatio, TotalDebtOverEquity, TotalDebtOverAssets, InventoryTurnover, GrossMargin, ROIC
         }
     } else {
         switch (importantIndexType) {
             case STOCK_INDEX.BANGGIA:
-                return [Stock, Actions, BuyQuantity, SellQuantity, BuyForeignQuantity, SellForeignQuantity, DealVolume]
+                return [Stock, BuyQuantity, SellQuantity, BuyForeignQuantity, SellForeignQuantity, DealVolume]
             case STOCK_INDEX.COBAN:
-                return [Stock, Actions, MarketCap, EPS, PE, PB, PS, ROA, ROE]
+                return [Stock, MarketCap, EPS, PE, PB, PS, ROA, ROE]
             case STOCK_INDEX.THONGKE:
                 return []
             default:
-                return [Stock, Actions, TodayCapital, PriceChange, VolumeChange, MarketCap, ROE, EPS]
-            // Price, LastPrice
+                return [Stock, TodayCapital, PriceChange, VolumeChange, MarketCap, ROE, EPS]
         }
     }
-
-
-
 }
