@@ -8,6 +8,7 @@ import {
 
 
 import Stock from 'containers/Stock';
+import StockNew from 'containers/StockNew';
 import GoldenLayoutWrapper from 'containers/GoldenLayoutWrapper';
 import Test from 'containers/Test';
 import Account from 'containers/Account';
@@ -18,6 +19,7 @@ class App extends React.Component {
     return <Router>
       <Switch>
         <Route path="/stock" component={Stock} />
+        <Route path="/stock2" component={StockNew} />
         <Route path="/stickies" component={GoldenLayoutWrapper} />
         <Route path="/test" component={Test} />
         <Route path="/account" component={Account} />
@@ -44,6 +46,9 @@ class LinkList extends React.Component {
       </li>
       <li>
         <Link to="/account">Account</Link>
+      </li>
+      <li>
+        <Link to="/stock2">Stock New</Link>
       </li>
     </ul>
   }

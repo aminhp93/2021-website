@@ -1144,3 +1144,105 @@ export const marketAnalysisColumnDefs = (that, importantIndexType = null, allowI
         }
     }
 }
+
+export const getColumnDefsStockNew = () => {
+    const Symbol = {
+        field: 'symbol',
+        headerName: 'Symbol',
+        // type: 'rightAligned',
+        // filter: 'agNumberColumnFilter',
+        // cellRenderer: params => {
+            // const div = document.createElement("div");
+            // div.innerText = params.data._source.secCode
+            // return div
+        // }
+    }
+
+    const PercentChangePrice = {
+        field: 'PercentChangePrice',
+        headerName: 'PercentChangePrice',
+    }
+
+    const TotalValue = {
+        field: 'TotalValue',
+        headerName: 'TotalValue'
+    }
+
+    const Volume = {
+        field: 'Volume',
+        headerName: 'Volume'
+    }
+
+    const MarketCap = {
+        headerName: 'MarketCap',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = (params.data.marketCap / BILLION_UNIT).toFixed(0)
+            return div
+        }
+    }
+
+    const ROE = {
+        headerName: 'ROE',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.ROE.toFixed(2)
+            return div
+        }
+    }
+
+    const EPS = {
+        headerName: 'ROE',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.ROE.toFixed(2)
+            return div
+        }
+    }
+
+    const final = {
+        headerName: '',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            let className = '';
+            if (params.data.ROE < 1) {
+                className = 'bg-red height100'
+            }
+            if (params.data.ROE > 1) {
+                className = 'bg-green height100'
+            }
+            div.className = className
+            div.innerText = ''
+            return div
+        }
+    }
+
+    const priceClose = {
+        headerName: 'priceClose',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.priceClose.toFixed(2)
+            return div
+        }
+    }
+
+    const dealVolume = {
+        headerName: 'dealVolume',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.dealVolume.toFixed(0)
+            return div
+        }
+    }
+
+    const totalValue = {
+        headerName: 'totalValue',
+        cellRenderer: params => {
+            const div = document.createElement("div");
+            div.innerText = params.data.totalValue.toFixed(0)
+            return div
+        }
+    }
+
+    return [Symbol, priceClose, dealVolume, totalValue]
+}

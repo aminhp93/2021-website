@@ -70,6 +70,33 @@ class Test extends React.Component<IProps, IState> {
         //     .catch(error => {
         //         console.log(error);
         //     })
+
+        // this.update();
+    }
+
+    update = () => {
+        // .match(/.{1,3}/g)
+        
+        Axios({
+            method: 'put',
+            url: 'https://restv2.fireant.vn/me/watchlists/360431',
+            headers: {
+                Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkdYdExONzViZlZQakdvNERWdjV4QkRITHpnSSIsImtpZCI6IkdYdExONzViZlZQakdvNERWdjV4QkRITHpnSSJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmZpcmVhbnQudm4iLCJhdWQiOiJodHRwczovL2FjY291bnRzLmZpcmVhbnQudm4vcmVzb3VyY2VzIiwiZXhwIjoxOTE1MTI5NTc2LCJuYmYiOjE2MTUxMjk1NzYsImNsaWVudF9pZCI6ImZpcmVhbnQudHJhZGVzdGF0aW9uIiwic2NvcGUiOlsib3BlbmlkIiwicHJvZmlsZSIsInJvbGVzIiwiZW1haWwiLCJhY2NvdW50cy1yZWFkIiwiYWNjb3VudHMtd3JpdGUiLCJvcmRlcnMtcmVhZCIsIm9yZGVycy13cml0ZSIsImNvbXBhbmllcy1yZWFkIiwiaW5kaXZpZHVhbHMtcmVhZCIsImZpbmFuY2UtcmVhZCIsInBvc3RzLXdyaXRlIiwicG9zdHMtcmVhZCIsInN5bWJvbHMtcmVhZCIsInVzZXItZGF0YS1yZWFkIiwidXNlci1kYXRhLXdyaXRlIiwidXNlcnMtcmVhZCIsInNlYXJjaCIsImFjYWRlbXktcmVhZCIsImFjYWRlbXktd3JpdGUiLCJibG9nLXJlYWQiLCJpbnZlc3RvcGVkaWEtcmVhZCJdLCJzdWIiOiJkNzJjOWQxNy0xNDU2LTQ1Y2EtOWQ2NC00YTA5ZWI3ZmU3Y2IiLCJhdXRoX3RpbWUiOjE2MTUxMjk1NjAsImlkcCI6IkZhY2Vib29rIiwibmFtZSI6Im1pbmhwbi5vcmcuZWNAZ21haWwuY29tIiwic2VjdXJpdHlfc3RhbXAiOiI1MjdjZTNhNi02ZjlmLTQ5YWYtOWZiYy05MWE1ODcyZTgxNDgiLCJqdGkiOiI2NTM3OTA3ZDA3ZDY5ZDUwNjhjZjhhOGQ0YWI2ZGI0OCIsImFtciI6WyJleHRlcm5hbCJdfQ.GdgdiQ8VZAjph7HdT0Qomzll8wXV1BQ9CkojQhNG70G3b4wkjxda2hSM6VZ4-O6SkHwh0viYiH4haPTFBdceRnvY47xQgnJFFtkzZ9QKf9UyRiwAagQhm5WaXUmlQxb_pV2AwQQ0cfMxKzkXRrZtuFaK1BkQASFTpG0k094OF2yKpB5wtBq0j_9eMSwCHy4qbeBdjGYp6x94F0Uac8Znzg-oll9AI3eY5JSqpMAuGdve4CcK4I1a89-1-mFQ-CZIN3LBn7hKkqw3FDq4ac4viYESXrktTEpEI7o5ii9C5yYYv7Dnu7cwwmCLzEMJsmyZMkHiZ3SwmtimRIZ62E2fSA'
+            },
+            data: {
+                name: "side way",
+                symbols: ["AAA", "ACB", "ACV", "AGG", "AGR", "AMV", "APH", "BID", "BMP", "BSI", "BVB", "BWE", "CII", "CKG", "CRE", "CTD", "CTG", "CTI", "CTR", "CTS", "D2D", "DBC", "DHC", "DPG", "DRC", "DRH", "DVN", "EIB", "FMC", "FPT", "FRT", "GAS", "GEX", "GMD", "GVR", "HBC", "HCM", "HDB", "HDC", "HDG", "HHS", "HND", "HPG", "ILB", "IMP", "ITA", "KDC", "KOS", "L14", "MBB", "MPC", "MSN", "MWG", "NAF", "NDN", "NHA", "NLG", "NT2", "NTL", "NVL", "PDR", "PHR", "PLX", "PNJ", "POW", "PPC", "PTB", "PVT", "QNS", "REE", "SBT", "SGP", "SHB", "SHS", "SJS", "SSI", "STB", "SZC", "TAR", "TCB", "TCM", "TDM", "TPB", "TV2", "VCB", "VCG", "VCI", "VCS", "VGC", "VHC", "VHM", "VIC", "VIP", "VJC", "VND", "VOC", "VPB", "VPG", "VPI", "VRE"],
+                userName: "minhpn.org.ec@gmail.com",
+                watchlistID: 360431
+            }
+            
+        })
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     getAllPosts = () => {
