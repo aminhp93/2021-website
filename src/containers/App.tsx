@@ -12,6 +12,7 @@ import StockNew from 'containers/StockNew';
 import GoldenLayoutWrapper from 'containers/GoldenLayoutWrapper';
 import Test from 'containers/Test';
 import Account from 'containers/Account';
+import Process from 'containers/Process';
 
 class App extends React.Component {
 
@@ -23,6 +24,7 @@ class App extends React.Component {
         <Route path="/stickies" component={GoldenLayoutWrapper} />
         <Route path="/test" component={Test} />
         <Route path="/account" component={Account} />
+        <Route path="/process" component={Process} />
         <Route path="/" component={LinkList} />
       </Switch>
     </Router>
@@ -49,6 +51,9 @@ class LinkList extends React.Component {
       </li>
       <li>
         <Link to="/stock2">Stock New</Link>
+      </li>
+      <li>
+        <Link to="/process">Process</Link>
       </li>
     </ul>
   }
